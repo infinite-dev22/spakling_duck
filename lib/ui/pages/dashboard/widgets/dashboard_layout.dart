@@ -3,6 +3,7 @@ import 'package:smart_rent/ui/pages/dashboard/widgets/occupancy_widget.dart';
 import 'package:smart_rent/ui/pages/dashboard/widgets/payments_widget.dart';
 import 'package:smart_rent/ui/pages/dashboard/widgets/properties_widget.dart';
 import 'package:smart_rent/ui/pages/dashboard/widgets/unpaid_widget.dart';
+import 'package:smart_rent/ui/pages/properties/properties_page.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/appbar_content.dart';
 
@@ -21,7 +22,7 @@ class DashboardLayout extends StatelessWidget {
         ),
         body: const TabBarView(
           children: [
-            PropertiesWidget(),
+            PropertiesPage(),
             PaymentsWidget(),
             UnpaidWidget(),
             OccupancyWidget(),
