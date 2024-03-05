@@ -63,7 +63,7 @@ class CustomImage extends StatelessWidget {
                       fit: imageFit,
                     )
                   : DecorationImage(
-                      image: FileImage(file),
+                      image: /*FileImage*/AssetImage(file),
                       fit: imageFit,
                     ),
             ),

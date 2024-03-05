@@ -23,6 +23,7 @@ class _RootPageState extends State<RootPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      resizeToAvoidBottomInset: false,
       floatingActionButton: BottomNavBar(
         screens: _screens(),
         onFabTap: _buildAddWidget,

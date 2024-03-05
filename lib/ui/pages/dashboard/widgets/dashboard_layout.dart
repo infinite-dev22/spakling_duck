@@ -4,6 +4,7 @@ import 'package:smart_rent/ui/pages/dashboard/widgets/payments_widget.dart';
 import 'package:smart_rent/ui/pages/dashboard/widgets/properties_widget.dart';
 import 'package:smart_rent/ui/pages/dashboard/widgets/unpaid_widget.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/appbar_content.dart';
 
 class DashboardLayout extends StatelessWidget {
   const DashboardLayout({super.key});
@@ -93,30 +94,6 @@ class DashboardLayout extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class TitleBarImageHolder extends StatelessWidget {
-  const TitleBarImageHolder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 200,
-          height: 35,
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-            image: DecorationImage(
-              image: AssetImage('assets/images/title_bar_white.png'),
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
