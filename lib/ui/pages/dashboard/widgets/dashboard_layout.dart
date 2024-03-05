@@ -111,7 +111,7 @@ class TitleBarImageHolder extends StatelessWidget {
           decoration: const BoxDecoration(
             color: Colors.transparent,
             image: DecorationImage(
-              image: AssetImage('assets/auth/title_bar_white.png'),
+              image: AssetImage('assets/images/title_bar_white.png'),
               fit: BoxFit.contain,
             ),
           ),
