@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
+import 'package:smart_rent/ui/pages/auth_pages/login_page/login_page.dart';
 import 'package:smart_rent/ui/pages/dashboard/bloc/dashboard_bloc.dart';
 import 'package:smart_rent/ui/pages/propert_details/property_details_page.dart';
 import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
 import 'package:smart_rent/ui/pages/root/root_page.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
 
 void main() {
   runApp(
@@ -12,6 +15,8 @@ void main() {
       providers: [
         BlocProvider(create: (context) => NavBarBloc()),
         BlocProvider(create: (context) => DashboardBloc()),
+        BlocProvider(create: (context) => LoginBloc()),
+        BlocProvider(create: (context) => ProfilePicBloc()),
       ],
       child: const MyApp(),
     ),
@@ -37,7 +42,8 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.light,
       routes: {
-        '/': (context) => const RootPage(),
+        '/': (context) => const LoginPage(),
+        '/root': (context) => const RootPage(),
         '/property_details': (context) => const PropertyDetailsPage(),
       },
     );

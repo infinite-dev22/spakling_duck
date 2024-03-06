@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:smart_case/services/apis/smartcase_api.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 
 part 'profile_pic_event.dart';
@@ -29,9 +28,9 @@ class ProfilePicBloc extends Bloc<ProfilePicEvent, ProfilePicState> {
   _mapUpdateProfilePicEventToState(
       UpdateProfilePic event, Emitter<ProfilePicState> emit) async {
     emit(state.copyWith(status: ProfilePicStatus.loading));
-    await SmartCaseApi.uploadProfilePicture(event.file).onError(
-        (error, stackTrace) =>
-            emit(state.copyWith(status: ProfilePicStatus.error)));
+    // await SmartCaseApi.uploadProfilePicture(event.file).onError(
+    //     (error, stackTrace) =>
+    //         emit(state.copyWith(status: ProfilePicStatus.error)));
   }
 
   // _mapGetProfilePicEventToState(
