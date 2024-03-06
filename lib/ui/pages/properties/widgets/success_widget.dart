@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/property_item_widget.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/app_search_textfield.dart';
-import 'package:smart_rent/ui/widgets/appbar_content.dart';
 
 class SuccessWidget extends StatelessWidget {
   const SuccessWidget({super.key});
@@ -12,16 +11,15 @@ class SuccessWidget extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.appBgColor,
       appBar: AppBar(
-        title: const TitleBarImageHolder(),
-        bottom: _buildAppTitle(),
-        backgroundColor: AppTheme.primary,
+        title: _buildAppTitle(),
+        backgroundColor: AppTheme.appBgColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: ListView.builder(
-          itemBuilder: (context, index) => const PropertyItemWidget(),
-          itemCount: 10,
+      body: ListView.builder(
+        padding: const EdgeInsets.only(top: 10),
+        itemBuilder: (context, index) => PropertyItemWidget(
+          onTap: () => Navigator.pushNamed(context, "/property_details"),
         ),
+        itemCount: 10,
       ),
     );
   }
@@ -29,14 +27,15 @@ class SuccessWidget extends StatelessWidget {
   PreferredSize _buildAppTitle() {
     TextEditingController searchController = TextEditingController();
     return PreferredSize(
-      preferredSize: const Size.fromHeight(80),
+      preferredSize: const Size.fromHeight(90),
       child: Container(
         padding: const EdgeInsets.only(
-          top: 10,
+          top: 15,
           left: 10,
           right: 10,
+          bottom: 15,
         ),
-        decoration: const BoxDecoration(color: AppTheme.appBgColor),
+        decoration: const BoxDecoration(color: Colors.transparent),
         child: AppSearchTextField(
           controller: searchController,
           hintText: 'Search properties, tenants, units',
