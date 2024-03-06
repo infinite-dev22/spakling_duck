@@ -48,6 +48,8 @@ dependencies:
   fluttertoast: ^8.2.4
   url_launcher: ^6.2.5
   email_validator: ^2.1.17
+  dio: ^5.4.1
+  dio_cache_interceptor: ^3.5.0
 
 dev_dependencies:
   flutter_test:
