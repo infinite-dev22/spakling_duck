@@ -43,6 +43,11 @@ dependencies:
   flutter_slidable: ^3.0.1
   icons_plus: ^5.0.0
   font_awesome_flutter: ^10.7.0
+  flutter_phone_direct_caller: ^2.1.1
+  get_secure_storage: ^1.0.4
+  fluttertoast: ^8.2.4
+  url_launcher: ^6.2.5
+  email_validator: ^2.1.17
 
 dev_dependencies:
   flutter_test:

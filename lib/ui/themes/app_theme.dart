@@ -24,6 +24,7 @@ class AppTheme {
   static const grey_300 = Color(0xFF9e9e9e);
   static const grey_500 = Color(0xff303e4249);
   static const grey_700 = Color(0xFF3e4249);
+  static const green = Colors.green;
 
   // static const secondaryColor = Color(0xFFCBE1F3);
 
