@@ -37,7 +37,7 @@ class PropertyDetailsLayout extends StatelessWidget {
 
   PreferredSize _buildAppTitle() {
     return PreferredSize(
-      preferredSize: const Size.fromHeight(80),
+      preferredSize: const Size.fromHeight(50),
       child: Container(
         decoration: const BoxDecoration(color: AppTheme.primaryDarker),
         child: const TabBar(
