@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 
 class WideButton extends StatelessWidget {
-  const WideButton(this.text,
-      {super.key,
-      this.color = AppTheme.primary,
-      this.bgColor = AppTheme.secondary,
-      this.onPressed});
+  const WideButton({
+    super.key,
+    this.onPressed,
+    required this.name,
+    this.bgColor = AppTheme.primary,
+    this.textStyle = const TextStyle(color: Colors.white),
+  });
 
-  final String text;
-  final Color color;
-  final Color bgColor;
   final Function()? onPressed;
+  final String name;
+  final Color bgColor;
+  final TextStyle textStyle;
 
   @override
   Widget build(BuildContext context) {
-    return _buildButton();
+    return _buildBody();
   }
 
-  Widget _buildButton() {
+  _buildBody() {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: SizedBox(
@@ -31,12 +33,8 @@ class WideButton extends StatelessWidget {
           ),
           onPressed: onPressed,
           child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 20,
-              color: color,
-              fontWeight: FontWeight.w500,
-            ),
+            name,
+            style: textStyle,
           ),
         ),
       ),
