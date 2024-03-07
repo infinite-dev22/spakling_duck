@@ -26,21 +26,6 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter() {
-    return Column(
-      children: [
-        const LoginFooterWidget(),
-        Text(
-          'copyright @ ${DateTime.now().year} SmartCase Manager',
-          style: const TextStyle(
-            color: AppTheme.inActiveColor,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildBody(BuildContext context) {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
@@ -72,7 +57,7 @@ class LoginPage extends StatelessWidget {
                             children: [
                               CustomImage(
                                 "assets/images/title_bar_white.png",
-                                trBackground: true,
+                                trBackground: false,
                                 isNetwork: false,
                                 width: MediaQuery.of(context).size.width * .6,
                                 imageFit: BoxFit.contain,
@@ -98,7 +83,7 @@ class LoginPage extends StatelessWidget {
                                 },
                               ),
                               const SizedBox(height: 10),
-                              _buildFooter(),
+                              const LoginFooterWidget(),
                             ],
                           ),
                         ),

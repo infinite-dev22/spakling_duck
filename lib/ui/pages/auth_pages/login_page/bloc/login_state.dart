@@ -84,7 +84,7 @@ class LoginState extends Equatable {
     return LoginState(
       loginSuccess: loginSuccess ?? this.loginSuccess,
       token: token ?? this.token,
-      message: message ?? this.message,
+      message: message,
       email: email ?? this.email,
       name: name ?? this.name,
       image: image ?? this.image,

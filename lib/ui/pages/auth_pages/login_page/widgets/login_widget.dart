@@ -23,8 +23,15 @@ class LoginWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state.status.isSuccess) {
-          _signUserIn(context);
+        print("Message: ${state.message}");
+        print("Success: ${state.loginSuccess}");
+        print("Token: ${state.token}");
+        print("Is Success: ${state.status.isSuccess}");
+
+        if (state.status.isSuccess &&
+            state.loginSuccess &&
+            state.message == null) {
+          _signUserIn(context, state);
         }
         if (state.status.isError) {
           Fluttertoast.showToast(
@@ -36,7 +43,8 @@ class LoginWidget extends StatelessWidget {
               textColor: AppTheme.whiteColor,
               fontSize: 16.0);
         }
-        if (state.message != null &&
+        if (state.status.isSuccess &&
+            state.message != null &&
             state.message!.toUpperCase().contains("USER_NOT_FOUND")) {
           Fluttertoast.showToast(
               msg: "User not found",
@@ -47,7 +55,8 @@ class LoginWidget extends StatelessWidget {
               textColor: AppTheme.whiteColor,
               fontSize: 16.0);
         }
-        if (state.message != null &&
+        if (state.status.isSuccess &&
+            state.message != null &&
             state.message!.toUpperCase().contains("WRONG_PASSWORD_PROVIDED")) {
           Fluttertoast.showToast(
               msg: "Incorrect password",
@@ -228,9 +237,11 @@ class LoginWidget extends StatelessWidget {
     }
   }
 
-  _signUserIn(BuildContext context) async {
+  _signUserIn(BuildContext context, LoginState state) async {
     final box = GetSecureStorage(
         password: 'infosec_technologies_ug_smart_rent_relator_manager');
+
+    currentUserToken = state.token;
 
     FocusManager.instance.primaryFocus?.unfocus();
     Navigator.popUntil(context, (route) => false);

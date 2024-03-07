@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
 import 'package:smart_rent/data_layer/models/auth/login_model.dart';
 import 'package:smart_rent/data_layer/repositories/auth_repository.dart';
-import 'package:smart_rent/utilities/app_init.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -35,7 +34,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       emit(state.copyWith(
         status: LoginStatus.loginUser,
-        token: currentUserToken,
         email: email,
         name: name,
         image: image,
@@ -47,7 +45,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   _mapAuthenticateUserEventToState(
       AuthenticateUser event, Emitter<LoginState> emit) async {
-    emit(state.copyWith(status: LoginStatus.loading));
+    emit(state.copyWith(
+      status: LoginStatus.loading,
+      loginSuccess: null,
+      message: null,
+      token: null,
+    ));
     await AuthRepository.signInUser(
       LoginModel(
         userName: event.userName,
@@ -57,6 +60,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         .then((loginResponse) => emit(state.copyWith(
               status: LoginStatus.success,
               loginSuccess: loginResponse?.success,
+              message: loginResponse?.message,
               token: loginResponse?.token,
             )))
         .onError((error, stackTrace) {
@@ -113,36 +117,36 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(status: LoginStatus.forgotPassword));
   }
 
-  @override
-  void onChange(Change<LoginState> change) {
-    super.onChange(change);
-    if (kDebugMode) {
-      print("Change: $change");
-    }
+@override
+void onChange(Change<LoginState> change) {
+  super.onChange(change);
+  if (kDebugMode) {
+    print("Change: $change");
   }
+}
 
-  @override
-  void onEvent(LoginEvent event) {
-    super.onEvent(event);
-    if (kDebugMode) {
-      print("Event: $event");
-    }
+@override
+void onEvent(LoginEvent event) {
+  super.onEvent(event);
+  if (kDebugMode) {
+    print("Event: $event");
   }
+}
 
-  @override
-  void onTransition(Transition<LoginEvent, LoginState> transition) {
-    super.onTransition(transition);
-    if (kDebugMode) {
-      print("Transition: $transition");
-    }
+@override
+void onTransition(Transition<LoginEvent, LoginState> transition) {
+  super.onTransition(transition);
+  if (kDebugMode) {
+    print("Transition: $transition");
   }
+}
 
-  @override
-  void onError(Object error, StackTrace stackTrace) {
-    super.onError(error, stackTrace);
-    if (kDebugMode) {
-      print("Error: $error");
-      print("StackTrace: $stackTrace");
-    }
+@override
+void onError(Object error, StackTrace stackTrace) {
+  super.onError(error, stackTrace);
+  if (kDebugMode) {
+    print("Error: $error");
+    print("StackTrace: $stackTrace");
   }
+}
 }

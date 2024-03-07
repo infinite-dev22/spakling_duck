@@ -9,10 +9,11 @@ class LoginResponse {
     this.message,
   });
 
-  factory LoginResponse.fromJsonToShow(Map<String, dynamic> json) =>
-      LoginResponse(
-        success: json['success'],
-        token: json['token'],
-        message: json['message'],
-      );
+  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    return LoginResponse(
+      success: json['success'],
+      token: json['token'],
+      message: json['message'],
+    );
+  }
 }
