@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/login_page.dart';
+import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/dashboard/bloc/dashboard_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
+import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
 import 'package:smart_rent/ui/pages/propert_details/property_details_page.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/property_categories/bloc/property_category_bloc.dart';
 import 'package:smart_rent/ui/pages/property_types/bloc/property_type_bloc.dart';
 import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
 import 'package:smart_rent/ui/pages/root/root_page.dart';
+import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
 
@@ -25,6 +28,10 @@ void main() {
         BlocProvider(create: (context) => PropertyTypeBloc()),
         BlocProvider(create: (context) => PropertyCategoryBloc()),
         BlocProvider(create: (context) => FloorBloc()),
+        BlocProvider(create: (context) => UnitBloc()),
+        BlocProvider(create: (context) => CurrencyBloc()),
+        BlocProvider(create: (context) => PeriodBloc()),
+        BlocProvider(create: (context) => PeriodBloc()),
       ],
       child: const MyApp(),
     ),

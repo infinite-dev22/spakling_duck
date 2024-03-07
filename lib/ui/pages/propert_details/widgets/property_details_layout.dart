@@ -27,14 +27,14 @@ class PropertyDetailsLayout extends StatelessWidget {
           foregroundColor: AppTheme.whiteColor,
           centerTitle: true,
         ),
-        body: const TabBarView(
+        body:  TabBarView(
           children: [
-            DetailsSuccessScreen(),
-            DocumentsSuccessScreen(),
-            FloorsSuccessScreen(),
-            UnitsSuccessScreen(),
-            TenantsSuccessScreen(),
-            PaymentsSuccessScreen(),
+            const DetailsSuccessScreen(),
+            const DocumentsSuccessScreen(),
+            FloorsSuccessScreen(property: property),
+            UnitsSuccessScreen(property: property,),
+            const TenantsSuccessScreen(),
+            const PaymentsSuccessScreen(),
           ],
         ),
       ),

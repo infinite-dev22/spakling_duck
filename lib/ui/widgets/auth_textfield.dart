@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 
 class AuthTextField extends StatelessWidget {
@@ -13,6 +14,8 @@ class AuthTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final Function()? onTap;
   final List<String>? autofillHints;
+  final TextInputType? keyBoardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   const AuthTextField({
     super.key,
@@ -27,6 +30,8 @@ class AuthTextField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.autofillHints,
+    this.keyBoardType,
+    this.inputFormatters,
   });
 
   @override
@@ -34,6 +39,10 @@ class AuthTextField extends StatelessWidget {
     return SizedBox(
       height: 50,
       child: TextFormField(
+        inputFormatters: inputFormatters ??
+            [
+              LengthLimitingTextInputFormatter(35),
+            ],
         autofillHints: autofillHints,
         cursorColor: AppTheme.gray45,
         validator: (val) =>
@@ -73,7 +82,7 @@ class AuthTextField extends StatelessWidget {
             fontSize: 16,
           ),
         ),
-        keyboardType: TextInputType.emailAddress,
+        keyboardType: keyBoardType ?? TextInputType.emailAddress,
         onTap: onTap,
       ),
     );
