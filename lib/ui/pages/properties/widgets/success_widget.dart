@@ -41,7 +41,11 @@ class SuccessWidget extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10),
             itemBuilder: (context, index) => PropertyItemWidget(
               property: state.properties![index],
-              onTap: () => Navigator.pushNamed(context, "/property_details"),
+              onTap: () => Navigator.pushNamed(
+                context,
+                "/property_details",
+                arguments: state.properties![index],
+              ),
             ),
             itemCount: state.properties!.length,
           ),

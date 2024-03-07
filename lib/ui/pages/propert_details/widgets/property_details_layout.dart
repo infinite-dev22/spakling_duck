@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/ui/pages/propert_details/screens/details_success_screen.dart';
 import 'package:smart_rent/ui/pages/propert_details/screens/documents_success_screen.dart';
 import 'package:smart_rent/ui/pages/propert_details/screens/floors_success_screen.dart';
@@ -9,8 +10,9 @@ import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/appbar_content.dart';
 
 class PropertyDetailsLayout extends StatelessWidget {
+  final Property property;
   const PropertyDetailsLayout({
-    super.key,
+    super.key, required this.property,
   });
 
   @override
@@ -25,14 +27,14 @@ class PropertyDetailsLayout extends StatelessWidget {
           foregroundColor: AppTheme.whiteColor,
           centerTitle: true,
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            const DetailsSuccessScreen(),
-            const DocumentsSuccessScreen(),
+            DetailsSuccessScreen(),
+            DocumentsSuccessScreen(),
             FloorsSuccessScreen(),
-            const UnitsSuccessScreen(),
-            const TenantsSuccessScreen(),
-            const PaymentsSuccessScreen(),
+            UnitsSuccessScreen(),
+            TenantsSuccessScreen(),
+            PaymentsSuccessScreen(),
           ],
         ),
       ),
