@@ -1,53 +1,35 @@
-
-
-import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
-
 import 'package:dropdown_textfield/dropdown_textfield.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:full_picker/full_picker.dart';
 import 'package:smart_rent/configs/app_configs.dart';
-import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
-import 'package:smart_rent/data_layer/models/smart_model.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
-import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
-import 'package:smart_rent/ui/pages/property_categories/bloc/property_category_bloc.dart';
-import 'package:smart_rent/ui/pages/property_types/bloc/property_type_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
 import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:smart_rent/utilities/app_init.dart';
-
-
 
 class AddPropertyFloorForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
-  const AddPropertyFloorForm({super.key, required this.addButtonText, required this.isUpdate});
+
+  const AddPropertyFloorForm(
+      {super.key, required this.addButtonText, required this.isUpdate});
 
   @override
   State<AddPropertyFloorForm> createState() => _AddPropertyFloorFormState();
 }
 
 class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
-
-
   final TextEditingController floorController = TextEditingController();
-  final TextEditingController floorDescriptionController = TextEditingController();
+  final TextEditingController floorDescriptionController =
+      TextEditingController();
 
   late SingleValueDropDownController _propertyModelCont;
 
   bool isTitleElevated = false;
   String? floorName;
-
 
   final ScrollController scrollController = ScrollController();
 
@@ -66,149 +48,133 @@ class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
     floorDescriptionController.dispose();
     _propertyModelCont.dispose();
     scrollController.dispose();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 20)
-                      .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Column(
+        builder: (BuildContext context, StateSetter setState) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 20)
+            .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          children: [
+            BlocListener<FloorBloc, FloorState>(
+              listener: (context, state) {
+                if (state.status == FloorStatus.successAdd) {
+                  Fluttertoast.showToast(
+                      msg: 'Floor Added Successfully',
+                      backgroundColor: Colors.green,
+                      gravity: ToastGravity.TOP);
+                  floorController.clear();
+                  floorDescriptionController.clear();
+                  _propertyModelCont.clearDropDown();
+                  Navigator.pop(context);
+                }
+                if (state.status == FloorStatus.accessDeniedAdd) {
+                  Fluttertoast.showToast(
+                      msg: state.message.toString(), gravity: ToastGravity.TOP);
+                }
+                if (state.status == FloorStatus.errorAdd) {
+                  Fluttertoast.showToast(
+                      msg: state.message.toString(), gravity: ToastGravity.TOP);
+                }
+              },
+              child: FormTitle(
+                name: '${widget.isUpdate ? "Edit" : "New"}  Floor',
+                addButtonText: widget.isUpdate ? "Update" : "Add",
+                onSave: () {
+                  if (floorController.text.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: 'floor name required', gravity: ToastGravity.TOP);
+                  } else if (floorController.text.length <= 1) {
+                    Fluttertoast.showToast(
+                        msg: 'floor name too short', gravity: ToastGravity.TOP);
+                  } else {
+                    context.read<FloorBloc>().add(AddFloorEvent(
+                          appUrl.toString(),
+                          34,
+                          floorController.text.trim().toString(),
+                          floorDescriptionController.text.trim().toString(),
+                        ));
+                  }
+                },
+                isElevated: isTitleElevated,
+                onCancel: () {
+                  floorController.clear();
+                  floorDescriptionController.clear();
+                  _propertyModelCont.clearDropDown();
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  // FocusManager.instance.primaryFocus?.unfocus();
+                },
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (scrollNotification) {
+                    if (scrollController.position.userScrollDirection ==
+                        ScrollDirection.reverse) {
+                      setState(() {
+                        isTitleElevated = true;
+                      });
+                    } else if (scrollController.position.userScrollDirection ==
+                        ScrollDirection.forward) {
+                      if (scrollController.position.pixels ==
+                          scrollController.position.maxScrollExtent) {
+                        setState(() {
+                          isTitleElevated = false;
+                        });
+                      }
+                    }
+                    return true;
+                  },
+                  child: ListView(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(8),
                     children: [
-
-                      BlocListener<FloorBloc, FloorState>(
-                        listener: (context, state) {
-                          if (state.status == FloorStatus.successAdd) {
-                            Fluttertoast.showToast(
-                                msg: 'Floor Added Successfully',
-                                backgroundColor: Colors.green,
-                                gravity: ToastGravity.TOP);
-                            floorController.clear();
-                            floorDescriptionController.clear();
-                            _propertyModelCont.clearDropDown();
-                            Navigator.pop(context);
-
-                          }
-                          if (state.status == FloorStatus.accessDeniedAdd) {
-                            Fluttertoast.showToast(
-                                msg: state.message.toString(),
-                                gravity: ToastGravity.TOP);
-                          } if (state.status == FloorStatus.errorAdd) {
-                            Fluttertoast.showToast(
-                                msg: state.message.toString(),
-                                gravity: ToastGravity.TOP);
-                          }
-                        },
-                        child: FormTitle(
-                        name: '${widget.isUpdate ? "Edit" : "New"}  Floor',
-                        addButtonText: widget.isUpdate ? "Update" : "Add",
-                        onSave: (){
-                          if (floorController.text.isEmpty) {
-                            Fluttertoast.showToast(
-                                msg: 'floor name required',
-                                gravity: ToastGravity.TOP);
-                          } else if (floorController.text.length <= 1) {
-                            Fluttertoast.showToast(
-                                msg: 'floor name too short',
-                                gravity: ToastGravity.TOP);
-                          } else {
-                            context.read<FloorBloc>().add(AddFloorEvent(
-                              appUrl.toString(),
-                              34,
-                              floorController.text.trim().toString(),
-                              floorDescriptionController.text
-                                  .trim()
-                                  .toString(),
-                            ));
-                          }
-                        },
-                        isElevated: isTitleElevated,
-                          onCancel: (){
-                            floorController.clear();
-                            floorDescriptionController.clear();
-                            _propertyModelCont.clearDropDown();
-                            Navigator.pop(context);
-
-                          },
-                      ),
-),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // FocusManager.instance.primaryFocus?.unfocus();
-                          },
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (scrollNotification) {
-                              if (scrollController.position.userScrollDirection ==
-                                  ScrollDirection.reverse) {
-                                setState(() {
-                                  isTitleElevated = true;
-                                });
-                              } else if (scrollController.position.userScrollDirection ==
-                                  ScrollDirection.forward) {
-                                if (scrollController.position.pixels ==
-                                    scrollController.position.maxScrollExtent) {
-                                  setState(() {
-                                    isTitleElevated = false;
-                                  });
-                                }
-                              }
-                              return true;
-                            },
-                            child: ListView(
-                              controller: scrollController,
-                              padding: const EdgeInsets.all(8),
-                              children: [
-                                LayoutBuilder(builder: (context, constraints) {
-                                  return Form(
-                                    child: Column(
-                                      children: [
-
-                                        SizedBox(height: 10,),
-
-                                        AuthTextField(
-                                          controller: floorController,
-                                          hintText: 'Floor Name.',
-                                          obscureText: false,
-                                          onChanged: (value) {
-                                            floorName = floorController.text.trim();
-                                            print(floorName.toString());
-                                          },
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-
-                                        AppMaxTextField(
-                                          controller: floorDescriptionController,
-                                          hintText: 'Description',
-                                          obscureText: false,
-                                          fillColor: AppTheme.itemBgColor,
-                                        ),
-
-
-
-                                      ],
-                                    ),
-                                  );
-                                }),
-                              ],
-                            ),
+                      LayoutBuilder(builder: (context, constraints) {
+                        return Form(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              AuthTextField(
+                                controller: floorController,
+                                hintText: 'Floor Name.',
+                                obscureText: false,
+                                onChanged: (value) {
+                                  floorName = floorController.text.trim();
+                                  print(floorName.toString());
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              AppMaxTextField(
+                                controller: floorDescriptionController,
+                                hintText: 'Description',
+                                obscureText: false,
+                                fillColor: AppTheme.itemBgColor,
+                              ),
+                            ],
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     ],
                   ),
-                );
-              }
-    );
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
-
 
 //
 // addPropertyForm(BuildContext context, String addButtonText,

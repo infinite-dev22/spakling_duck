@@ -7,7 +7,8 @@ import 'package:smart_rent/data_layer/models/property/property_category_model.da
 import 'package:smart_rent/data_layer/repositories/implementation/property_category_repo_impl.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 
-part 'property_category_event.dart';part 'property_category_state.dart';
+part 'property_category_event.dart';
+part 'property_category_state.dart';
 
 class PropertyCategoryBloc
     extends Bloc<PropertyCategoryEvent, PropertyCategoryState> {

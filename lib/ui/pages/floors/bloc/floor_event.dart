@@ -21,11 +21,11 @@ class AddFloorEvent extends FloorEvent {
   final String description;
 
   const AddFloorEvent(
-      this.token,
-      this.propertyId,
-      this.floorName,
-      this.description,
-      );
+    this.token,
+    this.propertyId,
+    this.floorName,
+    this.description,
+  );
 
   @override
   // TODO: implement props

@@ -19,8 +19,7 @@ class FloorRepoImpl implements FloorRepo {
         HttpHeaders.authorizationHeader: 'Bearer $token'
       };
 
-      var url =
-          Uri.parse('$appUrl/api/rent/floorsonproperty/$id');
+      var url = Uri.parse('$appUrl/api/rent/floorsonproperty/$id');
 
       var response = await client.get(url, headers: headers);
       List floorData = jsonDecode(response.body)['floorsonproperty'];
@@ -69,6 +68,4 @@ class FloorRepoImpl implements FloorRepo {
       client.close();
     }
   }
-
-
 }

@@ -6,8 +6,6 @@ import 'dart:convert';
 
 import 'package:smart_rent/data_layer/models/smart_model.dart';
 
-
-
 FloorListModel floorListModelFromJson(String str) =>
     FloorListModel.fromJson(json.decode(str));
 

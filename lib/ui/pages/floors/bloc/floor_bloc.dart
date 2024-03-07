@@ -9,9 +9,7 @@ import 'package:smart_rent/data_layer/models/floor/floor_model.dart';
 import 'package:smart_rent/data_layer/repositories/implementation/floor_repo_impl.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 
-
-part 'floor_event.dart';
-part 'floor_state.dart';
+part 'floor_event.dart';part 'floor_state.dart';
 
 class FloorBloc extends Bloc<FloorEvent, FloorState> {
   FloorBloc() : super(FloorState()) {
@@ -48,8 +46,8 @@ class FloorBloc extends Bloc<FloorEvent, FloorState> {
   _mapAddFloorEventToState(
       AddFloorEvent event, Emitter<FloorState> emit) async {
     emit(state.copyWith(status: FloorStatus.loadingAdd, isFloorLoading: true));
-    await FloorDtoImpl.addFloor(currentUserToken.toString(),
-        event.propertyId, event.floorName, event.description)
+    await FloorDtoImpl.addFloor(currentUserToken.toString(), event.propertyId,
+            event.floorName, event.description)
         .then((response) {
       print('success ${response.floorCreatedViaApi}');
 
@@ -110,5 +108,4 @@ class FloorBloc extends Bloc<FloorEvent, FloorState> {
     print(stackTrace);
     super.onError(error, stackTrace);
   }
-
 }
