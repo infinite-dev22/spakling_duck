@@ -17,6 +17,7 @@ class EmployeePageLayout extends StatelessWidget {
       appBar: AppBar(
         title: TitleBarImageHolder(),
         backgroundColor: AppTheme.primaryColor,
+        centerTitle: true,
       ),
       body: ListView.builder(
           shrinkWrap: true,
