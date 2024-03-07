@@ -31,32 +31,47 @@ class BottomBarItem extends StatelessWidget {
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.easeInOutCirc,
                 alignment: Alignment.center,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(7),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(70),
-                        color: state
-                            ? AppTheme.primary.withOpacity(.1)
-                            : Colors.transparent,
-                      ),
-                      child: Icon(
-                        screen.icon,
-                        size: 35,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(70),
+                            color: state
+                                ? AppTheme.primary.withOpacity(.1)
+                                : Colors.transparent,
+                          ),
+                          child: Icon(
+                            screen.icon,
+                            size: 25,
+                            color: state
+                                ? AppTheme.primary
+                                : AppTheme.inActiveColor,
+                          ),
+                        ),
+                        Positioned(
+                          bottom: -8,
+                          child: Icon(
+                            Icons.arrow_drop_up,
+                            size: 20.0,
+                            color:
+                                state ? AppTheme.primary : Colors.transparent,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      screen.name!,
+                      style: TextStyle(
                         color:
                             state ? AppTheme.primary : AppTheme.inActiveColor,
+                        fontSize: 11,
                       ),
-                    ),
-                    Positioned(
-                      bottom: -8,
-                      child: Icon(
-                        Icons.arrow_drop_up,
-                        size: 20.0,
-                        color: state ? AppTheme.primary : Colors.transparent,
-                      ),
-                    ),
+                    )
                   ],
                 ),
               );

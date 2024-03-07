@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/ui/pages/propert_details/forms/floor/add_property_floor_form.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 
 class FloorsSuccessScreen extends StatelessWidget {
-
   const FloorsSuccessScreen({super.key});
 
   @override
@@ -16,17 +14,16 @@ class FloorsSuccessScreen extends StatelessWidget {
         heroTag: null,
         label: GestureDetector(
           onTap: () {
-
             showModalBottomSheet(
                 useSafeArea: true,
                 isScrollControlled: true,
-                context: context, builder: (context){
-              return AddPropertyFloorForm(
-                addButtonText: 'Add',
-                isUpdate: false,
-              );
-            });
-
+                context: context,
+                builder: (context) {
+                  return AddPropertyFloorForm(
+                    addButtonText: 'Add',
+                    isUpdate: false,
+                  );
+                });
           },
           child: Card(
             child: Padding(

@@ -41,7 +41,7 @@ class PropertyItemWidget extends StatelessWidget {
             ),
           ],
         ),
-        child:  Row(
+        child: Row(
           children: [
             const CustomImage(
               "assets/images/property_image.jpg",

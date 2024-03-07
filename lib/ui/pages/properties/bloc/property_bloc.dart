@@ -7,7 +7,8 @@ import 'package:smart_rent/data_layer/models/property/property_response_model.da
 import 'package:smart_rent/data_layer/repositories/implementation/property_repo_impl.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 
-part 'property_event.dart';part 'property_state.dart';
+part 'property_event.dart';
+part 'property_state.dart';
 
 class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
   PropertyBloc() : super(const PropertyState()) {
