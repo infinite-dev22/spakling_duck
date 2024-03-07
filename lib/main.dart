@@ -5,6 +5,7 @@ import 'package:smart_rent/ui/pages/auth_pages/login_page/login_page.dart';
 import 'package:smart_rent/ui/pages/dashboard/bloc/dashboard_bloc.dart';
 import 'package:smart_rent/ui/pages/propert_details/property_details_page.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
+import 'package:smart_rent/ui/pages/properties/forms/add_property_form.dart';
 import 'package:smart_rent/ui/pages/property_categories/bloc/property_category_bloc.dart';
 import 'package:smart_rent/ui/pages/property_types/bloc/property_type_bloc.dart';
 import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
