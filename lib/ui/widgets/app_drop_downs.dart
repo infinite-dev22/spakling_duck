@@ -1565,7 +1565,7 @@ class SearchablePropertyModelListDropDown<T extends SmartPropertyModel>
         textFieldDecoration: InputDecoration(
           filled: true,
           // fillColor: AppTheme.textBoxColor,
-          fillColor: AppTheme.appWidgetColor,
+          fillColor: AppTheme.textBoxColor,
           hintText: 'Select $hintText',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

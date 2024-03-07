@@ -10,6 +10,7 @@ import 'package:smart_rent/data_layer/models/smart_model.dart';
 import 'package:smart_rent/ui/pages/dashboard/dashboard_page.dart';
 import 'package:smart_rent/ui/pages/employees/employees_page.dart';
 import 'package:smart_rent/ui/pages/explorer/explorer_page.dart';
+import 'package:smart_rent/ui/pages/floors/forms/add_floor_form.dart';
 import 'package:smart_rent/ui/pages/profile/profile_page.dart';
 import 'package:smart_rent/ui/pages/properties/forms/add_property_form.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/success_widget.dart';
@@ -176,9 +177,6 @@ class _RootPageState extends State<RootPage> {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                   // addPropertyForm('add', () { }, true, true);
-                   //    addPropertyForm(context,  'add', () { }, true, true);
-
                         showModalBottomSheet(
                             useSafeArea: true,
                             isScrollControlled: true,
@@ -216,7 +214,16 @@ class _RootPageState extends State<RootPage> {
                       ),
                     ),
                     onPressed: () {
-
+                      Navigator.pop(context);
+                      showModalBottomSheet(
+                          useSafeArea: true,
+                          isScrollControlled: true,
+                          context: context, builder: (context){
+                        return AddFloorForm(
+                            addButtonText: 'Add',
+                            isUpdate: false,
+                        );
+                      });
                     },
                     icon: const Icon(Icons.bed),
                     iconSize: 45,

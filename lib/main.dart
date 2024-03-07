@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/login_page.dart';
 import 'package:smart_rent/ui/pages/dashboard/bloc/dashboard_bloc.dart';
+import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/propert_details/property_details_page.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/forms/add_property_form.dart';
@@ -24,6 +25,7 @@ void main() {
         BlocProvider(create: (context) => PropertyBloc()),
         BlocProvider(create: (context) => PropertyTypeBloc()),
         BlocProvider(create: (context) => PropertyCategoryBloc()),
+        BlocProvider(create: (context) => FloorBloc()),
       ],
       child: const MyApp(),
     ),
