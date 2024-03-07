@@ -5,3 +5,5 @@ String? currentUsername;
 String? currentUserAvatar;
 String? currentUserToken;
 String? success;
+
+bool propertiesScrollVisibility = true;

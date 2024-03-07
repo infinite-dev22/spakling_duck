@@ -19,6 +19,7 @@ class NavBarState extends Equatable {
   final Color color;
   final List<Screen>? screens;
   final IconData? icon;
+  final bool isVisible;
   final NavBarStatus status;
   final int idSelected;
 
@@ -26,17 +27,20 @@ class NavBarState extends Equatable {
     this.screens,
     this.color = Colors.transparent,
     this.icon,
+    this.isVisible = true,
     this.status = NavBarStatus.changed,
     this.idSelected = 0,
   });
 
   @override
-  List<Object?> get props => [screens, color, icon, status, idSelected];
+  List<Object?> get props =>
+      [screens, color, icon, isVisible, status, idSelected];
 
   NavBarState copyWith({
     List<Screen>? screens,
     Color? color,
     IconData? icon,
+    bool? isVisible,
     NavBarStatus? status,
     int? idSelected,
   }) {
@@ -44,6 +48,7 @@ class NavBarState extends Equatable {
       screens: screens ?? this.screens,
       color: color ?? this.color,
       icon: icon ?? this.icon,
+      isVisible: isVisible ?? this.isVisible,
       status: status ?? this.status,
       idSelected: idSelected ?? this.idSelected,
     );

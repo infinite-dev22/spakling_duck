@@ -7,6 +7,7 @@ enum PropertyStatus {
   accessDenied,
   error,
   empty,
+  notFound,
   loadingDetails,
   successDetails,
   errorDetails,
@@ -19,10 +20,24 @@ enum PropertyStatus {
   refreshListSuccess
 }
 
+extension PropertyStatusX on PropertyStatus {
+  bool get isInitial => this == PropertyStatus.initial;
+
+  bool get isSuccess => this == PropertyStatus.success;
+
+  bool get isError => this == PropertyStatus.error;
+
+  bool get isLoading => this == PropertyStatus.loading;
+
+  bool get isEmpty => this == PropertyStatus.empty;
+
+  bool get isNotFound => this == PropertyStatus.notFound;
+}
+
 @immutable
 class PropertyState extends Equatable {
   final List<Property>? properties;
-  final PropertyStatus? status;
+  final PropertyStatus status;
   final Property? property;
   final bool? isPropertyLoading;
   final String? message;
@@ -65,9 +80,4 @@ class PropertyState extends Equatable {
           addPropertyResponseModel ?? this.addPropertyResponseModel,
     );
   }
-}
-
-class PropertyInitial extends PropertyState {
-  @override
-  List<Object> get props => [];
 }

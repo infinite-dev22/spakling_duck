@@ -243,8 +243,8 @@ class LoginWidget extends StatelessWidget {
     Navigator.pushNamed(context, '/root');
 
     box.write('email', emailController.text.trim());
-    box.write('name', currentUser.firstName);
-    box.write('image', currentUser.avatar);
+    // box.write('name', currentUser.firstName);
+    // box.write('image', currentUser.avatar);
 
     context.read<ProfilePicBloc>().add(GetProfilePic());
   }

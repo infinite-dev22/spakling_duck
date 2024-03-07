@@ -17,7 +17,6 @@ class LoadSinglePropertyEvent extends PropertyEvent {
   const LoadSinglePropertyEvent(this.id);
 
   @override
-  // TODO: implement props
   List<Object?> get props => [id];
 }
 
@@ -34,7 +33,6 @@ class AddPropertyEvent extends PropertyEvent {
       this.description, this.propertyTypeId, this.propertyCategoryId);
 
   @override
-  // TODO: implement props
   List<Object?> get props => [
         token,
         name,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SmartErrorWidget extends StatelessWidget {
-  const SmartErrorWidget({super.key});
+class SmartWidget extends StatelessWidget {
+  const SmartWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

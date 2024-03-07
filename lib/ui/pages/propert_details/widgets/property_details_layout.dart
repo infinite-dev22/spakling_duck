@@ -43,6 +43,7 @@ class PropertyDetailsLayout extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(color: AppTheme.primaryDarker),
         child: const TabBar(
+          tabAlignment: TabAlignment.start,
           indicatorColor: Color(0xFF2D80E3),
           // enableFeedback: true,
           isScrollable: true,

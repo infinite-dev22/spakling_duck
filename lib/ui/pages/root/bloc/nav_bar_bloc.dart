@@ -10,6 +10,7 @@ part 'nav_bar_state.dart';
 class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
   NavBarBloc() : super(const NavBarState()) {
     on<SwitchScreenEvent>(_mapSwitchScreenEventToState);
+    on<ChangeNavBarVisibility>(_mapNavBarVisibilityEventToState);
   }
 
   _mapSwitchScreenEventToState(
@@ -18,6 +19,18 @@ class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
     emit(
       state.copyWith(
         status: NavBarStatus.changed,
+        idSelected: event.selectedIndex,
+      ),
+    );
+  }
+
+  _mapNavBarVisibilityEventToState(
+      ChangeNavBarVisibility event, Emitter<NavBarState> emit) {
+    emit(state.copyWith(status: NavBarStatus.changing));
+    emit(
+      state.copyWith(
+        status: NavBarStatus.changed,
+        isVisible: event.isVisible,
         idSelected: event.selectedIndex,
       ),
     );

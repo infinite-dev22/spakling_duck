@@ -25,57 +25,61 @@ class BottomNavBar extends StatelessWidget {
 
     return BlocBuilder<NavBarBloc, NavBarState>(
       builder: (context, state) {
-        return LayoutBuilder(builder: (context, constraint) {
-          return Container(
-            height: 70,
-            width: double.infinity,
-            margin: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
-            child: Stack(
-              children: [
-                CustomPaint(
-                  size: Size(constraint.maxWidth, 70),
-                  painter: MyCustomPainter(),
-                ),
-                Center(
-                  heightFactor: .6,
-                  child: FloatingActionButton(
-                    onPressed: onFabTap,
-                    backgroundColor: AppTheme.primary,
-                    shape: const CircleBorder(),
-                    child: const Icon(
-                      Icons.add,
-                      color: AppTheme.whiteColor,
+        return AnimatedOpacity(
+          duration: const Duration(milliseconds: 400),
+          opacity: context.read<NavBarBloc>().state.isVisible ? 1 : 0.5,
+          child: LayoutBuilder(builder: (context, constraint) {
+            return Container(
+              height: 70,
+              width: double.infinity,
+              margin: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(constraint.maxWidth, 70),
+                    painter: MyCustomPainter(),
+                  ),
+                  Center(
+                    heightFactor: .6,
+                    child: FloatingActionButton(
+                      onPressed: onFabTap,
+                      backgroundColor: AppTheme.primary,
+                      shape: const CircleBorder(),
+                      child: const Icon(
+                        Icons.add,
+                        color: AppTheme.whiteColor,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 70,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: List.generate(
-                      screens.length,
-                      (index) => screens[index].icon == null
-                          ? Container(
-                              width: size.width * .2,
-                            )
-                          : BottomBarItem(
-                              key: ValueKey('${screens[index].name}$index'),
-                              screen: screens[index],
-                              onTap: () {
-                                context
-                                    .read<NavBarBloc>()
-                                    .add(SwitchScreenEvent(index));
-                              },
-                            ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 70,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: List.generate(
+                        screens.length,
+                        (index) => screens[index].icon == null
+                            ? Container(
+                                width: size.width * .2,
+                              )
+                            : BottomBarItem(
+                                key: ValueKey('${screens[index].name}$index'),
+                                screen: screens[index],
+                                onTap: () {
+                                  context
+                                      .read<NavBarBloc>()
+                                      .add(SwitchScreenEvent(index));
+                                },
+                              ),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        });
+                ],
+              ),
+            );
+          }),
+        );
       },
     );
   }

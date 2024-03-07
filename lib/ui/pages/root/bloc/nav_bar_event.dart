@@ -17,3 +17,19 @@ class SwitchScreenEvent extends NavBarEvent {
 
   const SwitchScreenEvent(this.selectedIndex);
 }
+
+class ChangeNavBarVisibility extends NavBarEvent {
+  final int selectedIndex;
+  final bool isVisible;
+
+  @override
+  List<Object?> get props => [
+        isVisible,
+        selectedIndex,
+      ];
+
+  const ChangeNavBarVisibility(
+    this.isVisible,
+    this.selectedIndex,
+  );
+}
