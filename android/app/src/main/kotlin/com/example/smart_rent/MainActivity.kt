@@ -1,4 +1,4 @@
-package com.example.smart_rent
+package com.infosec.smart_rent
 
 import io.flutter.embedding.android.FlutterActivity
 
