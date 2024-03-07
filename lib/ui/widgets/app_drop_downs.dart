@@ -1,4 +1,3 @@
-
 import 'package:amount_formatter/amount_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
@@ -9,7 +8,6 @@ import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/custom_elevated_image.dart';
 import 'package:smart_rent/ui/widgets/custom_icon_holder.dart';
 import 'package:smart_rent/utilities/extra.dart';
-
 
 class CustomDropdownFilter extends StatelessWidget {
   const CustomDropdownFilter({
@@ -242,16 +240,15 @@ class SearchableTenantDropDown<T extends SmartTenantModel>
   }
 }
 
-
 class SearchableTenantUnitDropDown<T extends SmartTenantUnitsModel>
     extends StatelessWidget {
   const SearchableTenantUnitDropDown(
       {super.key,
-        required this.hintText,
-        required this.menuItems,
-        this.onChanged,
-        this.defaultValue,
-        required this.controller});
+      required this.hintText,
+      required this.menuItems,
+      this.onChanged,
+      this.defaultValue,
+      required this.controller});
 
   final String hintText;
   final List<T> menuItems;
@@ -294,8 +291,9 @@ class SearchableTenantUnitDropDown<T extends SmartTenantUnitsModel>
         dropDownItemCount: 6,
         autovalidateMode: AutovalidateMode.always,
         dropDownList: menuItems
-            .map(
-                (item) => DropDownValueModel(value: item, name: '${item.getTenantName()} ${item.getUnitName()}'))
+            .map((item) => DropDownValueModel(
+                value: item,
+                name: '${item.getTenantName()} ${item.getUnitName()}'))
             .toList(),
         onChanged: onChanged,
       ),
@@ -414,8 +412,10 @@ class SearchableUnitDropDown<T extends SmartUnitModel> extends StatelessWidget {
         dropDownItemCount: 6,
         autovalidateMode: AutovalidateMode.always,
         dropDownList: menuItems
-            .map((item) =>
-                DropDownValueModel(value: item, name: '${item.getUnitName()}          @${amountFormatter.format(item.getAmount().toString())}/='))
+            .map((item) => DropDownValueModel(
+                value: item,
+                name:
+                    '${item.getUnitName()}          @${amountFormatter.format(item.getAmount().toString())}/='))
             .toList(),
         onChanged: onChanged,
       ),

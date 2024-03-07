@@ -12,7 +12,6 @@ import 'package:smart_rent/data_layer/models/property/property_category_model.da
 import 'package:smart_rent/data_layer/models/property/property_types_model.dart';
 import 'package:smart_rent/data_layer/models/smart_model.dart';
 
-
 PropertyModel propertyModelFromJson(String str) =>
     PropertyModel.fromJson(json.decode(str));
 

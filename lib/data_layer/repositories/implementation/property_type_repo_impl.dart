@@ -8,7 +8,6 @@ import 'package:smart_rent/configs/app_configs.dart';
 import 'package:smart_rent/data_layer/models/property/property_types_model.dart';
 import 'package:smart_rent/data_layer/repositories/interfaces/property_type_repo.dart';
 
-
 class PropertyTypeRepoImpl implements PropertyTypeRepo {
   @override
   Future<List<PropertyTypeModel>> getALlPropertyTypes(String token) async {

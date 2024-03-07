@@ -7,16 +7,13 @@ import 'package:smart_rent/data_layer/models/property/property_response_model.da
 import 'package:smart_rent/data_layer/repositories/implementation/property_repo_impl.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 
-
-part 'property_event.dart';
-part 'property_state.dart';
+part 'property_event.dart';part 'property_state.dart';
 
 class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
   PropertyBloc() : super(const PropertyState()) {
     on<LoadPropertiesEvent>(_mapFetchPropertiesToState);
     on<LoadSinglePropertyEvent>(_mapViewSinglePropertyDetailsEventToState);
     on<AddPropertyEvent>(_mapAddPropertyEventToState);
-
   }
 
   _mapFetchPropertiesToState(
@@ -66,18 +63,17 @@ class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
     emit(state.copyWith(
         status: PropertyStatus.loadingAdd, isPropertyLoading: true));
     await PropertyDtoImpl.addProperty(
-        currentUserToken.toString(),
-        event.name,
-        event.location,
-        event.sqm,
-        event.description,
-        event.propertyTypeId,
-        event.propertyCategoryId)
-        .then((response) async{
+            currentUserToken.toString(),
+            event.name,
+            event.location,
+            event.sqm,
+            event.description,
+            event.propertyTypeId,
+            event.propertyCategoryId)
+        .then((response) async {
       print('success ${response.propertyCreatedViaApi}');
 
       if (response != null) {
-
         await PropertyRepoImpl()
             .getALlProperties(currentUserToken.toString())
             .then((properties) {
@@ -99,8 +95,6 @@ class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
               isPropertyLoading: false,
               addPropertyResponseModel: response));
         });
-
-
       } else {
         emit(state.copyWith(
           status: PropertyStatus.accessDeniedAdd,
@@ -114,10 +108,6 @@ class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
           message: error.toString()));
     });
   }
-
-
-
-
 
   @override
   void onEvent(PropertyEvent event) {

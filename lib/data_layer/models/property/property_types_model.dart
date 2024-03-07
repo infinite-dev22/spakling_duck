@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import 'package:smart_rent/data_layer/models/smart_model.dart';
 
-
 List<PropertyTypeModel> propertyTypeModelFromJson(String str) =>
     List<PropertyTypeModel>.from(
         json.decode(str).map((x) => PropertyTypeModel.fromJson(x)));

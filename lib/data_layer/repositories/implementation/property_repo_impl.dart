@@ -8,7 +8,6 @@ import 'package:smart_rent/configs/app_configs.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/data_layer/repositories/interfaces/property_repo.dart';
 
-
 class PropertyRepoImpl implements PropertyRepo {
   @override
   @override

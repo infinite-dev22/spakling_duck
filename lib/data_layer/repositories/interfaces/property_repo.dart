@@ -1,5 +1,3 @@
-
-
 abstract class PropertyRepo {
   Future<dynamic> getALlProperties(String token);
 

@@ -8,7 +8,6 @@ import 'package:smart_rent/configs/app_configs.dart';
 import 'package:smart_rent/data_layer/models/property/property_category_model.dart';
 import 'package:smart_rent/data_layer/repositories/interfaces/property_category_repo.dart';
 
-
 class PropertyCategoryRepoImpl implements PropertyCategoryRepo {
   @override
   Future<List<PropertyCategoryModel>> getALlPropertyCategories(

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
-
 
 class FormTitle extends StatelessWidget {
   const FormTitle({
@@ -32,13 +30,13 @@ class FormTitle extends StatelessWidget {
         color: isElevated ? Colors.white : AppTheme.appBgColor,
         boxShadow: (isElevated)
             ? [
-          BoxShadow(
-            color: AppTheme.shadowColor.withOpacity(.1),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0.0, 2), // changes position of shadow
-          ),
-        ]
+                BoxShadow(
+                  color: AppTheme.shadowColor.withOpacity(.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0.0, 2), // changes position of shadow
+                ),
+              ]
             : null,
       ),
       child: Row(
@@ -99,13 +97,13 @@ class CalendarViewTitle extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: (isElevated)
             ? [
-          BoxShadow(
-            color: AppTheme.shadowColor.withOpacity(.1),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: const Offset(0.0, 2), // changes position of shadow
-          ),
-        ]
+                BoxShadow(
+                  color: AppTheme.shadowColor.withOpacity(.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0.0, 2), // changes position of shadow
+                ),
+              ]
             : null,
       ),
       child: Row(

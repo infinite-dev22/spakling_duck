@@ -30,22 +30,22 @@ class PropertyState extends Equatable {
 
   const PropertyState(
       {this.properties,
-        this.status = PropertyStatus.initial,
-        this.property,
-        this.isPropertyLoading = false,
-        this.message = '',
-        this.addPropertyResponseModel});
+      this.status = PropertyStatus.initial,
+      this.property,
+      this.isPropertyLoading = false,
+      this.message = '',
+      this.addPropertyResponseModel});
 
   @override
   // TODO: implement props
   List<Object?> get props => [
-    properties,
-    status,
-    property,
-    isPropertyLoading,
-    message,
-    addPropertyResponseModel
-  ];
+        properties,
+        status,
+        property,
+        isPropertyLoading,
+        message,
+        addPropertyResponseModel
+      ];
 
   PropertyState copyWith({
     List<Property>? properties,
@@ -62,7 +62,7 @@ class PropertyState extends Equatable {
       isPropertyLoading: isPropertyLoading ?? this.isPropertyLoading,
       message: message ?? this.message,
       addPropertyResponseModel:
-      addPropertyResponseModel ?? this.addPropertyResponseModel,
+          addPropertyResponseModel ?? this.addPropertyResponseModel,
     );
   }
 }

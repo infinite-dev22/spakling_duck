@@ -4,8 +4,6 @@ abstract class SmartModel {
   String getName();
 }
 
-
-
 abstract class SmartTenantTypeModel {
   int getId();
 

@@ -36,14 +36,14 @@ class AddPropertyEvent extends PropertyEvent {
   @override
   // TODO: implement props
   List<Object?> get props => [
-    token,
-    name,
-    location,
-    sqm,
-    description,
-    propertyTypeId,
-    propertyCategoryId
-  ];
+        token,
+        name,
+        location,
+        sqm,
+        description,
+        propertyTypeId,
+        propertyCategoryId
+      ];
 }
 
-class PropertyAddedEvent  extends PropertyEvent {}
+class PropertyAddedEvent extends PropertyEvent {}

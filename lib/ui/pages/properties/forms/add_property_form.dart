@@ -1,8 +1,4 @@
-
-
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,23 +15,20 @@ import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
 import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
-import 'package:flutter/material.dart';
 import 'package:smart_rent/utilities/app_init.dart';
-
-
 
 class AddPropertyForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
-  const AddPropertyForm({super.key, required this.addButtonText, required this.isUpdate});
+
+  const AddPropertyForm(
+      {super.key, required this.addButtonText, required this.isUpdate});
 
   @override
   State<AddPropertyForm> createState() => _AddPropertyFormState();
 }
 
 class _AddPropertyFormState extends State<AddPropertyForm> {
-
-
   File? propertyPic;
   String? propertyImagePath;
   String? propertyImageExtension;
@@ -56,7 +49,6 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
 
   final ScrollController scrollController = ScrollController();
 
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -67,315 +59,299 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
     locationController.dispose();
     sqmController.dispose();
     scrollController.dispose();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 20)
-                      .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Column(
+        builder: (BuildContext context, StateSetter setState) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 20)
+            .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          children: [
+            BlocListener<PropertyBloc, PropertyState>(
+              listener: (context, state) {
+                if (state.status == PropertyStatus.successAdd) {
+                  Fluttertoast.showToast(
+                      msg: 'Property Added Successfully',
+                      backgroundColor: Colors.green,
+                      gravity: ToastGravity.TOP);
+                  titleController.clear();
+                  locationController.clear();
+                  descriptionController.clear();
+                  sqmController.clear();
+                  selectedPropertyTypeId = 0;
+                  selectedPropertyCategoryId = 0;
+                  propertyPic = File('');
+                  print('Pic = ${propertyPic!.path}');
+                  Navigator.pop(context);
+                }
+                if (state.status == PropertyStatus.accessDeniedAdd) {
+                  Fluttertoast.showToast(
+                      msg: state.message.toString(), gravity: ToastGravity.TOP);
+                }
+                if (state.status == PropertyStatus.errorAdd) {
+                  Fluttertoast.showToast(
+                      msg: state.message.toString(), gravity: ToastGravity.TOP);
+                }
+              },
+              child: FormTitle(
+                name: '${widget.isUpdate ? "Edit" : "New"}  Property',
+                addButtonText: widget.isUpdate ? "Update" : "Add",
+                onSave: () {
+                  if (titleController.text.isEmpty ||
+                          locationController.text.isEmpty ||
+                          sqmController.text.isEmpty
+                      // propertyPic == null
+                      ) {
+                    Fluttertoast.showToast(
+                        msg: 'fill in all fields', gravity: ToastGravity.TOP);
+                  } else if (selectedPropertyTypeId == 0) {
+                    Fluttertoast.showToast(
+                        msg: 'select property type id',
+                        gravity: ToastGravity.TOP);
+                  } else if (selectedPropertyCategoryId == 0) {
+                    Fluttertoast.showToast(
+                        msg: 'select property category id',
+                        gravity: ToastGravity.TOP);
+                  } else {
+                    context.read<PropertyBloc>().add(AddPropertyEvent(
+                          currentUserToken.toString(),
+                          titleController.text.trim().toString(),
+                          locationController.text.trim().toString(),
+                          sqmController.text.trim().toString(),
+                          descriptionController.text.trim().toString(),
+                          selectedPropertyTypeId,
+                          selectedPropertyCategoryId,
+                        ));
+                  }
+                },
+                isElevated: isTitleElevated,
+                onCancel: () {
+                  titleController.clear();
+                  locationController.clear();
+                  descriptionController.clear();
+                  sqmController.clear();
+                  selectedPropertyTypeId = 0;
+                  selectedPropertyCategoryId = 0;
+                  propertyPic = File('');
+                  print('Pic = ${propertyPic!.path}');
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  // FocusManager.instance.primaryFocus?.unfocus();
+                },
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (scrollNotification) {
+                    if (scrollController.position.userScrollDirection ==
+                        ScrollDirection.reverse) {
+                      setState(() {
+                        isTitleElevated = true;
+                      });
+                    } else if (scrollController.position.userScrollDirection ==
+                        ScrollDirection.forward) {
+                      if (scrollController.position.pixels ==
+                          scrollController.position.maxScrollExtent) {
+                        setState(() {
+                          isTitleElevated = false;
+                        });
+                      }
+                    }
+                    return true;
+                  },
+                  child: ListView(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(8),
                     children: [
-                      BlocListener<PropertyBloc, PropertyState>(
-                        listener: (context, state) {
-                          if (state.status == PropertyStatus.successAdd) {
-                            Fluttertoast.showToast(
-                                msg: 'Property Added Successfully',
-                                backgroundColor: Colors.green,
-                                gravity: ToastGravity.TOP);
-                            titleController.clear();
-                            locationController.clear();
-                            descriptionController.clear();
-                            sqmController.clear();
-                            selectedPropertyTypeId = 0;
-                            selectedPropertyCategoryId = 0;
-                            propertyPic = File('');
-                            print('Pic = ${propertyPic!.path}');
-                            Navigator.pop(context);
-
-                          }
-                          if (state.status == PropertyStatus.accessDeniedAdd) {
-                            Fluttertoast.showToast(
-                                msg: state.message.toString(),
-                                gravity: ToastGravity.TOP);
-                          } if (state.status == PropertyStatus.errorAdd) {
-                            Fluttertoast.showToast(
-                                msg: state.message.toString(),
-                                gravity: ToastGravity.TOP);
-                          }
-                        },
-                        child: FormTitle(
-                        name: '${widget.isUpdate ? "Edit" : "New"}  Property',
-                        addButtonText: widget.isUpdate ? "Update" : "Add",
-                        onSave: (){
-                          if (titleController.text.isEmpty ||
-                              locationController.text.isEmpty ||
-                              sqmController.text.isEmpty
-                          // propertyPic == null
-                          ) {
-                            Fluttertoast.showToast(
-                                msg: 'fill in all fields',
-                                gravity: ToastGravity.TOP);
-                          } else if (selectedPropertyTypeId == 0) {
-                            Fluttertoast.showToast(
-                                msg: 'select property type id',
-                                gravity: ToastGravity.TOP);
-                          } else if (selectedPropertyCategoryId == 0) {
-                            Fluttertoast.showToast(
-                                msg: 'select property category id',
-                                gravity: ToastGravity.TOP);
-                          } else {
-                            context
-                                .read<PropertyBloc>()
-                                .add(AddPropertyEvent(
-                            currentUserToken.toString(),
-                              titleController.text
-                                  .trim()
-                                  .toString(),
-                              locationController.text
-                                  .trim()
-                                  .toString(),
-                              sqmController.text.trim().toString(),
-                              descriptionController.text
-                                  .trim()
-                                  .toString(),
-                              selectedPropertyTypeId,
-                              selectedPropertyCategoryId,
-                            ));
-                          }
-                        },
-                        isElevated: isTitleElevated,
-                          onCancel: (){
-                            titleController.clear();
-                            locationController.clear();
-                            descriptionController.clear();
-                            sqmController.clear();
-                            selectedPropertyTypeId = 0;
-                            selectedPropertyCategoryId = 0;
-                            propertyPic = File('');
-                            print('Pic = ${propertyPic!.path}');
-                            Navigator.pop(context);
-
-                          },
-                      ),
-),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // FocusManager.instance.primaryFocus?.unfocus();
-                          },
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (scrollNotification) {
-                              if (scrollController.position.userScrollDirection ==
-                                  ScrollDirection.reverse) {
-                                setState(() {
-                                  isTitleElevated = true;
-                                });
-                              } else if (scrollController.position.userScrollDirection ==
-                                  ScrollDirection.forward) {
-                                if (scrollController.position.pixels ==
-                                    scrollController.position.maxScrollExtent) {
-                                  setState(() {
-                                    isTitleElevated = false;
-                                  });
-                                }
-                              }
-                              return true;
-                            },
-                            child: ListView(
-                              controller: scrollController,
-                              padding: const EdgeInsets.all(8),
-                              children: [
-                                LayoutBuilder(builder: (context, constraints) {
-                                  return Form(
-                                    child: Column(
-                                      children: [
-
-                                        AuthTextField(
-                                          controller: titleController,
-                                          hintText: 'Property title',
-                                          obscureText: false,
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: 190,
-                                              child: BlocBuilder<PropertyTypeBloc,
-                                                  PropertyTypeState>(
-                                                builder: (context, state) {
-                                                  if(state.status == PropertyTypeStatus.initial){
-                                                    context.read<PropertyTypeBloc>().add(LoadAllPropertyTypesEvent());
-                                                  }
-                                                  return CustomApiGenericDropdown<
-                                                      SmartModel>(
-                                                    hintText: 'Type',
-                                                    menuItems: state.propertyTypes == null
-                                                        ? []
-                                                        : state.propertyTypes!,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        selectedPropertyTypeId =
-                                                            value!.getId();
-                                                      });
-                                                      print(value!.getId());
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 190,
-                                              child: BlocBuilder<PropertyCategoryBloc,
-                                                  PropertyCategoryState>(
-                                                builder: (context, state) {
-                                                  if(state.status == PropertyCategoryStatus.initial){
-                                                    context.read<PropertyCategoryBloc>().add(LoadAllPropertyCategoriesEvent());
-                                                  }
-                                                  return CustomApiGenericDropdown<
-                                                      SmartModel>(
-                                                    hintText: 'Category',
-                                                    menuItems:
-                                                    state.propertyCategories == null
-                                                        ? []
-                                                        : state.propertyCategories!,
-                                                    onChanged: (value) {
-                                                      print(value!.getId());
-                                                      setState(() {
-                                                        selectedPropertyCategoryId =
-                                                            value.getId();
-                                                      });
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            SizedBox(
-                                              width: 190,
-                                              child: AuthTextField(
-                                                controller: locationController,
-                                                hintText: 'Location',
-                                                obscureText: false,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 190,
-                                              child: AuthTextField(
-                                                controller: sqmController,
-                                                hintText: 'sqm',
-                                                obscureText: false,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        AppMaxTextField(
-                                          controller: descriptionController,
-                                          hintText: 'Description',
-                                          obscureText: false,
-                                          fillColor: AppTheme.itemBgColor,
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            FullPicker(
-                                              prefixName: 'add property',
-                                              context: context,
-                                              image: true,
-                                              imageCamera: kDebugMode,
-                                              imageCropper: true,
-                                              onError: (int value) {
-                                                print(" ----  onError ----=$value");
-                                              },
-                                              onSelected: (value) async {
-                                                print(" ----  onSelected ----");
-
-                                                setState(() {
-                                                  propertyPic = value.file.first;
-                                                  propertyImagePath =
-                                                      value.file.first!.path;
-                                                  propertyImageExtension = value
-                                                      .file.first!.path
-                                                      .split('.')
-                                                      .last;
-                                                  propertyFileName = value
-                                                      .file.first!.path
-                                                      .split('/')
-                                                      .last;
-                                                });
-                                                propertyBytes =
-                                                await propertyPic!.readAsBytes();
-                                                print('MY PIC == $propertyPic');
-                                                print('MY path == $propertyImagePath');
-                                                print('MY bytes == $propertyBytes');
-                                                print(
-                                                    'MY extension == $propertyImageExtension');
-                                                print(
-                                                    'MY FILE NAME == $propertyFileName');
-                                              },
-                                            );
+                      LayoutBuilder(builder: (context, constraints) {
+                        return Form(
+                          child: Column(
+                            children: [
+                              AuthTextField(
+                                controller: titleController,
+                                hintText: 'Property title',
+                                obscureText: false,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 190,
+                                    child: BlocBuilder<PropertyTypeBloc,
+                                        PropertyTypeState>(
+                                      builder: (context, state) {
+                                        if (state.status ==
+                                            PropertyTypeStatus.initial) {
+                                          context
+                                              .read<PropertyTypeBloc>()
+                                              .add(LoadAllPropertyTypesEvent());
+                                        }
+                                        return CustomApiGenericDropdown<
+                                            SmartModel>(
+                                          hintText: 'Type',
+                                          menuItems: state.propertyTypes == null
+                                              ? []
+                                              : state.propertyTypes!,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedPropertyTypeId =
+                                                  value!.getId();
+                                            });
+                                            print(value!.getId());
                                           },
-                                          child: Container(
-                                            width: 175,
-                                            height: 200,
-                                            decoration: BoxDecoration(
-                                                color: AppTheme.itemBgColor,
-                                                borderRadius:
-                                                BorderRadius.circular(15),
-                                                image: DecorationImage(
-                                                    image: FileImage(
-                                                        propertyPic ?? File('')),
-                                                    fit: BoxFit.cover)),
-                                            child: propertyPic == null ||
-                                                propertyPic!.path.isEmpty
-                                                ? Center(
-                                              child: Text('Upload Property Pic'),
-                                            )
-                                                : null,
-                                          ),
-                                        ),
-
-
-
-                                      ],
+                                        );
+                                      },
                                     ),
+                                  ),
+                                  SizedBox(
+                                    width: 190,
+                                    child: BlocBuilder<PropertyCategoryBloc,
+                                        PropertyCategoryState>(
+                                      builder: (context, state) {
+                                        if (state.status ==
+                                            PropertyCategoryStatus.initial) {
+                                          context.read<PropertyCategoryBloc>().add(
+                                              LoadAllPropertyCategoriesEvent());
+                                        }
+                                        return CustomApiGenericDropdown<
+                                            SmartModel>(
+                                          hintText: 'Category',
+                                          menuItems:
+                                              state.propertyCategories == null
+                                                  ? []
+                                                  : state.propertyCategories!,
+                                          onChanged: (value) {
+                                            print(value!.getId());
+                                            setState(() {
+                                              selectedPropertyCategoryId =
+                                                  value.getId();
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: 190,
+                                    child: AuthTextField(
+                                      controller: locationController,
+                                      hintText: 'Location',
+                                      obscureText: false,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 190,
+                                    child: AuthTextField(
+                                      controller: sqmController,
+                                      hintText: 'sqm',
+                                      obscureText: false,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              AppMaxTextField(
+                                controller: descriptionController,
+                                hintText: 'Description',
+                                obscureText: false,
+                                fillColor: AppTheme.itemBgColor,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  FullPicker(
+                                    prefixName: 'add property',
+                                    context: context,
+                                    image: true,
+                                    imageCamera: kDebugMode,
+                                    imageCropper: true,
+                                    onError: (int value) {
+                                      print(" ----  onError ----=$value");
+                                    },
+                                    onSelected: (value) async {
+                                      print(" ----  onSelected ----");
+
+                                      setState(() {
+                                        propertyPic = value.file.first;
+                                        propertyImagePath =
+                                            value.file.first!.path;
+                                        propertyImageExtension = value
+                                            .file.first!.path
+                                            .split('.')
+                                            .last;
+                                        propertyFileName = value
+                                            .file.first!.path
+                                            .split('/')
+                                            .last;
+                                      });
+                                      propertyBytes =
+                                          await propertyPic!.readAsBytes();
+                                      print('MY PIC == $propertyPic');
+                                      print('MY path == $propertyImagePath');
+                                      print('MY bytes == $propertyBytes');
+                                      print(
+                                          'MY extension == $propertyImageExtension');
+                                      print(
+                                          'MY FILE NAME == $propertyFileName');
+                                    },
                                   );
-                                }),
-                              ],
-                            ),
+                                },
+                                child: Container(
+                                  width: 175,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                      color: AppTheme.itemBgColor,
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                          image: FileImage(
+                                              propertyPic ?? File('')),
+                                          fit: BoxFit.cover)),
+                                  child: propertyPic == null ||
+                                          propertyPic!.path.isEmpty
+                                      ? Center(
+                                          child: Text('Upload Property Pic'),
+                                        )
+                                      : null,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                     ],
                   ),
-                );
-              }
-    );
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
-
 
 //
 // addPropertyForm(BuildContext context, String addButtonText,
