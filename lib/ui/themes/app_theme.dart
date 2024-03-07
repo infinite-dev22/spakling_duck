@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart' as gf;
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 class AppTheme {
   static const primary = Color(0xFF1467CB); // 183D5D

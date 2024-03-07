@@ -3,13 +3,13 @@ import 'package:smart_rent/ui/themes/app_theme.dart';
 
 class IconBox extends StatelessWidget {
   const IconBox({
-    Key? key,
+    super.key,
     required this.child,
     this.bgColor,
     this.onTap,
     this.borderColor = Colors.transparent,
     this.radius = 50,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final Color borderColor;

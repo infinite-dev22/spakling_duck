@@ -14,7 +14,7 @@ class AuthService {
 
     try {
       var response = await dio.post(
-          Uri.https(app_url.replaceRange(0, 8, ''), 'api/login').toString(),
+          Uri.https(appUrl.replaceRange(0, 8, ''), 'api/login').toString(),
           data: jsonEncode(loginModel.toJson()));
 
       if (response.statusCode == 200) {

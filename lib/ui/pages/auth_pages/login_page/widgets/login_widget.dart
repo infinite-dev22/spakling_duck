@@ -23,11 +23,6 @@ class LoginWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
-        print("Message: ${state.message}");
-        print("Success: ${state.loginSuccess}");
-        print("Token: ${state.token}");
-        print("Is Success: ${state.status.isSuccess}");
-
         if (state.status.isSuccess &&
             state.loginSuccess &&
             state.message == null) {

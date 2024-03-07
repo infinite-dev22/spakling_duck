@@ -37,7 +37,7 @@ class AuthTextField extends StatelessWidget {
         autofillHints: autofillHints,
         cursorColor: AppTheme.gray45,
         validator: (val) =>
-        val!.isEmpty ? 'Required field, Please fill in.' : null,
+            val!.isEmpty ? 'Required field, Please fill in.' : null,
         controller: controller,
         onChanged: onChanged,
         obscureText: obscureText,
@@ -46,20 +46,20 @@ class AuthTextField extends StatelessWidget {
         decoration: InputDecoration(
           focusedBorder: (borderSide != BorderSide.none)
               ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: AppTheme.gray45,
-              width: 2.0,
-            ),
-          )
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppTheme.gray45,
+                    width: 2.0,
+                  ),
+                )
               : null,
           enabledBorder: (borderSide != BorderSide.none)
               ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: AppTheme.gray45,
-            ),
-          )
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppTheme.gray45,
+                  ),
+                )
               : null,
           border: OutlineInputBorder(
             borderSide: borderSide,
@@ -119,7 +119,7 @@ class _AuthPasswordTextField extends State<AuthPasswordTextField> {
         autofillHints: widget.autofillHints,
         cursorColor: AppTheme.gray45,
         validator: (val) =>
-        val!.isEmpty ? 'Required field, Please fill in.' : null,
+            val!.isEmpty ? 'Required field, Please fill in.' : null,
         controller: widget.controller,
         obscureText: obscure,
         style: widget.style,
@@ -127,20 +127,20 @@ class _AuthPasswordTextField extends State<AuthPasswordTextField> {
         decoration: InputDecoration(
           focusedBorder: (widget.borderSide != BorderSide.none)
               ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: AppTheme.gray45,
-              width: 2.0,
-            ),
-          )
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppTheme.gray45,
+                    width: 2.0,
+                  ),
+                )
               : null,
           enabledBorder: (widget.borderSide != BorderSide.none)
               ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: AppTheme.gray45,
-            ),
-          )
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppTheme.gray45,
+                  ),
+                )
               : null,
           suffixIcon: IconButton(
               onPressed: () {

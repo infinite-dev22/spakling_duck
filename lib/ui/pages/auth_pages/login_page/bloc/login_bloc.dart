@@ -63,11 +63,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               message: loginResponse?.message,
               token: loginResponse?.token,
             )))
-        .onError((error, stackTrace) {
-      emit(state.copyWith(status: LoginStatus.error));
-      print(error);
-      print(stackTrace);
-    });
+        .onError((error, stackTrace) =>
+            emit(state.copyWith(status: LoginStatus.error)));
   }
 
   _mapResetPasswordEventToState(ResetPassword event, Emitter<LoginState> emit) {
@@ -117,36 +114,36 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(status: LoginStatus.forgotPassword));
   }
 
-@override
-void onChange(Change<LoginState> change) {
-  super.onChange(change);
-  if (kDebugMode) {
-    print("Change: $change");
+  @override
+  void onChange(Change<LoginState> change) {
+    super.onChange(change);
+    if (kDebugMode) {
+      print("Change: $change");
+    }
   }
-}
 
-@override
-void onEvent(LoginEvent event) {
-  super.onEvent(event);
-  if (kDebugMode) {
-    print("Event: $event");
+  @override
+  void onEvent(LoginEvent event) {
+    super.onEvent(event);
+    if (kDebugMode) {
+      print("Event: $event");
+    }
   }
-}
 
-@override
-void onTransition(Transition<LoginEvent, LoginState> transition) {
-  super.onTransition(transition);
-  if (kDebugMode) {
-    print("Transition: $transition");
+  @override
+  void onTransition(Transition<LoginEvent, LoginState> transition) {
+    super.onTransition(transition);
+    if (kDebugMode) {
+      print("Transition: $transition");
+    }
   }
-}
 
-@override
-void onError(Object error, StackTrace stackTrace) {
-  super.onError(error, stackTrace);
-  if (kDebugMode) {
-    print("Error: $error");
-    print("StackTrace: $stackTrace");
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    super.onError(error, stackTrace);
+    if (kDebugMode) {
+      print("Error: $error");
+      print("StackTrace: $stackTrace");
+    }
   }
-}
 }

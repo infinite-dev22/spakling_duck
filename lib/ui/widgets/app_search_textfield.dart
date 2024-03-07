@@ -69,12 +69,12 @@ class AppSearchTextField extends StatelessWidget {
               fillColor: AppTheme.itemBgColor,
               filled: true,
               hintText: hintText,
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                 color: Colors.grey,
                 fontSize: 16,
               ),
-              suffixIcon: Icon(Icons.filter_alt_outlined),
-              prefixIcon: Icon(Icons.search),
+              suffixIcon: const Icon(Icons.filter_alt_outlined),
+              prefixIcon: const Icon(Icons.search),
             ),
             keyboardType: TextInputType.emailAddress,
           ),

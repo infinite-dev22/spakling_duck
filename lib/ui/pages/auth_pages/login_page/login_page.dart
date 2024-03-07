@@ -65,10 +65,10 @@ class LoginPage extends StatelessWidget {
                               ),
                               BlocBuilder<LoginBloc, LoginState>(
                                 builder: (context, state) {
-                                  print(state.status.isInitial);
-                                  print(state.status.isLoginUser);
                                   if (state.status.isInitial) {
-                                    context.read<LoginBloc>().add(LoginInitial());
+                                    context
+                                        .read<LoginBloc>()
+                                        .add(LoginInitial());
                                   }
                                   if (state.status.isLoginUser) {
                                     return LoginWidget();

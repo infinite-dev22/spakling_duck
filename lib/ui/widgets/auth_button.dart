@@ -30,6 +30,7 @@ class AuthButton extends StatelessWidget {
 class AuthButtonAgree extends StatelessWidget {
   final Function()? onTap;
   final String text;
+
   const AuthButtonAgree({super.key, required this.onTap, required this.text});
 
   @override
@@ -42,7 +43,7 @@ class AuthButtonAgree extends StatelessWidget {
           color: const Color.fromARGB(255, 71, 233, 133),
           borderRadius: BorderRadius.circular(8),
         ),
-        child:  Center(
+        child: Center(
           child: Text(
             text,
             style: const TextStyle(

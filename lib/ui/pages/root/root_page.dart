@@ -4,7 +4,6 @@ import 'package:smart_rent/ui/pages/dashboard/dashboard_page.dart';
 import 'package:smart_rent/ui/pages/employees/employees_page.dart';
 import 'package:smart_rent/ui/pages/explorer/explorer_page.dart';
 import 'package:smart_rent/ui/pages/profile/profile_page.dart';
-import 'package:smart_rent/ui/pages/properties/widgets/success_widget.dart';
 import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
 import 'package:smart_rent/ui/pages/root/widgets/bottom_nav_bar.dart';
 import 'package:smart_rent/ui/pages/root/widgets/screen.dart';
