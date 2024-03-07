@@ -18,8 +18,6 @@ import 'package:smart_rent/ui/pages/property_types/bloc/property_type_bloc.dart'
 import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
 import 'package:smart_rent/ui/pages/root/widgets/bottom_nav_bar.dart';
 import 'package:smart_rent/ui/pages/root/widgets/screen.dart';
-import 'package:smart_rent/ui/pages/settings/settings_page.dart';
-import 'package:smart_rent/ui/pages/tenants/tenants_page.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
 import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
@@ -90,15 +88,15 @@ class _RootPageState extends State<RootPage> {
       const Screen(),
       const Screen(
         index: 3,
-        name: "Tenants",
-        icon: Icons.people_outline_rounded,
-        widget: TenantsPage(),
+        name: "Search",
+        icon: Icons.search,
+        widget: ExplorerPage(),
       ),
       const Screen(
         index: 4,
-        name: "Settings",
-        icon: Icons.settings,
-        widget: SettingsPage(),
+        name: "Profile",
+        icon: Icons.person,
+        widget: ProfilePage(),
       ),
     ];
   }
