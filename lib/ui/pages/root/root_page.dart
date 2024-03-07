@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/ui/pages/dashboard/dashboard_page.dart';
 import 'package:smart_rent/ui/pages/employees/employees_page.dart';
-import 'package:smart_rent/ui/pages/explorer/explorer_page.dart';
-import 'package:smart_rent/ui/pages/profile/profile_page.dart';
 import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
 import 'package:smart_rent/ui/pages/root/widgets/bottom_nav_bar.dart';
 import 'package:smart_rent/ui/pages/root/widgets/screen.dart';
+import 'package:smart_rent/ui/pages/settings/settings_page.dart';
+import 'package:smart_rent/ui/pages/tenants/tenants_page.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 
 class RootPage extends StatefulWidget {
@@ -53,15 +53,15 @@ class _RootPageState extends State<RootPage> {
       const Screen(),
       const Screen(
         index: 3,
-        name: "Search",
-        icon: Icons.search,
-        widget: ExplorerPage(),
+        name: "Tenants",
+        icon: Icons.people_outline_rounded,
+        widget: TenantsPage(),
       ),
       const Screen(
         index: 4,
-        name: "Profile",
-        icon: Icons.person,
-        widget: ProfilePage(),
+        name: "Settings",
+        icon: Icons.settings,
+        widget: SettingsPage(),
       ),
     ];
   }

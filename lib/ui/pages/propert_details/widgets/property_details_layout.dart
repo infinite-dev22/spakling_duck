@@ -20,6 +20,8 @@ class PropertyDetailsLayout extends StatelessWidget {
           backgroundColor: AppTheme.primary,
           title: const TitleBarImageHolder(),
           bottom: _buildAppTitle(),
+          foregroundColor: AppTheme.whiteColor,
+          centerTitle: true,
         ),
         body: const TabBarView(
           children: [

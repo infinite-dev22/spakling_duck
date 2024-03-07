@@ -18,6 +18,8 @@ class DashboardLayout extends StatelessWidget {
           backgroundColor: AppTheme.primary,
           title: const TitleBarImageHolder(),
           bottom: _buildAppTitle(),
+          centerTitle: true,
+          foregroundColor: AppTheme.whiteColor,
         ),
         body: const TabBarView(
           children: [
@@ -56,6 +58,7 @@ class DashboardLayout extends StatelessWidget {
                   ),
                 ),
               ),
+              tabAlignment: TabAlignment.start,
               tabs: [
                 Tab(
                   child: Text(
