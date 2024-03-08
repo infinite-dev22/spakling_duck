@@ -4,7 +4,7 @@ import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/login_page.dart';
 import 'package:smart_rent/ui/pages/dashboard/bloc/dashboard_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
-import 'package:smart_rent/ui/pages/propert_details/property_details_page.dart';
+import 'package:smart_rent/ui/pages/property_details/property_details_page.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/property_categories/bloc/property_category_bloc.dart';
 import 'package:smart_rent/ui/pages/property_types/bloc/property_type_bloc.dart';
