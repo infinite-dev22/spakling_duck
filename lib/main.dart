@@ -6,7 +6,7 @@ import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/dashboard/bloc/dashboard_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
-import 'package:smart_rent/ui/pages/propert_details/property_details_page.dart';
+import 'package:smart_rent/ui/pages/property_details/property_details_page.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/property_categories/bloc/property_category_bloc.dart';
 import 'package:smart_rent/ui/pages/property_types/bloc/property_type_bloc.dart';

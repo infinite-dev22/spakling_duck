@@ -7,6 +7,7 @@ enum FloorStatus {
   accessDenied,
   error,
   empty,
+  notFound,
   loadingDetails,
   successDetails,
   errorDetails,
@@ -16,6 +17,20 @@ enum FloorStatus {
   accessDeniedAdd,
   errorAdd,
   emptyAdd
+}
+
+extension FloorStatusX on FloorStatus {
+  bool get isInitial => this == FloorStatus.initial;
+
+  bool get isSuccess => this == FloorStatus.success;
+
+  bool get isError => this == FloorStatus.error;
+
+  bool get isLoading => this == FloorStatus.loading;
+
+  bool get isEmpty => this == FloorStatus.empty;
+
+  bool get isNotFound => this == FloorStatus.notFound;
 }
 
 class FloorState extends Equatable {

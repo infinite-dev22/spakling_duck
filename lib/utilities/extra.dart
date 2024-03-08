@@ -4,3 +4,4 @@ import 'package:flutter/cupertino.dart';
 final amountFormatter = AmountFormatter(separator: ',');
 ScrollController propertiesScrollController = ScrollController();
 ScrollController usersScrollController = ScrollController();
+ScrollController floorsScrollController = ScrollController();

@@ -7,7 +7,7 @@ class CustomImage extends StatelessWidget {
     super.key,
     this.width = 100,
     this.height = 100,
-    this.bgColor,
+    this.bgColor = Colors.transparent,
     this.borderWidth = 0,
     this.borderColor,
     this.trBackground = false,
@@ -15,6 +15,7 @@ class CustomImage extends StatelessWidget {
     this.radius = 50,
     this.imageFit = BoxFit.cover,
     this.canClose = false,
+    this.isElevated = true,
     this.onClose,
     this.onTap,
   });
@@ -28,6 +29,7 @@ class CustomImage extends StatelessWidget {
   final bool trBackground;
   final bool isNetwork;
   final bool canClose;
+  final bool isElevated;
   final double radius;
   final BoxFit imageFit;
   final Function()? onClose;
@@ -49,14 +51,14 @@ class CustomImage extends StatelessWidget {
             decoration: BoxDecoration(
               color: bgColor,
               borderRadius: BorderRadius.circular(radius),
-              boxShadow: [
+              boxShadow: (isElevated) ? [
                 BoxShadow(
                   color: AppTheme.shadowColor.withOpacity(0.1),
                   spreadRadius: 1,
                   blurRadius: .1,
                   offset: const Offset(0, 1), // changes position of shadow
                 ),
-              ],
+              ] : null,
               image: (isNetwork)
                   ? DecorationImage(
                       image: NetworkImage(file),
