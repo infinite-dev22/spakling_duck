@@ -3,7 +3,6 @@ import 'package:smart_rent/data_layer/models/property/property_response_model.da
 import 'package:smart_rent/ui/pages/floors/floors_page.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/details_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/documents_success_screen.dart';
-import 'package:smart_rent/ui/pages/floors/widgets/floors_success_widget.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/payments_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/tenants_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/units_success_screen.dart';
@@ -12,8 +11,10 @@ import 'package:smart_rent/ui/widgets/appbar_content.dart';
 
 class PropertyDetailsLayout extends StatelessWidget {
   final Property property;
+
   const PropertyDetailsLayout({
-    super.key, required this.property,
+    super.key,
+    required this.property,
   });
 
   @override
@@ -34,7 +35,6 @@ class PropertyDetailsLayout extends StatelessWidget {
             const DocumentsSuccessScreen(),
             FloorsPage(property: property),
             UnitsSuccessScreen(property: property),
-            const UnitsSuccessScreen(),
             const TenantsSuccessScreen(),
             const PaymentsSuccessScreen(),
           ],

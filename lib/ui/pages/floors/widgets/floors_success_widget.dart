@@ -57,9 +57,10 @@ class FloorsSuccessWidget extends StatelessWidget {
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
-                    return const AddPropertyFloorForm(
+                    return AddPropertyFloorForm(
                       addButtonText: 'Add',
                       isUpdate: false,
+                      property: property,
                     );
                   }),
               backgroundColor: AppTheme.primary,
@@ -92,9 +93,10 @@ class FloorsSuccessWidget extends StatelessWidget {
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
-                    return const AddPropertyFloorForm(
+                    return AddPropertyFloorForm(
                       addButtonText: 'Add',
                       isUpdate: false,
+                      property: property,
                     );
                   }),
               backgroundColor: AppTheme.primary,
