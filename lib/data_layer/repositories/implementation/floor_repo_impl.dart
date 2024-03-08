@@ -19,10 +19,10 @@ class FloorRepoImpl implements FloorRepo {
         HttpHeaders.authorizationHeader: 'Bearer $token'
       };
 
-      var url = Uri.parse('$appUrl/api/rent/floorsonproperty/$id');
+      var url = Uri.parse('$appUrl/api/rent/units/create/prefill/$id');
 
       var response = await client.get(url, headers: headers);
-      List floorData = jsonDecode(response.body)['floorsonproperty'];
+      List floorData = jsonDecode(response.body)['floors'];
       if (kDebugMode) {
         print("floor RESPONSE: $response");
       }

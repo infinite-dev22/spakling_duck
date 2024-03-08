@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smart_rent/configs/app_configs.dart';
+import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
@@ -13,9 +14,10 @@ import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 class AddPropertyFloorForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
+  final Property property;
 
   const AddPropertyFloorForm(
-      {super.key, required this.addButtonText, required this.isUpdate});
+      {super.key, required this.addButtonText, required this.isUpdate, required this.property});
 
   @override
   State<AddPropertyFloorForm> createState() => _AddPropertyFloorFormState();
@@ -93,7 +95,7 @@ class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
                   } else {
                     context.read<FloorBloc>().add(AddFloorEvent(
                           appUrl.toString(),
-                          34,
+                          widget.property.id!,
                           floorController.text.trim().toString(),
                           floorDescriptionController.text.trim().toString(),
                         ));

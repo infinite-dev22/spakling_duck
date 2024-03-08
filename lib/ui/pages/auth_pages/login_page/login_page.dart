@@ -59,6 +59,7 @@ class LoginPage extends StatelessWidget {
                                 "assets/images/title_bar_white.png",
                                 trBackground: false,
                                 isNetwork: false,
+                                isElevated: false,
                                 width: MediaQuery.of(context).size.width * .6,
                                 imageFit: BoxFit.contain,
                                 radius: 0,
