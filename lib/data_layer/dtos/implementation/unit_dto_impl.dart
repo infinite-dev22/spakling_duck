@@ -1,6 +1,7 @@
-import 'package:smart_rent/data_layer/repositories/implementation/unit_repo_impl.dart';
-import 'package:smart_rent/data_layer/models/unit/add_unit_response.dart';
-import 'package:smart_rent/data_layer/repositories/interfaces/unit_repo.dart';
+
+import 'package:SmartCase/data_layer/models/unit/add_unit_response.dart';
+import 'package:SmartCase/data_layer/repositories/implementation/unit_repo_impl.dart';
+import 'package:SmartCase/data_layer/repositories/interfaces/unit_repo.dart';
 
 class UnitDtoImpl {
   static Future<AddUnitResponse> addUnitToProperty(

@@ -1,7 +1,8 @@
+import 'package:SmartCase/ui/pages/auth_pages/login_page/widgets/action_text_widget.dart';
+import 'package:SmartCase/ui/pages/auth_pages/login_page/widgets/clickable_text_widget.dart';
+import 'package:SmartCase/ui/themes/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_rent/ui/pages/auth_pages/login_page/widgets/action_text_widget.dart';
-import 'package:smart_rent/ui/pages/auth_pages/login_page/widgets/clickable_text_widget.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
+
 
 class LoginFooterWidget extends StatelessWidget {
   const LoginFooterWidget({super.key});

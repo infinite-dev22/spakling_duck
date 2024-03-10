@@ -1,12 +1,13 @@
+import 'package:SmartCase/ui/pages/properties/bloc/property_bloc.dart';
+import 'package:SmartCase/ui/pages/properties/widgets/property_item_widget.dart';
+import 'package:SmartCase/ui/pages/root/bloc/nav_bar_bloc.dart';
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/app_search_textfield.dart';
+import 'package:SmartCase/utilities/extra.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
-import 'package:smart_rent/ui/pages/properties/widgets/property_item_widget.dart';
-import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/app_search_textfield.dart';
-import 'package:smart_rent/utilities/extra.dart';
+
 
 class SuccessWidget extends StatelessWidget {
   const SuccessWidget({super.key});

@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:SmartCase/data_layer/models/property/property_category_model.dart';
+import 'package:SmartCase/data_layer/repositories/implementation/property_category_repo_impl.dart';
+import 'package:SmartCase/utilities/app_init.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:smart_rent/data_layer/models/property/property_category_model.dart';
-import 'package:smart_rent/data_layer/repositories/implementation/property_category_repo_impl.dart';
-import 'package:smart_rent/utilities/app_init.dart';
+
 
 part 'property_category_event.dart';
 part 'property_category_state.dart';

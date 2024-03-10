@@ -1,5 +1,6 @@
+import 'package:SmartCase/ui/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_rent/ui/widgets/custom_image.dart';
+
 
 class NoDataWidget extends StatelessWidget {
   const NoDataWidget({super.key});

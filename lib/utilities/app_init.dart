@@ -1,4 +1,5 @@
-import 'package:smart_rent/data_layer/models/user_model.dart';
+
+import 'package:SmartCase/data_layer/models/user_model.dart';
 
 late CurrentSmartUser currentUser;
 String? currentUsername;

@@ -1,9 +1,10 @@
+import 'package:SmartCase/ui/pages/root/bloc/nav_bar_bloc.dart';
+import 'package:SmartCase/ui/pages/root/widgets/bottom_bar_item.dart';
+import 'package:SmartCase/ui/pages/root/widgets/screen.dart';
+import 'package:SmartCase/ui/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
-import 'package:smart_rent/ui/pages/root/widgets/bottom_bar_item.dart';
-import 'package:smart_rent/ui/pages/root/widgets/screen.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
+
 
 class BottomNavBar extends StatelessWidget {
   final Function()? onFabTap;

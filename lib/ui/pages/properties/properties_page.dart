@@ -1,5 +1,5 @@
+import 'package:SmartCase/ui/pages/properties/widgets/properties_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_rent/ui/pages/properties/widgets/properties_layout.dart';
 
 class PropertiesPage extends StatelessWidget {
   const PropertiesPage({super.key});

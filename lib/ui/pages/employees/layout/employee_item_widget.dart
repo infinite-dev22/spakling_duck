@@ -1,8 +1,9 @@
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/user_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/user_card_widget.dart';
+
 
 class EmployeeItemWidget extends StatelessWidget {
   const EmployeeItemWidget({super.key});

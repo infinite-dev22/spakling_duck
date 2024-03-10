@@ -1,8 +1,8 @@
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/custom_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/custom_image.dart';
 
 class DetailsSuccessScreen extends StatelessWidget {
   const DetailsSuccessScreen({super.key});

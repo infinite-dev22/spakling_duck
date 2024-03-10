@@ -1,6 +1,7 @@
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/appbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/appbar_content.dart';
+
 
 class TenantsPage extends StatelessWidget {
   const TenantsPage({super.key});

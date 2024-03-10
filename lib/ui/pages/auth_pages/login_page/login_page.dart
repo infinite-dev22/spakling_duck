@@ -1,15 +1,17 @@
 import 'dart:ui';
 
+import 'package:SmartCase/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
+import 'package:SmartCase/ui/pages/auth_pages/login_page/widgets/login_footer_widget.dart';
+import 'package:SmartCase/ui/pages/auth_pages/login_page/widgets/login_widget.dart';
+import 'package:SmartCase/ui/pages/auth_pages/login_page/widgets/reset_password_widget.dart';
+import 'package:SmartCase/ui/pages/auth_pages/login_page/widgets/sign_in_widget.dart';
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
-import 'package:smart_rent/ui/pages/auth_pages/login_page/widgets/login_footer_widget.dart';
-import 'package:smart_rent/ui/pages/auth_pages/login_page/widgets/login_widget.dart';
-import 'package:smart_rent/ui/pages/auth_pages/login_page/widgets/reset_password_widget.dart';
-import 'package:smart_rent/ui/pages/auth_pages/login_page/widgets/sign_in_widget.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/custom_image.dart';
-import 'package:smart_rent/ui/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
+
+import '../../../widgets/custom_image.dart';
+
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});

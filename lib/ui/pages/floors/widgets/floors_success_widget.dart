@@ -1,14 +1,17 @@
+import 'package:SmartCase/data_layer/models/property/property_response_model.dart';
+import 'package:SmartCase/ui/pages/floors/bloc/floor_bloc.dart';
+import 'package:SmartCase/ui/pages/properties/widgets/loading_widget.dart';
+import 'package:SmartCase/ui/pages/properties/widgets/no_data_widget.dart';
+import 'package:SmartCase/ui/pages/properties/widgets/not_found_widget.dart';
+import 'package:SmartCase/ui/pages/property_details/forms/floor/add_property_floor_form.dart';
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/app_search_textfield.dart';
+import 'package:SmartCase/ui/widgets/smart_error_widget.dart';
+import 'package:SmartCase/ui/widgets/smart_widget.dart';
+import 'package:SmartCase/utilities/extra.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
-import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
-import 'package:smart_rent/ui/pages/property_details/forms/floor/add_property_floor_form.dart';
-import 'package:smart_rent/ui/pages/property_details/widgets/property_details_barrel.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/app_search_textfield.dart';
-import 'package:smart_rent/ui/widgets/smart_error_widget.dart';
-import 'package:smart_rent/ui/widgets/smart_widget.dart';
-import 'package:smart_rent/utilities/extra.dart';
+
 
 class FloorsSuccessWidget extends StatelessWidget {
   final Property property;
@@ -39,18 +42,14 @@ class FloorsSuccessWidget extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppTheme.appBgColor,
             appBar: _buildAppTitle(),
-            floatingActionButton: FloatingActionButton.extended(
+            floatingActionButton: FloatingActionButton(
               heroTag: "add_floor",
-              label: const Text(
-                'Add',
-                style: TextStyle(
+              child: Center(
+                child: Icon(
+                  Icons.add,
                   color: Colors.white,
+                  size: 25,
                 ),
-              ),
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 25,
               ),
               onPressed: () => showModalBottomSheet(
                   useSafeArea: true,

@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:SmartCase/utilities/app_init.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:smart_rent/utilities/app_init.dart';
 
 part 'profile_pic_event.dart';
 part 'profile_pic_state.dart';

@@ -1,21 +1,22 @@
 import 'dart:io';
 
+import 'package:SmartCase/data_layer/models/smart_model.dart';
+import 'package:SmartCase/ui/pages/properties/bloc/property_bloc.dart';
+import 'package:SmartCase/ui/pages/property_categories/bloc/property_category_bloc.dart';
+import 'package:SmartCase/ui/pages/property_types/bloc/property_type_bloc.dart';
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/app_drop_downs.dart';
+import 'package:SmartCase/ui/widgets/app_max_textfield.dart';
+import 'package:SmartCase/ui/widgets/auth_textfield.dart';
+import 'package:SmartCase/ui/widgets/form_title_widget.dart';
+import 'package:SmartCase/utilities/app_init.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:full_picker/full_picker.dart';
-import 'package:smart_rent/data_layer/models/smart_model.dart';
-import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
-import 'package:smart_rent/ui/pages/property_categories/bloc/property_category_bloc.dart';
-import 'package:smart_rent/ui/pages/property_types/bloc/property_type_bloc.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
-import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
-import 'package:smart_rent/ui/widgets/auth_textfield.dart';
-import 'package:smart_rent/ui/widgets/form_title_widget.dart';
-import 'package:smart_rent/utilities/app_init.dart';
+
 
 class AddPropertyForm extends StatefulWidget {
   final String addButtonText;

@@ -1,10 +1,10 @@
+import 'package:SmartCase/ui/pages/dashboard/widgets/occupancy_widget.dart';
+import 'package:SmartCase/ui/pages/dashboard/widgets/payments_widget.dart';
+import 'package:SmartCase/ui/pages/dashboard/widgets/unpaid_widget.dart';
+import 'package:SmartCase/ui/pages/properties/properties_page.dart';
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/appbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_rent/ui/pages/dashboard/widgets/occupancy_widget.dart';
-import 'package:smart_rent/ui/pages/dashboard/widgets/payments_widget.dart';
-import 'package:smart_rent/ui/pages/dashboard/widgets/unpaid_widget.dart';
-import 'package:smart_rent/ui/pages/properties/properties_page.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/appbar_content.dart';
 
 class DashboardLayout extends StatelessWidget {
   const DashboardLayout({super.key});

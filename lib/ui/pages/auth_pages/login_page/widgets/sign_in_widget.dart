@@ -1,3 +1,10 @@
+import 'package:SmartCase/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/auth_textfield.dart';
+import 'package:SmartCase/ui/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
+import 'package:SmartCase/ui/widgets/profile_pic_widget/profile_pic.dart';
+import 'package:SmartCase/ui/widgets/wide_button.dart';
+import 'package:SmartCase/utilities/app_init.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -5,13 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
-import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/auth_textfield.dart';
-import 'package:smart_rent/ui/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
-import 'package:smart_rent/ui/widgets/profile_pic_widget/profile_pic.dart';
-import 'package:smart_rent/ui/widgets/wide_button.dart';
-import 'package:smart_rent/utilities/app_init.dart';
+
 
 class SignInWidget extends StatelessWidget {
   var _height = 40.0;

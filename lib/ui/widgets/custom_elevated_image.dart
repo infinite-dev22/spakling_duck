@@ -1,5 +1,5 @@
+import 'package:SmartCase/ui/themes/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
 
 class CustomElevatedImage extends StatelessWidget {
   const CustomElevatedImage(

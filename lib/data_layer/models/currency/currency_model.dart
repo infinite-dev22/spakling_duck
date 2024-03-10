@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-import 'package:smart_rent/data_layer/models/smart_model.dart';
+import 'package:SmartCase/data_layer/models/smart_model.dart';
+
 
 
 List<CurrencyModel> currencyModelFromJson(String str) =>

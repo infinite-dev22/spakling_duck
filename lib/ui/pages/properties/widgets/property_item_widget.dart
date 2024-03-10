@@ -1,9 +1,10 @@
 import 'dart:math';
 
+import 'package:SmartCase/data_layer/models/property/property_response_model.dart';
+import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:SmartCase/ui/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/custom_image.dart';
+
 
 class PropertyItemWidget extends StatelessWidget {
   final Property property;
