@@ -21,12 +21,13 @@ class TenantUnitRepoImpl implements TenantUnitRepo {
         HttpHeaders.authorizationHeader: 'Bearer $token'
       };
 
-      var url =
-          Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$id');
+      var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$id');
+      // var url =  Uri.parse('$appUrl/api/rent/payments/create/prefill/$id');
 
       var response = await client.get(url, headers: headers);
       print('Tenant Unist ${response.body}');
       List tenantUnitData = jsonDecode(response.body)['tenantunitsonproperty'] ?? [];
+      // List tenantUnitData = jsonDecode(response.body)['tenantunits'] ?? [];
       // return [];
       if (kDebugMode) {
         print("tenant unit RESPONSE: $response");

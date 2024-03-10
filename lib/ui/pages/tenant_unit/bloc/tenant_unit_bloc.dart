@@ -6,6 +6,7 @@ import 'package:SmartCase/data_layer/dtos/implementation/tenant_unit_dto_impl.da
 import 'package:SmartCase/data_layer/models/tenant_unit/add_tenant_unit_response.dart';
 import 'package:SmartCase/data_layer/models/tenant_unit/tenant_unit_model.dart';
 import 'package:SmartCase/data_layer/repositories/implementation/tenant_unit_repo_impl.dart';
+import 'package:SmartCase/utilities/app_init.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -24,7 +25,7 @@ class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
       LoadTenantUnitsEvent event, Emitter<TenantUnitState> emit) async {
     emit(state.copyWith(status: TenantUnitStatus.loading));
     await TenantUnitRepoImpl()
-        .getALlTenantUnits(appUrl, event.id)
+        .getALlTenantUnits(currentUserToken.toString(), event.id)
         .then((tenantUnits) {
       if (tenantUnits.isNotEmpty) {
         emit(state.copyWith(
@@ -60,7 +61,7 @@ class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
   _mapAddTenantUnitEventToState(
       AddTenantUnitEvent event, Emitter<TenantUnitState> emit) async {
     emit(state.copyWith(status: TenantUnitStatus.loadingAdd, isLoading: true));
-    await TenantUnitDtoImpl.addTenantUnit(appUrl,
+    await TenantUnitDtoImpl.addTenantUnit(currentUserToken.toString(),
       event.tenantId, event.unitId, event.periodId, event.fromDate,
       event.toDate, event.unitAmount, event.currencyId, event.agreedAmount, event.description, event.propertyId,
     )

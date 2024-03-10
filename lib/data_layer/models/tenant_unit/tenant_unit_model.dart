@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:SmartCase/data_layer/models/payment/payment_schedules_model.dart';
 import 'package:SmartCase/data_layer/models/period/period_model.dart';
 import 'package:SmartCase/data_layer/models/smart_model.dart';
 import 'package:SmartCase/data_layer/models/tenant/tenant_model.dart';
@@ -49,6 +50,7 @@ class TenantUnitModel extends SmartTenantUnitsModel{
   TenantModel? tenant;
   TUnitModel? unit;
   PeriodModel? period;
+  List<PaymentSchedulesModel>? paymentScheduleModel;
 
   TenantUnitModel({
     this.id,
@@ -70,6 +72,7 @@ class TenantUnitModel extends SmartTenantUnitsModel{
     this.tenant,
     this.unit,
     this.period,
+    this.paymentScheduleModel,
   });
 
   factory TenantUnitModel.fromJson(Map<String, dynamic> json) => TenantUnitModel(
@@ -92,6 +95,8 @@ class TenantUnitModel extends SmartTenantUnitsModel{
     tenant: json["tenant"] == null ? null : TenantModel.fromJson(json["tenant"]),
     unit: json["unit"] == null ? null : TUnitModel.fromJson(json["unit"]),
     period: json["period"] == null ? null : PeriodModel.fromJson(json["period"]),
+    paymentScheduleModel: json["schedules"] == null ? [] : List<PaymentSchedulesModel>.from(json["schedules"]!.map((x) => PaymentSchedulesModel.fromJson(x))),
+
   );
 
   Map<String, dynamic> toJson() => {
@@ -114,6 +119,8 @@ class TenantUnitModel extends SmartTenantUnitsModel{
     "tenant": tenant?.toJson(),
     "unit": unit?.toJson(),
     "period": period?.toJson(),
+    "schedules": paymentScheduleModel == null ? [] : List<dynamic>.from(paymentScheduleModel!.map((x) => x.toJson())),
+
   };
 
   @override

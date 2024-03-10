@@ -5,6 +5,7 @@ import 'package:SmartCase/ui/themes/app_theme.dart';
 import 'package:SmartCase/ui/widgets/app_max_textfield.dart';
 import 'package:SmartCase/ui/widgets/auth_textfield.dart';
 import 'package:SmartCase/ui/widgets/form_title_widget.dart';
+import 'package:SmartCase/utilities/app_init.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -95,7 +96,7 @@ class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
                         msg: 'floor name too short', gravity: ToastGravity.TOP);
                   } else {
                     context.read<FloorBloc>().add(AddFloorEvent(
-                          appUrl.toString(),
+                          currentUserToken.toString(),
                           widget.property.id!,
                           floorController.text.trim().toString(),
                           floorDescriptionController.text.trim().toString(),

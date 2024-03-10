@@ -73,7 +73,7 @@ class PaymentRepoImpl implements PaymentRepo {
 
   @override
   Future<List<PaymentSchedulesModel>> getAllPaymentSchedules(
-      String token, int tenantUnitId, int propertyId
+      String token, int tenantUnitId,
       ) async {
     var client = RetryClient(http.Client());
     try {
@@ -83,10 +83,13 @@ class PaymentRepoImpl implements PaymentRepo {
         HttpHeaders.authorizationHeader: 'Bearer $token'
       };
 
-      var url = Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
+      // var url = Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
+      // var url = Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
+      var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$tenantUnitId');
+
 
       var response = await client.get(url, headers: headers);
-      List schedulesData = jsonDecode(response.body);
+      List schedulesData = jsonDecode(response.body)['tenantunitsonproperty'][0]['schedules'];
       if (kDebugMode) {
         print("payment schedules RESPONSE: $response");
         print("payment schedules Data: ${response.body}");

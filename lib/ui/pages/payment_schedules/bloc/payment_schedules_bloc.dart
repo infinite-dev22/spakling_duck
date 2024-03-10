@@ -20,7 +20,7 @@ class PaymentSchedulesBloc extends Bloc<PaymentSchedulesEvent, PaymentSchedulesS
       LoadAllPaymentSchedulesEvent event, Emitter<PaymentSchedulesState> emit) async {
     emit(state.copyWith(status: PaymentSchedulesStatus.loading));
     await PaymentRepoImpl()
-        .getAllPaymentSchedules(currentUserToken.toString(), event.tenantUnitId, event.propertyId)
+        .getAllPaymentSchedules(currentUserToken.toString(), event.tenantUnitId,)
         .then((schedules) {
       if (schedules.isNotEmpty) {
         emit(state.copyWith(
