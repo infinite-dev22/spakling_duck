@@ -84,12 +84,13 @@ class PaymentRepoImpl implements PaymentRepo {
       };
 
       // var url = Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
-      // var url = Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
-      var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$tenantUnitId');
+      var url = Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
+      // var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$tenantUnitId');
+      // var url =  Uri.parse('$appUrl/api/rent/tenantunits/$tenantUnitId');
 
 
       var response = await client.get(url, headers: headers);
-      List schedulesData = jsonDecode(response.body)['tenantunitsonproperty'][0]['schedules'];
+      List schedulesData = jsonDecode(response.body);
       if (kDebugMode) {
         print("payment schedules RESPONSE: $response");
         print("payment schedules Data: ${response.body}");

@@ -294,7 +294,7 @@ class SearchableTenantUnitDropDown<T extends SmartTenantUnitsModel>
         dropDownList: menuItems
             .map((item) => DropDownValueModel(
                 value: item,
-                name: '${item.getTenantName()} ${item.getUnitName()}'))
+                name: '${item.getTenantName()} - ${item.getUnitName()}'))
             .toList(),
         onChanged: onChanged,
       ),

@@ -31,7 +31,9 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         emit(state.copyWith(
             status: PaymentStatus.successAdd,
             isPaymentLoading: false,
-            addPaymentResponseModel: response));
+            addPaymentResponseModel: response,
+          message: response.message
+        ));
       } else {
         emit(state.copyWith(
           status: PaymentStatus.accessDeniedAdd,

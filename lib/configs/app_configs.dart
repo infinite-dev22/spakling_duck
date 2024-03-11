@@ -33,4 +33,4 @@ final options = CacheOptions(
   allowPostMethod: false,
 );
 
-var appUrl = 'https://rentest.smartcase.co.ug';
+var appUrl = 'https://rentest.smart_rent.co.ug';
