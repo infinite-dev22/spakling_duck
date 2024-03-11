@@ -1,9 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
-import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
+import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
+import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/no_data_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/not_found_widget.dart';
-import 'package:smart_rent/ui/pages/property_details/forms/floor/add_property_floor_form.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/forms/tenant_unit_form.dart';
+import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/pages/units/forms/add_unit_form.dart';
 import 'package:smart_rent/ui/pages/units/widgets/unit_card_widget.dart';
@@ -12,9 +16,6 @@ import 'package:smart_rent/ui/widgets/app_search_textfield.dart';
 import 'package:smart_rent/ui/widgets/smart_error_widget.dart';
 import 'package:smart_rent/ui/widgets/smart_widget.dart';
 import 'package:smart_rent/utilities/extra.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class UnitsTabScreenLayout extends StatelessWidget {
   final Property property;
@@ -59,10 +60,18 @@ class UnitsTabScreenLayout extends StatelessWidget {
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
-                    return AddUnitForm(
-                      addButtonText: 'Add',
-                      isUpdate: false,
-                      property: property,
+                    return MultiBlocListener(
+                      listeners: [
+                        BlocProvider(create: (context) => TenantBloc()),
+                        BlocProvider(create: (context) => UnitBloc()),
+                        BlocProvider(create: (context) => PeriodBloc()),
+                        BlocProvider(create: (context) => CurrencyBloc()),
+                      ],
+                      child: TenantUnitForm(
+                        addButtonText: 'Add Tenant',
+                        isUpdate: false,
+                        property: property,
+                      ),
                     );
                   }),
               backgroundColor: AppTheme.primary,
@@ -102,9 +111,8 @@ class UnitsTabScreenLayout extends StatelessWidget {
             body: ListView.builder(
               controller: unitsScrollController,
               padding: const EdgeInsets.only(top: 10),
-              itemBuilder: (context, index) => UnitCardWidget(
-                  unitModel: state.units![index],
-                  index: index),
+              itemBuilder: (context, index) =>
+                  UnitCardWidget(unitModel: state.units![index], index: index),
               itemCount: state.units!.length,
             ),
           );
