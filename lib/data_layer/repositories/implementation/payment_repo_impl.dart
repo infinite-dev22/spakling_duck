@@ -5,6 +5,7 @@ import 'package:smart_rent/configs/app_configs.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_account_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_mode_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payments_model.dart';
 import 'package:smart_rent/data_layer/repositories/interfaces/payment_repo.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -41,6 +42,33 @@ class PaymentRepoImpl implements PaymentRepo {
     }
   }
 
+  @override
+  Future<List<PaymentsModel>> getAllPayments(
+      String token, int propertyId
+      ) async {
+    var client = RetryClient(http.Client());
+    try {
+      var headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token'
+      };
+
+      var url = Uri.parse('$appUrl/api/rent/paymentslist/$propertyId');
+
+      var response = await client.get(url, headers: headers);
+      List paymentsData = jsonDecode(response.body);
+      if (kDebugMode) {
+        print("payments RESPONSE: ${response.body}");
+        print("payments data: ${paymentsData}");
+      }
+      return paymentsData
+          .map((payment) => PaymentsModel.fromJson(payment))
+          .toList();
+    } finally {
+      client.close();
+    }
+  }
 
   @override
   Future<List<PaymentModeModel>> getAllPaymentModes(
@@ -84,12 +112,13 @@ class PaymentRepoImpl implements PaymentRepo {
       };
 
       // var url = Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
-      // var url = Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
-      var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$tenantUnitId');
+      var url = Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
+      // var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$tenantUnitId');
+      // var url =  Uri.parse('$appUrl/api/rent/tenantunits/$tenantUnitId');
 
 
       var response = await client.get(url, headers: headers);
-      List schedulesData = jsonDecode(response.body)['tenantunitsonproperty'][0]['schedules'];
+      List schedulesData = jsonDecode(response.body);
       if (kDebugMode) {
         print("payment schedules RESPONSE: $response");
         print("payment schedules Data: ${response.body}");

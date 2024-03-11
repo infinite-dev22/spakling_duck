@@ -8,6 +8,7 @@ import 'package:smart_rent/data_layer/models/smart_model.dart';
 import 'package:smart_rent/data_layer/models/tenant/tenant_details_model.dart';
 import 'package:smart_rent/data_layer/models/tenant/tenant_type_model.dart';
 
+
 TenanListModel tenanListModelFromJson(String str) =>
     TenanListModel.fromJson(json.decode(str));
 
@@ -34,7 +35,7 @@ class TenanListModel {
       };
 }
 
-class TenantModel extends SmartTenantModel {
+class TenantModel extends SmartTenantModel{
   int? id;
   String? number;
   int? clientTypeId;
@@ -93,55 +94,45 @@ class TenantModel extends SmartTenantModel {
       };
 
   @override
-  String getBusinessType() {
-    return clientType!.name!;
+  String getBusinessType() { return clientType!.name!;
   }
 
   @override
-  int getBusinessTypeId() {
-    return clientType!.id!;
+  int getBusinessTypeId() { return clientType!.id!;
   }
 
   @override
-  String getDescription() {
-    return clientType!.description!;
+  String getDescription() { return clientType!.description!;
   }
 
   @override
-  int getId() {
-    return id!;
+  int getId() { return id!;
   }
 
   @override
-  String getImageDocUrl() {
-    return '';
+  String getImageDocUrl() { return '';
   }
 
   @override
-  String getName() {
-    return clientTypeId == 1
-        ? '${clientProfiles!.first.firstName} ${clientProfiles!.first.lastName}'
-        : '${clientProfiles!.first.companyName}';
+  String getName() { return clientTypeId == 1
+      ? '${clientProfiles!.first.firstName} ${clientProfiles!.first.lastName}'
+      : '${clientProfiles!.first.companyName}';
   }
 
   @override
-  int getNationId() {
-    return clientProfiles![0].nationId!;
+  int getNationId() { return clientProfiles![0].nationId!;
   }
 
   @override
-  String getTenantNo() {
-    return number!;
+  String getTenantNo() { return number!;
   }
 
   @override
-  String getTenantType() {
-    return clientType!.name!;
+  String getTenantType() { return clientType!.name!;
   }
 
   @override
-  int getTenantTypeId() {
-    return clientType!.id!;
+  int getTenantTypeId() { return clientType!.id!;
   }
 }
 

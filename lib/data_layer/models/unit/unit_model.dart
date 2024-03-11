@@ -10,8 +10,9 @@ import 'package:smart_rent/data_layer/models/period/period_model.dart';
 import 'package:smart_rent/data_layer/models/smart_model.dart';
 import 'package:smart_rent/data_layer/models/unit/unit_type_model.dart';
 
-UnitListModel unitListModelFromJson(String str) =>
-    UnitListModel.fromJson(json.decode(str));
+
+
+UnitListModel unitListModelFromJson(String str) => UnitListModel.fromJson(json.decode(str));
 
 String unitListModelToJson(UnitListModel data) => json.encode(data.toJson());
 
@@ -23,28 +24,22 @@ class UnitListModel {
   });
 
   factory UnitListModel.fromJson(Map<String, dynamic> json) => UnitListModel(
-        units: json["units"] == null
-            ? []
-            : List<UnitModel>.from(
-                json["units"]!.map((x) => UnitModel.fromJson(x))),
-      );
+    units: json["units"] == null ? [] : List<UnitModel>.from(json["units"]!.map((x) => UnitModel.fromJson(x))),
+  );
 
   Map<String, dynamic> toJson() => {
-        "units": units == null
-            ? []
-            : List<dynamic>.from(units!.map((x) => x.toJson())),
-      };
+    "units": units == null ? [] : List<dynamic>.from(units!.map((x) => x.toJson())),
+  };
 }
 
-class UnitModel extends SmartUnitModel {
+class UnitModel extends SmartUnitModel{
   int? id;
   String? name;
   int? amount;
   int? isAvailable;
   String? squareMeters;
   String? description;
-  UnitTypeModel? unitTypeModel;
-  int? unitTypeModelId;
+  // UnitTypeModel? unitTypeModel;
   int? floorId;
   int? scheduleId;
   int? propertyId;
@@ -57,6 +52,7 @@ class UnitModel extends SmartUnitModel {
   PeriodModel? periodModel;
   CurrencyModel? currencyModel;
 
+
   UnitModel({
     this.id,
     this.name,
@@ -64,8 +60,7 @@ class UnitModel extends SmartUnitModel {
     this.isAvailable,
     this.squareMeters,
     this.description,
-    this.unitTypeModel,
-    this.unitTypeModelId,
+    // this.unitTypeModel,
     this.floorId,
     this.scheduleId,
     this.propertyId,
@@ -79,112 +74,91 @@ class UnitModel extends SmartUnitModel {
     this.currencyModel,
   });
 
-  factory UnitModel.fromJson(Map<String, dynamic> json) {
-    print("Unit Type: ${json["unit_type"]}");
-    return UnitModel(
-      id: json["id"],
-      name: json["name"],
-      amount: json["amount"],
-      isAvailable: json["is_available"],
-      squareMeters: json["square_meters"],
-      description: json["description"],
-      // unitTypeModel: json["unit_type"] == null
-      //     ? null
-      //     : UnitTypeModel.fromJson(json["unit_type"]),
-      unitTypeModelId: json["unit_type"],
-      floorId: json["floor_id"],
-      scheduleId: json["schedule_id"],
-      propertyId: json["property_id"],
-      currencyId: json["currency_id"],
-      createdBy: json["created_by"],
-      updatedBy: json["updated_by"],
-      createdAt: json["created_at"] == null
-          ? null
-          : DateTime.parse(json["created_at"]),
-      updatedAt: json["updated_at"] == null
-          ? null
-          : DateTime.parse(json["updated_at"]),
-      floorModel:
-          json["floor"] == null ? null : FloorModel.fromJson(json["floor"]),
-      periodModel:
-          json["period"] == null ? null : PeriodModel.fromJson(json["period"]),
-      currencyModel: json["currency"] == null
-          ? null
-          : CurrencyModel.fromJson(json["currency"]),
-    );
-  }
+  factory UnitModel.fromJson(Map<String, dynamic> json) => UnitModel(
+    id: json["id"],
+    name: json["name"],
+    amount: json["amount"],
+    isAvailable: json["is_available"],
+    squareMeters: json["square_meters"],
+    description: json["description"],
+    // unitTypeModel: json["unit_type"] == null ? null : UnitTypeModel.fromJson(json["unit_type"]),
+    floorId: json["floor_id"],
+    scheduleId: json["schedule_id"],
+    propertyId: json["property_id"],
+    currencyId: json["currency_id"],
+    createdBy: json["created_by"],
+    updatedBy: json["updated_by"],
+    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    floorModel: json["floor"] == null ? null : FloorModel.fromJson(json["floor"]),
+    periodModel: json["period"] == null ? null : PeriodModel.fromJson(json["period"]),
+    currencyModel: json["currency"] == null ? null : CurrencyModel.fromJson(json["currency"]),
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "amount": amount,
-        "is_available": isAvailable,
-        "square_meters": squareMeters,
-        "description": description,
-        "unit_type": unitTypeModel?.toJson(),
-        "floor_id": floorId,
-        "schedule_id": scheduleId,
-        "property_id": propertyId,
-        "currency_id": currencyId,
-        "created_by": createdBy,
-        "updated_by": updatedBy,
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
-        "floor": floorModel?.toJson(),
-        "period": periodModel?.toJson(),
-        "currency": currencyModel?.toJson(),
-      };
+    "id": id,
+    "name": name,
+    "amount": amount,
+    "is_available": isAvailable,
+    "square_meters": squareMeters,
+    "description": description,
+    // "unit_type": unitTypeModel?.toJson(),
+    "floor_id": floorId,
+    "schedule_id": scheduleId,
+    "property_id": propertyId,
+    "currency_id": currencyId,
+    "created_by": createdBy,
+    "updated_by": updatedBy,
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
+    "floor": floorModel?.toJson(),
+    "period": periodModel?.toJson(),
+    "currency": currencyModel?.toJson(),
+  };
 
   @override
-  int getAmount() {
-    return amount!;
+  int getAmount() { return amount!;
   }
 
   @override
-  int getAvailability() {
-    return isAvailable!;
+  int getAvailability() { return isAvailable!;}
+
+  @override
+  String getDescription() { return description!;
   }
 
   @override
-  String getDescription() {
-    return description!;
+  int getFloorId() { return floorId!;
   }
 
   @override
-  int getFloorId() {
-    return floorId!;
+  int getId() { return id!;
   }
 
   @override
-  int getId() {
-    return id!;
+  int getPeriodId() { return periodModel!.id!;
   }
 
   @override
-  int getPeriodId() {
-    return periodModel!.id!;
+  int getPropertyId() { return propertyId!;
   }
 
   @override
-  int getPropertyId() {
-    return propertyId!;
+  String getUnitName() { return name!;
   }
 
   @override
-  String getUnitName() {
-    return name!;
+  String getUnitNumber() { return '';
   }
 
   @override
-  String getUnitNumber() {
-    return '';
-  }
-
-  @override
-  int getUnitType() {
-    return unitTypeModel!.id!;
+  int getUnitType() { return 0;
   }
 }
+
+
+
+
 
 // // To parse this JSON data, do
 // //

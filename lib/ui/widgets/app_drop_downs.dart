@@ -1,13 +1,14 @@
-import 'package:amount_formatter/amount_formatter.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:dropdown_textfield/dropdown_textfield.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:smart_rent/data_layer/models/smart_model.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/custom_elevated_image.dart';
 import 'package:smart_rent/ui/widgets/custom_icon_holder.dart';
 import 'package:smart_rent/utilities/extra.dart';
+import 'package:amount_formatter/amount_formatter.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 
 class CustomDropdownFilter extends StatelessWidget {
   const CustomDropdownFilter({
@@ -293,7 +294,7 @@ class SearchableTenantUnitDropDown<T extends SmartTenantUnitsModel>
         dropDownList: menuItems
             .map((item) => DropDownValueModel(
                 value: item,
-                name: '${item.getTenantName()} ${item.getUnitName()}'))
+                name: '${item.getTenantName()} - ${item.getUnitName()}'))
             .toList(),
         onChanged: onChanged,
       ),
@@ -508,7 +509,7 @@ class CustomGenericDropdown<T> extends StatelessWidget {
           child: DropdownButtonFormField2<T>(
             isExpanded: true,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              contentPadding: EdgeInsets.symmetric(vertical: 16),
               filled: true,
               // fillColor: AppTheme.textBoxColor,
               fillColor: AppTheme.itemBgColor,
@@ -560,91 +561,7 @@ class CustomGenericDropdown<T> extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 10),
-      ],
-    );
-  }
-}
-
-class TenantUnitDropdown<T extends SmartUnitModel> extends StatelessWidget {
-  const TenantUnitDropdown(
-      {super.key,
-      required this.hintText,
-      required this.menuItems,
-      this.onChanged,
-      this.defaultValue});
-
-  final String hintText;
-  final List<T> menuItems;
-  final T? defaultValue;
-  final Function(T?)? onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildBody();
-  }
-
-  _buildBody() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 50,
-          child: DropdownButtonFormField2<T>(
-            isExpanded: true,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
-              filled: true,
-              // fillColor: AppTheme.textBoxColor,
-              fillColor: AppTheme.itemBgColor,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            hint: Text(
-              hintText,
-              style:
-                  const TextStyle(color: AppTheme.inActiveColor, fontSize: 15),
-            ),
-            items: menuItems
-                .map((item) => DropdownMenuItem<T>(
-                      value: item,
-                      child: Text(
-                        item.getUnitName(),
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ))
-                .toList(),
-            validator: (value) {
-              if (value == null) {
-                return 'Please select a $hintText';
-              }
-              return null;
-            },
-            onChanged: onChanged,
-            buttonStyleData: const ButtonStyleData(
-              padding: EdgeInsets.only(right: 8),
-            ),
-            iconStyleData: const IconStyleData(
-              icon: Icon(
-                Icons.arrow_drop_down,
-                color: Colors.black45,
-              ),
-              iconSize: 24,
-            ),
-            dropdownStyleData: DropdownStyleData(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            menuItemStyleData: const MenuItemStyleData(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
+        // const SizedBox(height: 10),
       ],
     );
   }
@@ -682,7 +599,7 @@ class CustomApiGenericDropdown<T extends SmartModel> extends StatelessWidget {
             value: defaultValue,
             isExpanded: true,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              contentPadding: EdgeInsets.symmetric(vertical: 16),
               filled: true,
               // fillColor: AppTheme.textBoxColor,
               fillColor: AppTheme.itemBgColor,
@@ -734,7 +651,7 @@ class CustomApiGenericDropdown<T extends SmartModel> extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 10),
+        // const SizedBox(height: 10),
       ],
     );
   }
@@ -773,7 +690,7 @@ class CustomPeriodApiGenericDropdown<T extends SmartModel>
             value: defaultValue,
             isExpanded: true,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              contentPadding: EdgeInsets.symmetric(vertical: 16),
               filled: true,
               // fillColor: AppTheme.textBoxColor,
               fillColor: AppTheme.itemBgColor,
@@ -864,7 +781,7 @@ class CustomUpdateApiGenericDropdown<T extends SmartModel>
             value: defaultValue,
             isExpanded: true,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              contentPadding: EdgeInsets.symmetric(vertical: 16),
               filled: true,
               // fillColor: AppTheme.textBoxColor,
               fillColor: AppTheme.appWidgetColor,
@@ -956,7 +873,7 @@ class CustomApiGenericTenantModelDropdown<T extends SmartTenantModel>
           child: DropdownButtonFormField2<T>(
             isExpanded: true,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              contentPadding: EdgeInsets.symmetric(vertical: 16),
               filled: true,
               fillColor: AppTheme.textBoxColor,
               border: OutlineInputBorder(
@@ -1559,7 +1476,7 @@ class CustomApiUserRoleDropdown<T extends SmartUserRoleModel>
             value: defaultValue,
             isExpanded: true,
             decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+              contentPadding: EdgeInsets.symmetric(vertical: 16),
               filled: true,
               // fillColor: AppTheme.textBoxColor,
               fillColor: AppTheme.appWidgetColor,
