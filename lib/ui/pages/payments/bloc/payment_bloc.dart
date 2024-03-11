@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:SmartCase/data_layer/dtos/implementation/payment_dto_impl.dart';
-import 'package:SmartCase/data_layer/models/payment/add_payment_response_model.dart';
-import 'package:SmartCase/data_layer/models/payment/payments_model.dart';
-import 'package:SmartCase/utilities/app_init.dart';
+import 'package:smart_rent/data_layer/dtos/implementation/payment_dto_impl.dart';
+import 'package:smart_rent/data_layer/models/payment/add_payment_response_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payments_model.dart';
+import 'package:smart_rent/utilities/app_init.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 

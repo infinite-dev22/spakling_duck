@@ -1,8 +1,8 @@
-import 'package:SmartCase/data_layer/dtos/implementation/property_dto_impl.dart';
-import 'package:SmartCase/data_layer/models/property/add_response_model.dart';
-import 'package:SmartCase/data_layer/models/property/property_response_model.dart';
-import 'package:SmartCase/data_layer/repositories/implementation/property_repo_impl.dart';
-import 'package:SmartCase/utilities/app_init.dart';
+import 'package:smart_rent/data_layer/dtos/implementation/property_dto_impl.dart';
+import 'package:smart_rent/data_layer/models/property/add_response_model.dart';
+import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
+import 'package:smart_rent/data_layer/repositories/implementation/property_repo_impl.dart';
+import 'package:smart_rent/utilities/app_init.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';

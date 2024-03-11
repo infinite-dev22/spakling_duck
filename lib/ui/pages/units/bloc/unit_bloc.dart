@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:SmartCase/data_layer/dtos/implementation/unit_dto_impl.dart';
-import 'package:SmartCase/data_layer/models/unit/add_unit_response.dart';
-import 'package:SmartCase/data_layer/models/unit/unit_model.dart';
-import 'package:SmartCase/data_layer/models/unit/unit_type_model.dart';
-import 'package:SmartCase/data_layer/repositories/implementation/unit_repo_impl.dart';
-import 'package:SmartCase/utilities/app_init.dart';
+import 'package:smart_rent/data_layer/dtos/implementation/unit_dto_impl.dart';
+import 'package:smart_rent/data_layer/models/unit/add_unit_response.dart';
+import 'package:smart_rent/data_layer/models/unit/unit_model.dart';
+import 'package:smart_rent/data_layer/models/unit/unit_type_model.dart';
+import 'package:smart_rent/data_layer/repositories/implementation/unit_repo_impl.dart';
+import 'package:smart_rent/utilities/app_init.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';

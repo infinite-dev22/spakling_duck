@@ -1,4 +1,4 @@
-import 'package:SmartCase/ui/pages/employees/layout/employee_page_layout.dart';
+import 'package:smart_rent/ui/pages/employees/layout/employee_page_layout.dart';
 import 'package:flutter/material.dart';
 
 class EmployeesPage extends StatelessWidget {

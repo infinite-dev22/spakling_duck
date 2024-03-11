@@ -1,4 +1,4 @@
-import 'package:SmartCase/ui/pages/root/widgets/screen.dart';
+import 'package:smart_rent/ui/pages/root/widgets/screen.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';

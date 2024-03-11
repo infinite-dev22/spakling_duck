@@ -4,10 +4,10 @@
 
 import 'dart:convert';
 
-import 'package:SmartCase/data_layer/models/payment/payment_schedules_model.dart';
-import 'package:SmartCase/data_layer/models/period/period_model.dart';
-import 'package:SmartCase/data_layer/models/smart_model.dart';
-import 'package:SmartCase/data_layer/models/tenant/tenant_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
+import 'package:smart_rent/data_layer/models/period/period_model.dart';
+import 'package:smart_rent/data_layer/models/smart_model.dart';
+import 'package:smart_rent/data_layer/models/tenant/tenant_model.dart';
 
 
 TenantUnitListModel tenantUnitListModelFromJson(String str) => TenantUnitListModel.fromJson(json.decode(str));

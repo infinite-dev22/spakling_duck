@@ -1,10 +1,10 @@
-import 'package:SmartCase/ui/pages/properties/bloc/property_bloc.dart';
-import 'package:SmartCase/ui/pages/properties/widgets/loading_widget.dart';
-import 'package:SmartCase/ui/pages/properties/widgets/no_data_widget.dart';
-import 'package:SmartCase/ui/pages/properties/widgets/not_found_widget.dart';
-import 'package:SmartCase/ui/pages/properties/widgets/success_widget.dart';
-import 'package:SmartCase/ui/widgets/smart_error_widget.dart';
-import 'package:SmartCase/ui/widgets/smart_widget.dart';
+import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
+import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
+import 'package:smart_rent/ui/pages/properties/widgets/no_data_widget.dart';
+import 'package:smart_rent/ui/pages/properties/widgets/not_found_widget.dart';
+import 'package:smart_rent/ui/pages/properties/widgets/success_widget.dart';
+import 'package:smart_rent/ui/widgets/smart_error_widget.dart';
+import 'package:smart_rent/ui/widgets/smart_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

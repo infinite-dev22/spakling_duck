@@ -1,7 +1,7 @@
 
-import 'package:SmartCase/data_layer/models/tenant_unit/add_tenant_unit_response.dart';
-import 'package:SmartCase/data_layer/repositories/implementation/tenant_unit_repo_impl.dart';
-import 'package:SmartCase/data_layer/repositories/interfaces/tenant_unit_repo.dart';
+import 'package:smart_rent/data_layer/models/tenant_unit/add_tenant_unit_response.dart';
+import 'package:smart_rent/data_layer/repositories/implementation/tenant_unit_repo_impl.dart';
+import 'package:smart_rent/data_layer/repositories/interfaces/tenant_unit_repo.dart';
 
 class TenantUnitDtoImpl {
   static Future<AddTenantUnitResponse> addTenantUnit(

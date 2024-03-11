@@ -1,4 +1,4 @@
-import 'package:SmartCase/ui/widgets/custom_image.dart';
+import 'package:smart_rent/ui/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
 
 class SmartWidget extends StatelessWidget {

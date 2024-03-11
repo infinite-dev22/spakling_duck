@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:SmartCase/configs/app_configs.dart';
-import 'package:SmartCase/data_layer/models/auth/login_model.dart';
+import 'package:smart_rent/configs/app_configs.dart';
+import 'package:smart_rent/data_layer/models/auth/login_model.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 

@@ -1,5 +1,5 @@
-import 'package:SmartCase/data_layer/models/auth/login_model.dart';
-import 'package:SmartCase/data_layer/repositories/auth_repository.dart';
+import 'package:smart_rent/data_layer/models/auth/login_model.dart';
+import 'package:smart_rent/data_layer/repositories/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';

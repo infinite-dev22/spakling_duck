@@ -11,7 +11,7 @@
 
 import 'dart:convert';
 
-import 'package:SmartCase/data_layer/models/smart_model.dart';
+import 'package:smart_rent/data_layer/models/smart_model.dart';
 
 List<PaymentSchedulesModel> paymentSchedulesModelFromJson(String str) => List<PaymentSchedulesModel>.from(json.decode(str).map((x) => PaymentSchedulesModel.fromJson(x)));
 
@@ -118,7 +118,7 @@ class PaymentSchedulesModel extends SmartModel{
 //
 // import 'dart:convert';
 //
-// import 'package:SmartCase/data_layer/models/smart_model.dart';
+// import 'package:smart_rent/data_layer/models/smart_model.dart';
 //
 // List<List<PaymentSchedulesModel>> paymentSchedulesModelFromJson(String str) => List<List<PaymentSchedulesModel>>.from(json.decode(str).map((x) => List<PaymentSchedulesModel>.from(x.map((x) => PaymentSchedulesModel.fromJson(x)))));
 //

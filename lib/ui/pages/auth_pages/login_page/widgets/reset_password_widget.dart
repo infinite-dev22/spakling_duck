@@ -1,6 +1,6 @@
-import 'package:SmartCase/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
-import 'package:SmartCase/ui/themes/app_theme.dart';
-import 'package:SmartCase/ui/widgets/auth_textfield.dart';
+import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
