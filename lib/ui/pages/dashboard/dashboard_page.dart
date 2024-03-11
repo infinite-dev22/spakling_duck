@@ -1,5 +1,5 @@
-import 'package:SmartCase/ui/pages/dashboard/bloc/dashboard_bloc.dart';
-import 'package:SmartCase/ui/pages/dashboard/widgets/dashboard_layout.dart';
+import 'package:smart_rent/ui/pages/dashboard/bloc/dashboard_bloc.dart';
+import 'package:smart_rent/ui/pages/dashboard/widgets/dashboard_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

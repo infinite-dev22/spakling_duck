@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:SmartCase/configs/app_configs.dart';
-import 'package:SmartCase/data_layer/models/payment/payment_account_model.dart';
-import 'package:SmartCase/data_layer/models/payment/payment_mode_model.dart';
-import 'package:SmartCase/data_layer/models/payment/payment_schedules_model.dart';
-import 'package:SmartCase/data_layer/repositories/interfaces/payment_repo.dart';
+import 'package:smart_rent/configs/app_configs.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_account_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_mode_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
+import 'package:smart_rent/data_layer/repositories/interfaces/payment_repo.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
@@ -84,12 +84,13 @@ class PaymentRepoImpl implements PaymentRepo {
       };
 
       // var url = Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
-      // var url = Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
-      var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$tenantUnitId');
+      var url = Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
+      // var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$tenantUnitId');
+      // var url =  Uri.parse('$appUrl/api/rent/tenantunits/$tenantUnitId');
 
 
       var response = await client.get(url, headers: headers);
-      List schedulesData = jsonDecode(response.body)['tenantunitsonproperty'][0]['schedules'];
+      List schedulesData = jsonDecode(response.body);
       if (kDebugMode) {
         print("payment schedules RESPONSE: $response");
         print("payment schedules Data: ${response.body}");

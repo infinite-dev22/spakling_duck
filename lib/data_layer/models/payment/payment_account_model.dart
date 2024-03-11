@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:SmartCase/data_layer/models/smart_model.dart';
+import 'package:smart_rent/data_layer/models/smart_model.dart';
 
 
 List<List<PaymentAccountsModel>> paymentAccountsModelFromJson(String str) => List<List<PaymentAccountsModel>>.from(json.decode(str).map((x) => List<PaymentAccountsModel>.from(x.map((x) => PaymentAccountsModel.fromJson(x)))));

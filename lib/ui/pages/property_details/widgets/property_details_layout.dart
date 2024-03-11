@@ -1,12 +1,12 @@
-import 'package:SmartCase/data_layer/models/property/property_response_model.dart';
-import 'package:SmartCase/ui/pages/floors/floors_page.dart';
-import 'package:SmartCase/ui/pages/property_details/screens/details_success_screen.dart';
-import 'package:SmartCase/ui/pages/property_details/screens/documents_success_screen.dart';
-import 'package:SmartCase/ui/pages/property_details/screens/payments_success_screen.dart';
-import 'package:SmartCase/ui/pages/property_details/screens/tenants_success_screen.dart';
-import 'package:SmartCase/ui/pages/property_details/screens/units_success_screen.dart';
-import 'package:SmartCase/ui/themes/app_theme.dart';
-import 'package:SmartCase/ui/widgets/appbar_content.dart';
+import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
+import 'package:smart_rent/ui/pages/floors/floors_page.dart';
+import 'package:smart_rent/ui/pages/property_details/screens/details_success_screen.dart';
+import 'package:smart_rent/ui/pages/property_details/screens/documents_success_screen.dart';
+import 'package:smart_rent/ui/pages/property_details/screens/payments_success_screen.dart';
+import 'package:smart_rent/ui/pages/property_details/screens/tenants_success_screen.dart';
+import 'package:smart_rent/ui/pages/property_details/screens/units_success_screen.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/appbar_content.dart';
 import 'package:flutter/material.dart';
 
 

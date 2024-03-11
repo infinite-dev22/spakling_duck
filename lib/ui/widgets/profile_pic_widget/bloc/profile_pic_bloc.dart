@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:SmartCase/utilities/app_init.dart';
+import 'package:smart_rent/utilities/app_init.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -28,7 +28,7 @@ class ProfilePicBloc extends Bloc<ProfilePicEvent, ProfilePicState> {
   _mapUpdateProfilePicEventToState(
       UpdateProfilePic event, Emitter<ProfilePicState> emit) async {
     emit(state.copyWith(status: ProfilePicStatus.loading));
-    // await SmartCaseApi.uploadProfilePicture(event.file).onError(
+    // await smart_rentApi.uploadProfilePicture(event.file).onError(
     //     (error, stackTrace) =>
     //         emit(state.copyWith(status: ProfilePicStatus.error)));
   }
@@ -49,7 +49,7 @@ class ProfilePicBloc extends Bloc<ProfilePicEvent, ProfilePicState> {
   // _mapUpdateProfilePicEventToState(
   //     UpdateProfilePic event, Emitter<ProfilePicState> emit) async {
   //   emit(state.copyWith(status: ProfilePicStatus.loading));
-  //   await SmartCaseApi.uploadProfilePicture(event.file).whenComplete(() {
+  //   await smart_rentApi.uploadProfilePicture(event.file).whenComplete(() {
   //     currentUserAvatar = currentUser.avatar;
   //     emit(state.copyWith(status: ProfilePicStatus.success));
   //   }).onError((error, stackTrace) =>

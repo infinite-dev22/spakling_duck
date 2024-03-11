@@ -1,8 +1,8 @@
-import 'package:SmartCase/data_layer/models/smart_model.dart';
-import 'package:SmartCase/ui/themes/app_theme.dart';
-import 'package:SmartCase/ui/widgets/custom_elevated_image.dart';
-import 'package:SmartCase/ui/widgets/custom_icon_holder.dart';
-import 'package:SmartCase/utilities/extra.dart';
+import 'package:smart_rent/data_layer/models/smart_model.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/custom_elevated_image.dart';
+import 'package:smart_rent/ui/widgets/custom_icon_holder.dart';
+import 'package:smart_rent/utilities/extra.dart';
 import 'package:amount_formatter/amount_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
@@ -294,7 +294,7 @@ class SearchableTenantUnitDropDown<T extends SmartTenantUnitsModel>
         dropDownList: menuItems
             .map((item) => DropDownValueModel(
                 value: item,
-                name: '${item.getTenantName()} ${item.getUnitName()}'))
+                name: '${item.getTenantName()} - ${item.getUnitName()}'))
             .toList(),
         onChanged: onChanged,
       ),

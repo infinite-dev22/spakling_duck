@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:SmartCase/data_layer/models/smart_model.dart';
+import 'package:smart_rent/data_layer/models/smart_model.dart';
 
 
 List<UnitTypeModel> unitTypeModelFromJson(String str) =>

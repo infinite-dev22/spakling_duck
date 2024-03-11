@@ -1,6 +1,6 @@
-import 'package:SmartCase/data_layer/models/property/property_response_model.dart';
-import 'package:SmartCase/ui/pages/units/forms/add_unit_form.dart';
-import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
+import 'package:smart_rent/ui/pages/units/forms/add_unit_form.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class UnitsSuccessScreen extends StatelessWidget {

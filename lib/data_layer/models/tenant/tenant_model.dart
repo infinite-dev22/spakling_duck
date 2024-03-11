@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-import 'package:SmartCase/data_layer/models/smart_model.dart';
-import 'package:SmartCase/data_layer/models/tenant/tenant_details_model.dart';
-import 'package:SmartCase/data_layer/models/tenant/tenant_type_model.dart';
+import 'package:smart_rent/data_layer/models/smart_model.dart';
+import 'package:smart_rent/data_layer/models/tenant/tenant_details_model.dart';
+import 'package:smart_rent/data_layer/models/tenant/tenant_type_model.dart';
 
 
 TenanListModel tenanListModelFromJson(String str) =>

@@ -1,4 +1,4 @@
-import 'package:SmartCase/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

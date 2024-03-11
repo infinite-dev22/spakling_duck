@@ -4,11 +4,11 @@
 
 import 'dart:convert';
 
-import 'package:SmartCase/data_layer/models/currency/currency_model.dart';
-import 'package:SmartCase/data_layer/models/floor/floor_model.dart';
-import 'package:SmartCase/data_layer/models/period/period_model.dart';
-import 'package:SmartCase/data_layer/models/smart_model.dart';
-import 'package:SmartCase/data_layer/models/unit/unit_type_model.dart';
+import 'package:smart_rent/data_layer/models/currency/currency_model.dart';
+import 'package:smart_rent/data_layer/models/floor/floor_model.dart';
+import 'package:smart_rent/data_layer/models/period/period_model.dart';
+import 'package:smart_rent/data_layer/models/smart_model.dart';
+import 'package:smart_rent/data_layer/models/unit/unit_type_model.dart';
 
 
 

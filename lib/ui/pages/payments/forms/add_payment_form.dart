@@ -1,30 +1,30 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:SmartCase/data_layer/models/currency/currency_model.dart';
-import 'package:SmartCase/data_layer/models/floor/floor_model.dart';
-import 'package:SmartCase/data_layer/models/payment/payment_account_model.dart';
-import 'package:SmartCase/data_layer/models/payment/payment_mode_model.dart';
-import 'package:SmartCase/data_layer/models/period/period_model.dart';
-import 'package:SmartCase/data_layer/models/property/property_response_model.dart';
-import 'package:SmartCase/data_layer/models/tenant_unit/tenant_unit_model.dart';
-import 'package:SmartCase/data_layer/models/unit/unit_type_model.dart';
-import 'package:SmartCase/ui/pages/currency/bloc/currency_bloc.dart';
-import 'package:SmartCase/ui/pages/floors/bloc/floor_bloc.dart';
-import 'package:SmartCase/ui/pages/payment_account/bloc/payment_account_bloc.dart';
-import 'package:SmartCase/ui/pages/payment_mode/bloc/payment_mode_bloc.dart';
-import 'package:SmartCase/ui/pages/payment_schedules/bloc/payment_schedules_bloc.dart';
-import 'package:SmartCase/ui/pages/payments/bloc/payment_bloc.dart';
-import 'package:SmartCase/ui/pages/period/bloc/period_bloc.dart';
-import 'package:SmartCase/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
-import 'package:SmartCase/ui/pages/units/bloc/unit_bloc.dart';
-import 'package:SmartCase/ui/themes/app_theme.dart';
-import 'package:SmartCase/ui/widgets/amount_text_field.dart';
-import 'package:SmartCase/ui/widgets/app_drop_downs.dart';
-import 'package:SmartCase/ui/widgets/app_max_textfield.dart';
-import 'package:SmartCase/ui/widgets/auth_textfield.dart';
-import 'package:SmartCase/ui/widgets/form_title_widget.dart';
-import 'package:SmartCase/utilities/app_init.dart';
+import 'package:smart_rent/data_layer/models/currency/currency_model.dart';
+import 'package:smart_rent/data_layer/models/floor/floor_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_account_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_mode_model.dart';
+import 'package:smart_rent/data_layer/models/period/period_model.dart';
+import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
+import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
+import 'package:smart_rent/data_layer/models/unit/unit_type_model.dart';
+import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
+import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
+import 'package:smart_rent/ui/pages/payment_account/bloc/payment_account_bloc.dart';
+import 'package:smart_rent/ui/pages/payment_mode/bloc/payment_mode_bloc.dart';
+import 'package:smart_rent/ui/pages/payment_schedules/bloc/payment_schedules_bloc.dart';
+import 'package:smart_rent/ui/pages/payments/bloc/payment_bloc.dart';
+import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
+import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/amount_text_field.dart';
+import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
+import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
+import 'package:smart_rent/ui/widgets/auth_textfield.dart';
+import 'package:smart_rent/ui/widgets/form_title_widget.dart';
+import 'package:smart_rent/utilities/app_init.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/cupertino.dart';
@@ -60,14 +60,17 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
   var myPaymentSchedules = [];
   var myBalances = [];
+  var myPaymentScheduleIDs = [];
   final MultiSelectController myPaymentSchedulesController = MultiSelectController();
+
+  final TextEditingController descriptionController = TextEditingController();
 
   var unitBalance = 0;
 
   final TextEditingController paidController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController balanceController = TextEditingController();
-  final TextEditingController paymentDateController = TextEditingController();
+  late TextEditingController paymentDateController;
 
   TextEditingController date1Controller = TextEditingController();
   TextEditingController date2Controller = TextEditingController();
@@ -91,13 +94,20 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
   var initialBalance = 0;
 
+  List<ValueItem<dynamic>> availableOptions = []; // Maintain a list of available options
+  List<ValueItem<dynamic>> selectedOptions = [];
+
   Future<int> setPaymentScheduleId(int id) async {
     setState(() {
-      selectedPaymentScheduleId = id;
+      selectedTenantUnitId = id;
     });
+
+    print('SELECTED TENANT UNIT ID== $selectedTenantUnitId');
 
     return id;
   }
+
+
 
   Future<void> _selectPaymentDate(BuildContext context) async {
     // final DateTime? picked = await showDatePicker(
@@ -109,7 +119,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
     final DateTime? picked = await showDatePickerDialog(
       context: context,
-      initialDate: paymentDate.value,
+      initialDate: DateTime.now(),
       minDate: DateTime(1900),
       maxDate: DateTime.now(),
     );
@@ -118,7 +128,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
       paymentDate(picked);
       // paymentDateController.text =
       //     '${DateFormat('MM/dd/yyyy').format(paymentDate.value)}';
-      var formatedDate1 = "${paymentDate.value.year}-${paymentDate.value.day}-${paymentDate.value.month}";
+      var formatedDate1 = "${paymentDate.value.day}-${paymentDate.value.month}-${paymentDate.value.year}";
       print('formatedFromDate1 $formatedDate1');
       paymentDateController.text = formatedDate1;
 
@@ -134,6 +144,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
   int totalBalance = 0;
 
   PaymentModeModel? paymentModeModel;
+  PaymentAccountsModel? paymentAccountsModel;
 
   late bool isTitleElevated = false;
 
@@ -145,6 +156,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
     // TODO: implement initState
     super.initState();
     tenantUnitsDropdownCont = SingleValueDropDownController();
+    paymentDateController = TextEditingController(text: "${paymentDate.value.day}-${paymentDate.value.month}-${paymentDate.value.year}");
 
   }
 
@@ -152,6 +164,8 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    _controller.dispose();
+    tenantUnitsDropdownCont.dispose();
 
   }
 
@@ -168,7 +182,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
               listener: (context, state) {
                 if (state.status == PaymentStatus.successAdd) {
                   Fluttertoast.showToast(
-                      msg: 'Payment Added Successfully',
+                      msg: state.message.toString(),
                       backgroundColor: Colors.green,
                       gravity: ToastGravity.TOP);
                   selectedDate1.value = DateTime.now();
@@ -177,6 +191,15 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                   paidController.clear();
                   balanceController.clear();
                   initialBalance = 0;
+                  selectedTenantUnitId = 0;
+                  selectedPaymentScheduleId = 0;
+                  selectedPaymentModeId = 0;
+                  selectedPaymentAccountId = 0;
+
+                  context.read<PaymentSchedulesBloc>().add(
+                      LoadAllPaymentSchedulesEvent(
+                          selectedTenantUnitId, widget.property.id!));
+                  _controller.options.clear();
                   Navigator.pop(context);
                 }
                 if (state.status == PaymentStatus.accessDeniedAdd) {
@@ -208,14 +231,6 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                     Fluttertoast.showToast(
                         msg: 'please select a tenant unit',
                         gravity: ToastGravity.TOP);
-                  } else if (selectedPaymentAccountId == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select payment account',
-                        gravity: ToastGravity.TOP);
-                  } else if (selectedPaymentModeId == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select a payment mode',
-                        gravity: ToastGravity.TOP);
                   } else if (int.parse(paidController.text.trim().replaceAll(',', '').toString()) > int.parse(amountController.text.trim().replaceAll(',', '').toString())) {
                     Fluttertoast.showToast(
                         msg: 'paid amount exceeds balance',
@@ -223,22 +238,29 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                   } else {
                     print('MY INITIAL BALANCE IS == $initialBalance');
                     var postedBalance =  initialBalance - int.parse(paidController.text.trim().replaceAll(',', '').toString());
+
+                    List<String> stringScheduleList = myPaymentSchedules.map((item) => item.id.toString()).toList();
+
                     print('MY Posted Balance == $postedBalance');
                     print('MY Cont options = ${_controller.options}');
-                    print('amount = $amountController');
+                    print('amount = ${amountController.text}');
                     print('paid = $paidController');
                     print('balance = $balanceController');
-
-                    List<String> stringScheduleList = myPaymentSchedules.map((item) => item.toString()).toList();
+                    print('selectedTenantUnitId = $selectedTenantUnitId');
+                    print('selectedPaymentAccountId = $selectedPaymentAccountId');
+                    print('selectedPaymentModeId = $selectedPaymentModeId');
+                    print('paymentModeModelID = ${paymentModeModel!.id!.toInt()}');
+                    print('basedSelectedpaymentModeModelID = ${selectedPaymentModeId == 0 ? paymentModeModel!.id!.toInt() : selectedPaymentModeId}');
+                    print('stringScheduleList = $stringScheduleList');
 
                     context.read<PaymentBloc>().add(AddPaymentsEvent(
                       currentUserToken.toString(),
                       paidController.text.trim().replaceAll(',', '').toString(),
-                      balanceController.text.trim().replaceAll(',', '').toString(),
+                      amountController.text.trim().replaceAll(',', '').toString(),
                       paymentDateController.text.trim(),
                       selectedTenantUnitId,
-                      selectedPaymentAccountId,
-                      selectedPaymentModeId,
+                      selectedPaymentAccountId == 0 ? paymentAccountsModel!.id!.toInt() : selectedPaymentModeId,
+                      selectedPaymentModeId == 0 ? paymentModeModel!.id!.toInt() : selectedPaymentModeId,
                       widget.property.id!,
                       stringScheduleList,
                     ));
@@ -308,7 +330,8 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                       PaymentSchedulesStatus.initial) {
                                     context.read<PaymentSchedulesBloc>().add(
                                         LoadAllPaymentSchedulesEvent(
-                                            selectedPaymentScheduleId, widget.property.id!));
+                                            selectedTenantUnitId, widget.property.id!));
+
                                   }
                                 },
                                 child:
@@ -330,9 +353,6 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                       onChanged: (value) {
                                         print(value.value.id);
 
-                                        // setState((){
-                                        //   selectedTenantUnitId = value.value.id;
-                                        // });
                                         print('My Amounts = ${value.value.getAmount()}');
                                         setPaymentScheduleId(value.value.id)
                                             .then((newValue) {
@@ -353,21 +373,43 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                               BlocBuilder<PaymentSchedulesBloc,
                                   PaymentSchedulesState>(
                                 builder: (context, state) {
-                                  // if(state.status == PaymentSchedulesStatus.initial){
-                                  //   context.read<PaymentSchedulesBloc>().add(LoadAllPaymentSchedulesEvent(selectedPaymentScheduleId));
-                                  // }
+                                  if(state.status == PaymentSchedulesStatus.initial){
+                                    context.read<PaymentSchedulesBloc>().add(LoadAllPaymentSchedulesEvent(selectedTenantUnitId, widget.property.id!));
+
+                                  }
                                   if (state.status ==
                                       PaymentSchedulesStatus.success) {
+                                    print("ITEMS: ${state.paymentSchedules}");
                                     return MultiSelectDropDown(
+                                      onOptionRemoved: (int intValue, ValueItem<dynamic> valueItem){
+                                        print('RemovedInt = $intValue');
+                                        print('Removed ValueItem = ${valueItem.value.balance}');
+                                        _controller.clearSelection(valueItem);
+                                        amountController.text = (int.parse(paidController.text.trim().toString().replaceAll(',', '').toString()) -int.parse(valueItem.value.balance.toString().replaceAll(',', '').toString())).toString();
+                                        print('new Amount = ${amountController.text}');
+                                        print('My Selected Options = ${_controller.selectedOptions}');
+                                        print('My Selected Options count= ${_controller.selectedOptions.length}');
+                                        if(_controller.selectedOptions.isEmpty){
+                                          _controller.clearAllSelection();
+                                          paidController.clear();
+                                          amountController.clear();
+                                          balanceController.clear();
+
+                                        } else {
+
+                                        }
+
+                                      },
+
                                       controller: _controller,
                                       inputDecoration: BoxDecoration(
                                         color: AppTheme.itemBgColor,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      clearIcon: Icon(Icons.clear),
+                                      clearIcon: const Icon(Icons.clear),
                                       // showClearIcon: true,
                                       hint: 'Select Payment Schedule',
-                                      hintStyle: TextStyle(
+                                      hintStyle: const TextStyle(
                                         color: AppTheme.inActiveColor,
                                         fontSize: 16,
                                       ),
@@ -385,15 +427,32 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                           myBalances = options
                                               .map((e) => e.value)
                                               .toList();
+                                          myPaymentScheduleIDs = options
+                                              .map((e) => e.value)
+                                              .toList();
+
 
                                           print('My selected balances = ${myBalances.map((e) => e.balance).toList()}');
+                                          print('My selected ps ids = ${myPaymentScheduleIDs.map((e) => e.id).toList()}');
 
                                           int sumBalances = myBalances.map((e) => int.parse(e.balance.replaceAll(',',''))).toList().reduce((value, element) => value + element);
+                                          // int sumBalances = myBalances.map((e) => e.balance).toList().reduce((value, element) => value + element);
 
                                           print('My Toatal balance = $sumBalances');
                                           amountController.text = sumBalances.toString();
                                           paidController.text = sumBalances.toString();
+                                          balanceController.text = (int.parse(amountController.text.trim()) - int.parse(paidController.text.trim())).toString();
                                           // balanceController.text = int.parse(tenantController.specificPaymentBalance.value.toString()) as String;
+
+                                          bool exists = myPaymentScheduleIDs.contains(element);
+
+                                          if (exists) {
+                                            print('The object exists in the list.');
+                                          } else {
+                                            print('The object does not exist in the list.');
+                                          }
+
+
 
                                         }
                                       },
@@ -410,6 +469,15 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                           //     .unitNumber}|${schedule.balance}'
                                         );
                                       }).toList(),
+                                      // optionBuilder: (context, valueItem, isSelected) {
+                                      //   return  ListTile(
+                                      //     title: Text(valueItem.label),
+                                      //     // subtitle: Text(valueItem.value.toString()),
+                                      //     trailing: isSelected
+                                      //         ? const Icon(Icons.check_circle)
+                                      //         : const Icon(Icons.radio_button_unchecked),
+                                      //   );
+                                      // },
                                       selectionType: SelectionType.multi,
                                       chipConfig: const ChipConfig(
                                         wrapType: WrapType.wrap,
@@ -419,12 +487,75 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                       const TextStyle(fontSize: 16),
                                       selectedOptionIcon:
                                       const Icon(Icons.check_circle),
+
+
                                     );
                                   }
                                   return Container();
                                 },
                               ),
 
+
+
+                              SizedBox(
+                                height: 10,
+                              ),
+
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                   children: [
+                     Obx(() {
+                       return SizedBox(
+                         width: 190,
+                         child: AmountTextField(
+                           inputFormatters: [
+                             ThousandsFormatter(),
+                           ],
+                           controller: amountController,
+                           hintText: 'Amount Due',
+                           obscureText: false,
+                           keyBoardType: TextInputType.number,
+                           enabled: false,
+                           suffix: fitValue.value == 0
+                               ? ''
+                               : '$fitValue $fitUnit',
+                         ),
+                       );
+                     }),
+
+                     SizedBox(
+                       width: 190,
+                       child: AuthTextField(
+                         inputFormatters: [
+                           ThousandsFormatter(),
+                         ],
+                         controller: paidController,
+                         hintText: 'Paid',
+                         obscureText: false,
+                         keyBoardType: TextInputType.number,
+                         onChanged: (value) {
+                           balanceController.text = (int.parse(
+                               amountController.text
+                                   .trim()
+                                   .toString()
+                                   .replaceAll(',', '')) -
+                               int.parse(
+                                   paidController.text.isEmpty
+                                       ? '0'
+                                       : paidController.text
+                                       .trim()
+                                       .replaceAll(',', '')))
+                               .toString()
+                               .replaceAll(',', '');
+                           print(
+                               'MY Balance == ${balanceController.text}');
+                         },
+                       ),
+                     ),
+
+
+                   ],
+                 ),
 
                               SizedBox(
                                 height: 10,
@@ -477,6 +608,13 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                               PaymentAccountStatus.initial) {
                                             context.read<PaymentAccountBloc>().add(
                                                 LoadAllPaymentAccountsEvent(widget.property.id!));
+                                          }   if (state.status ==
+                                              PaymentAccountStatus.success) {
+                                            paymentAccountsModel =
+                                                state.paymentAccounts!.firstWhere(
+                                                      (accounts) => accounts.number == 'PETTYCASH',
+                                                  // orElse: () => null as CurrencyModel,
+                                                );
                                           }
                                           return CustomApiGenericDropdown<
                                               PaymentAccountsModel>(
@@ -491,6 +629,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                                 value!.id!;
                                               });
                                             },
+                                            defaultValue: paymentAccountsModel,
                                           );
                                         },
                                       )),
@@ -500,78 +639,14 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                               SizedBox(
                                 height: 10,
                               ),
-
-                              Obx(() {
-                                return AmountTextField(
-                                  inputFormatters: [
-                                    ThousandsFormatter(),
-                                  ],
-                                  controller: amountController,
-                                  hintText: 'Amount',
+                              AppMaxTextField(
+                                  controller: descriptionController,
+                                  hintText: 'Description',
                                   obscureText: false,
-                                  keyBoardType: TextInputType.number,
-                                  enabled: false,
-                                  suffix: fitValue.value == 0
-                                      ? ''
-                                      : '$fitValue $fitUnit',
-                                );
-                              }),
-
-                              SizedBox(
-                                height: 10,
+                                fillColor: AppTheme.itemBgColor,
                               ),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    child: AuthTextField(
-                                      inputFormatters: [
-                                        ThousandsFormatter(),
-                                      ],
-                                      controller: paidController,
-                                      hintText: 'Paid',
-                                      obscureText: false,
-                                      keyBoardType: TextInputType.number,
-                                      onChanged: (value) {
-                                        balanceController.text = (int.parse(
-                                            amountController.text
-                                                .trim()
-                                                .toString()
-                                                .replaceAll(',', '')) -
-                                            int.parse(
-                                                paidController.text.isEmpty
-                                                    ? '0'
-                                                    : paidController.text
-                                                    .trim()
-                                                    .replaceAll(',', '')))
-                                            .toString()
-                                            .replaceAll(',', '');
-                                        print(
-                                            'MY Balance == ${balanceController.text}');
-                                      },
-                                    ),
-                                    width: 190,
-                                  ),
-                                  SizedBox(
-                                    width: 190,
-                                    child: AuthTextField(
-                                      inputFormatters: [
-                                        ThousandsFormatter(),
-                                      ],
-                                      controller: balanceController,
-                                      hintText: 'Balance',
-                                      obscureText: false,
-                                      keyBoardType: TextInputType.number,
-                                      enabled: false,
-                                    ),
-                                  ),
-                                ],
-                              ),
 
-                              SizedBox(
-                                height: 10,
-                              ),
                               GestureDetector(
                                 onTap: () {
                                   FullPicker(
