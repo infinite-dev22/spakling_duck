@@ -5,6 +5,15 @@ abstract class PaymentEvent extends Equatable {
 }
 
 
+class LoadAllPayments extends PaymentEvent{
+  final int propertyId;
+  const LoadAllPayments( this.propertyId);
+  @override
+  // TODO: implement props
+  List<Object?> get props => [propertyId];
+
+}
+
 class AddPaymentsEvent extends PaymentEvent {
   final String token;
   final String paid;

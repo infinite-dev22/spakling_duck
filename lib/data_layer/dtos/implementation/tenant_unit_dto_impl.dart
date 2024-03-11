@@ -5,7 +5,7 @@ import 'package:smart_rent/data_layer/repositories/interfaces/tenant_unit_repo.d
 
 class TenantUnitDtoImpl {
   static Future<AddTenantUnitResponse> addTenantUnit(
-      String token, int tenantId, int unitId, int periodId, String fromDate,
+      String token, int tenantId, int unitId, int periodId, String duration,String fromDate,
       String toDate, String unitAmount, int currencyId, String agreedAmount, String description, int propertyId, {
         Function()? onSuccess,
         Function()? onError,
@@ -14,7 +14,7 @@ class TenantUnitDtoImpl {
     var result;
     TenantUnitRepo tenantUnitRepo = TenantUnitRepoImpl();
     await tenantUnitRepo
-        .addTenantUnit(  token,  tenantId,  unitId,  periodId,  fromDate,
+        .addTenantUnit(  token,  tenantId,  unitId,  periodId,  duration,  fromDate,
          toDate,  unitAmount,  currencyId,  agreedAmount,  description,  propertyId
     ).then((response) => result = AddTenantUnitResponse.fromJson(response));
     print("Then here");

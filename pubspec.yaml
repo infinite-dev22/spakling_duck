@@ -63,6 +63,8 @@ dependencies:
   get: ^4.6.6
   date_picker_plus: ^3.0.0
   multi_dropdown: ^2.1.4
+  flutter_multi_formatter: ^2.12.4
+  jiffy: ^6.2.1
 
 dev_dependencies:
   flutter_test:

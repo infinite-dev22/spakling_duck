@@ -40,10 +40,8 @@ class TenantUnitRepoImpl implements TenantUnitRepo {
     }
   }
 
-
   @override
-  Future<dynamic> addTenantUnit(String token, int tenantId, int unitId, int periodId, String fromDate,
-      String toDate, String unitAmount, int currencyId, String agreedAmount, String description, int propertyId) async {
+  Future addTenantUnit(String token, int tenantId, int unitId, int periodId, String duration, String fromDate, String toDate, String unitAmount, int currencyId, String agreedAmount, String description, int propertyId) async {
     var client = RetryClient(http.Client());
     try {
       var headers = {
@@ -59,17 +57,17 @@ class TenantUnitRepoImpl implements TenantUnitRepo {
       print("Soon Posting: URL Created");
 
       log("POST_DATA: {"
-        '\"from_date\": \"$fromDate\",'
-        '\"to_date\": \"$toDate\",'
-        '\"amount\": \"$unitAmount\",'
-        '\"discount_amount\": \"$agreedAmount\",'
-        '\"description\": \"$description\",'
-        '\"unit_id\": \"$unitId\",'
-        '\"tenant_id\": \"$tenantId\",'
-        '\"schedule_id\": \"$periodId\",'
-        '\"property_id\": \"$propertyId\",'
-        '\"currency_id\": \"$currencyId\",'
-      "}");
+          '\"from_date\": \"$fromDate\",'
+          '\"to_date\": \"$toDate\",'
+          '\"amount\": \"$unitAmount\",'
+          '\"discount_amount\": \"$agreedAmount\",'
+          '\"description\": \"$description\",'
+          '\"unit_id\": \"$unitId\",'
+          '\"tenant_id\": \"$tenantId\",'
+          '\"schedule_id\": \"$periodId\",'
+          '\"property_id\": \"$propertyId\",'
+          '\"currency_id\": \"$currencyId\",'
+          "}");
 
       var response = await client.post(
         url,
@@ -100,6 +98,4 @@ class TenantUnitRepoImpl implements TenantUnitRepo {
       client.close();
     }
   }
-
-
 }

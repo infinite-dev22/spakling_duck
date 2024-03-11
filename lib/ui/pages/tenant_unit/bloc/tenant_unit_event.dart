@@ -21,6 +21,7 @@ class AddTenantUnitEvent extends TenantUnitEvent {
   final int unitId;
   final int periodId;
   final String fromDate;
+  final String duration;
   final String toDate;
   final String unitAmount;
   final int currencyId;
@@ -33,6 +34,7 @@ class AddTenantUnitEvent extends TenantUnitEvent {
           this.tenantId,
           this.unitId,
           this.periodId,
+          this.duration,
           this.fromDate,
           this.toDate,
           this.unitAmount,
@@ -45,6 +47,6 @@ class AddTenantUnitEvent extends TenantUnitEvent {
 
   @override
   // TODO: implement props
-  List<Object?> get props => [token, tenantId, unitId, periodId, fromDate, toDate, unitAmount, currencyId, agreedAmount, description, propertyId];
+  List<Object?> get props => [token, tenantId, unitId, duration, periodId, fromDate, toDate, unitAmount, currencyId, agreedAmount, description, propertyId];
 
 }

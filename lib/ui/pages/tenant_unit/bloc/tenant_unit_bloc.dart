@@ -16,7 +16,7 @@ part 'tenant_unit_event.dart';
 part 'tenant_unit_state.dart';
 
 class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
-  TenantUnitBloc() : super(TenantUnitState()) {
+  TenantUnitBloc() : super(const TenantUnitState()) {
     on<LoadTenantUnitsEvent>(_mapFetchTenantUnitsToState);
     on<AddTenantUnitEvent>(_mapAddTenantUnitEventToState);
   }
@@ -42,27 +42,11 @@ class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
     });
   }
 
-  // _mapViewSingleFloorDetailsEventToState(LoadSinglePropertyEvent event, Emitter<PropertyState> emit) async {
-  //   emit(state.copyWith(status: PropertyStatus.loadingDetails,));
-  //   await PropertyRepoImpl().getSingleProperty(event.id, userStorage.read('accessToken').toString()).then((property) {
-  //     if(property != null) {
-  //       emit(state.copyWith(status: PropertyStatus.successDetails, property: property));
-  //     } else {
-  //       emit(state.copyWith(status: PropertyStatus.emptyDetails, property: null));
-  //     }
-  //   }).onError((error, stackTrace) {
-  //     emit(state.copyWith(status: PropertyStatus.errorDetails, isPropertyLoading: false));
-  //   });
-  //
-  // }
-
-
-
   _mapAddTenantUnitEventToState(
       AddTenantUnitEvent event, Emitter<TenantUnitState> emit) async {
     emit(state.copyWith(status: TenantUnitStatus.loadingAdd, isLoading: true));
     await TenantUnitDtoImpl.addTenantUnit(currentUserToken.toString(),
-      event.tenantId, event.unitId, event.periodId, event.fromDate,
+      event.tenantId, event.unitId, event.periodId, event.duration,event.fromDate,
       event.toDate, event.unitAmount, event.currencyId, event.agreedAmount, event.description, event.propertyId,
     )
         .then((response) {
