@@ -18,6 +18,20 @@ enum TenantStatus {
   emptyTT
 }
 
+extension TenantStatusX on TenantStatus {
+  bool get isInitial => this == TenantStatus.initial;
+
+  bool get isLoading => this == TenantStatus.loading;
+
+  bool get isSuccess => this == TenantStatus.success;
+
+  bool get isError => this == TenantStatus.error;
+
+  bool get isEmpty => this == TenantStatus.empty;
+
+  bool get isAccessDenied => this == TenantStatus.accessDenied;
+}
+
 @immutable
 class TenantState extends Equatable {
   final List<TenantModel>? tenants;

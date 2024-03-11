@@ -6,8 +6,18 @@ abstract class PeriodEvent extends Equatable {
 
 class LoadAllPeriodsEvent extends PeriodEvent {
   final int id;
-  const LoadAllPeriodsEvent( this.id);
+
+  const LoadAllPeriodsEvent(this.id);
+
   @override
-  // TODO: implement props
   List<Object?> get props => [id];
+}
+
+class SelectPeriodEvent extends PeriodEvent {
+  final int durationIdSelected;
+
+  const SelectPeriodEvent(this.durationIdSelected);
+
+  @override
+  List<Object?> get props => [durationIdSelected];
 }

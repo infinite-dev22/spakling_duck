@@ -5,6 +5,7 @@ import 'package:smart_rent/ui/pages/property_details/screens/documents_success_s
 import 'package:smart_rent/ui/pages/property_details/screens/payments_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/tenants_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/units_success_screen.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/tenant_units_page.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/appbar_content.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class PropertyDetailsLayout extends StatelessWidget {
             const DocumentsSuccessScreen(),
             FloorsPage(property: property),
             UnitsSuccessScreen(property: property),
-            const TenantsSuccessScreen(),
+            TenantUnitsPage(property: property),
              PaymentsSuccessScreen(property: property,),
           ],
         ),

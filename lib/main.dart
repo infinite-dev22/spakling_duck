@@ -15,6 +15,7 @@ import 'package:smart_rent/ui/pages/property_types/bloc/property_type_bloc.dart'
 import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
 import 'package:smart_rent/ui/pages/root/root_page.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
+import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
@@ -43,6 +44,7 @@ void main() {
         BlocProvider(create: (context) => PeriodBloc()),
         BlocProvider(create: (context) => PaymentSchedulesBloc()),
         BlocProvider(create: (context) => TenantUnitBloc()),
+        BlocProvider(create: (context) => TenantBloc()),
       ],
       child: const MyApp(),
     ),
