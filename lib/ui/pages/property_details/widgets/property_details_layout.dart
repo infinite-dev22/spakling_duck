@@ -1,10 +1,13 @@
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/ui/pages/floors/floors_page.dart';
+import 'package:smart_rent/ui/pages/payments/layouts/payment_tab_screen_layout.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/details_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/documents_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/payments_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/tenants_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/units_success_screen.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/forms/tenant_unit_tab_screen_layout.dart';
+import 'package:smart_rent/ui/pages/units/layouts/unit_tab_screen_layout.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/appbar_content.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +38,12 @@ class PropertyDetailsLayout extends StatelessWidget {
             const DetailsSuccessScreen(),
             const DocumentsSuccessScreen(),
             FloorsPage(property: property),
-            UnitsSuccessScreen(property: property),
-            const TenantsSuccessScreen(),
-             PaymentsSuccessScreen(property: property,),
+            // UnitsSuccessScreen(property: property),
+            UnitsTabScreenLayout(property: property),
+            // const TenantsSuccessScreen(),
+            TenantUnitTabScreenLayout(property: property),
+             // PaymentsSuccessScreen(property: property,),
+            PaymentTabScreenLayout(property: property),
           ],
         ),
       ),

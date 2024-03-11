@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:smart_rent/data_layer/dtos/implementation/payment_dto_impl.dart';
 import 'package:smart_rent/data_layer/models/payment/add_payment_response_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payments_model.dart';
+import 'package:smart_rent/data_layer/repositories/implementation/payment_repo_impl.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -14,8 +16,33 @@ part 'payment_state.dart';
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   PaymentBloc() : super(PaymentState()) {
     on<AddPaymentsEvent>(_mapAddPaymentsEventToState);
+    on<LoadAllPayments>(_mapFetchPaymentsToState);
   }
 
+  _mapFetchPaymentsToState(
+      LoadAllPayments event, Emitter<PaymentState> emit) async {
+    emit(state.copyWith(status: PaymentStatus.loading));
+
+    await PaymentRepoImpl()
+        .getAllPayments(currentUserToken.toString(), event.propertyId)
+        .then((floors) {
+      if (floors.isNotEmpty) {
+        emit(state.copyWith(status: PaymentStatus.success, payments: floors));
+
+      } else {
+        emit(state.copyWith(status: PaymentStatus.empty));
+
+      }
+
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(status: PaymentStatus.error));
+      if (kDebugMode) {
+        print("Error: $error");
+        print("Stacktrace: $stackTrace");
+        print("JON MARK 3");
+      }
+    });
+  }
 
   _mapAddPaymentsEventToState(
       AddPaymentsEvent event, Emitter<PaymentState> emit) async {
