@@ -1,19 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:smart_rent/configs/app_configs.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:smart_rent/data_layer/dtos/implementation/tenant_unit_dto_impl.dart';
 import 'package:smart_rent/data_layer/models/tenant_unit/add_tenant_unit_response.dart';
 import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
 import 'package:smart_rent/data_layer/repositories/implementation/tenant_unit_repo_impl.dart';
 import 'package:smart_rent/utilities/app_init.dart';
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
-
-part 'tenant_unit_event.dart';
-part 'tenant_unit_state.dart';
+part 'tenant_unit_event.dart';part 'tenant_unit_state.dart';
 
 class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
   TenantUnitBloc() : super(const TenantUnitState()) {
@@ -45,11 +41,20 @@ class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
   _mapAddTenantUnitEventToState(
       AddTenantUnitEvent event, Emitter<TenantUnitState> emit) async {
     emit(state.copyWith(status: TenantUnitStatus.loadingAdd, isLoading: true));
-    await TenantUnitDtoImpl.addTenantUnit(currentUserToken.toString(),
-      event.tenantId, event.unitId, event.periodId, event.duration,event.fromDate,
-      event.toDate, event.unitAmount, event.currencyId, event.agreedAmount, event.description, event.propertyId,
-    )
-        .then((response) {
+    await TenantUnitDtoImpl.addTenantUnit(
+      currentUserToken.toString(),
+      event.tenantId,
+      event.unitId,
+      event.periodId,
+      event.duration,
+      event.fromDate,
+      event.toDate,
+      event.unitAmount,
+      event.currencyId,
+      event.agreedAmount,
+      event.description,
+      event.propertyId,
+    ).then((response) {
       print('success ${response.tenantunitcreated}');
 
       if (response.tenantunitcreated != null) {
@@ -58,8 +63,7 @@ class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
             isLoading: false,
             addTenantUnitResponse: response));
         print('Add Tenant Unit success ==  ${response.tenantunitcreated}');
-
-      } else if(response.message != null){
+      } else if (response.message != null) {
         emit(state.copyWith(
             status: TenantUnitStatus.errorAdd,
             isLoading: false,
@@ -81,7 +85,6 @@ class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
           message: error.toString()));
     });
   }
-
 
   @override
   void onEvent(TenantUnitEvent event) {

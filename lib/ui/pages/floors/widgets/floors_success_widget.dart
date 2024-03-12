@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
@@ -9,9 +11,6 @@ import 'package:smart_rent/ui/widgets/app_search_textfield.dart';
 import 'package:smart_rent/ui/widgets/smart_error_widget.dart';
 import 'package:smart_rent/ui/widgets/smart_widget.dart';
 import 'package:smart_rent/utilities/extra.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class FloorsSuccessWidget extends StatelessWidget {
   final Property property;
@@ -44,13 +43,6 @@ class FloorsSuccessWidget extends StatelessWidget {
             appBar: _buildAppTitle(),
             floatingActionButton: FloatingActionButton(
               heroTag: "add_floor",
-              child: Center(
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 25,
-                ),
-              ),
               onPressed: () => showModalBottomSheet(
                   useSafeArea: true,
                   isScrollControlled: true,
@@ -63,6 +55,11 @@ class FloorsSuccessWidget extends StatelessWidget {
                     );
                   }),
               backgroundColor: AppTheme.primary,
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 25,
+              ),
             ),
             body: const NoDataWidget(),
           );

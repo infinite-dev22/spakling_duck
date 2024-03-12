@@ -266,7 +266,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                     ));
                   }
                 },
-                isElevated: isTitleElevated,
+                isElevated: true,
                 onCancel: () {
                   selectedDate1.value = DateTime.now();
                   selectedDate2.value = DateTime.now();
@@ -319,7 +319,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                   _selectPaymentDate(context);
                                 },
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -497,7 +497,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
 
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -557,7 +557,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                    ],
                  ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -636,7 +636,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                 ],
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               AppMaxTextField(
@@ -700,7 +700,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                           FileImage(paymentPic ?? File('')),
                                           fit: BoxFit.cover)),
                                   child: paymentPic == null
-                                      ? Center(
+                                      ? const Center(
                                     child: Text('Upload payment pic'),
                                   )
                                       : null,

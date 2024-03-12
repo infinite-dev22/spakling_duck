@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:smart_rent/data_layer/models/currency/currency_model.dart';
 import 'package:smart_rent/data_layer/models/floor/floor_model.dart';
 import 'package:smart_rent/data_layer/models/period/period_model.dart';
@@ -13,14 +18,6 @@ import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
-import 'package:dropdown_textfield/dropdown_textfield.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pattern_formatter/pattern_formatter.dart';
-
-
 
 class AddUnitForm extends StatefulWidget {
   final String addButtonText;
@@ -28,7 +25,10 @@ class AddUnitForm extends StatefulWidget {
   final Property property;
 
   const AddUnitForm(
-      {super.key, required this.addButtonText, required this.isUpdate, required this.property});
+      {super.key,
+      required this.addButtonText,
+      required this.isUpdate,
+      required this.property});
 
   @override
   State<AddUnitForm> createState() => _AddUnitFormState();
@@ -54,14 +54,12 @@ class _AddUnitFormState extends State<AddUnitForm> {
   CurrencyModel? currencyModel;
   PeriodModel? periodModel;
 
-
   final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
   @override
@@ -101,6 +99,9 @@ class _AddUnitFormState extends State<AddUnitForm> {
                   descriptionController.clear();
                   roomNameController.clear();
                   unitNumberController.clear();
+                  context
+                      .read<UnitBloc>()
+                      .add(LoadAllUnitsEvent(widget.property.id!));
                   Navigator.pop(context);
                 }
                 if (state.status == UnitStatus.accessDeniedAdd) {
@@ -122,10 +123,10 @@ class _AddUnitFormState extends State<AddUnitForm> {
                   } else if (roomNumberController.text.length <= 1) {
                     Fluttertoast.showToast(
                         msg: 'unit name too short', gravity: ToastGravity.TOP);
-                  }  else if (amountController.text.isEmpty) {
+                  } else if (amountController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'amount required', gravity: ToastGravity.TOP);
-                  }else if (selectedUnitTypeId == 0) {
+                  } else if (selectedUnitTypeId == 0) {
                     Fluttertoast.showToast(
                         msg: 'please select a unit type',
                         gravity: ToastGravity.TOP);
@@ -143,20 +144,23 @@ class _AddUnitFormState extends State<AddUnitForm> {
                         gravity: ToastGravity.TOP);
                   } else {
                     context.read<UnitBloc>().add(AddUnitEvent(
-                      currentUserToken.toString(),
-                      selectedUnitTypeId,
-                      selectedFloorId,
-                      roomNumberController.text.trim().toString(),
-                      sizeController.text.trim().toString(),
-                      selectedDurationId,
-                      selectedCurrency,
-                      int.parse(amountController.text.trim().toString().replaceAll(',', '')),
-                      descriptionController.text.trim().toString(),
-                      widget.property.id!,
-                    ));
+                          currentUserToken.toString(),
+                          selectedUnitTypeId,
+                          selectedFloorId,
+                          roomNumberController.text.trim().toString(),
+                          sizeController.text.trim().toString(),
+                          selectedDurationId,
+                          selectedCurrency,
+                          int.parse(amountController.text
+                              .trim()
+                              .toString()
+                              .replaceAll(',', '')),
+                          descriptionController.text.trim().toString(),
+                          widget.property.id!,
+                        ));
                   }
                 },
-                isElevated: isTitleElevated,
+                isElevated: true,
                 onCancel: () {
                   selectedFloorId == 0;
                   selectedCurrency == 0;
@@ -203,22 +207,23 @@ class _AddUnitFormState extends State<AddUnitForm> {
                         return Form(
                           child: Column(
                             children: [
-
                               SizedBox(
                                 height: 10,
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
                                     width: 190,
                                     child: BlocBuilder<UnitBloc, UnitState>(
                                       builder: (context, state) {
-                                        if (state.status == UnitStatus.initial) {
-                                          context
-                                              .read<UnitBloc>()
-                                              .add(LoadUnitTypesEvent(widget.property.id!));
+                                        if (state.status ==
+                                            UnitStatus.initial) {
+                                          context.read<UnitBloc>().add(
+                                              LoadUnitTypesEvent(
+                                                  widget.property.id!));
                                         }
                                         return CustomApiGenericDropdown<
                                             UnitTypeModel>(
@@ -239,12 +244,14 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                     width: 190,
                                     child: BlocBuilder<FloorBloc, FloorState>(
                                       builder: (context, state) {
-                                        if (state.status == FloorStatus.initial) {
-                                          context
-                                              .read<FloorBloc>()
-                                              .add(LoadAllFloorsEvent(widget.property.id!));
+                                        if (state.status ==
+                                            FloorStatus.initial) {
+                                          context.read<FloorBloc>().add(
+                                              LoadAllFloorsEvent(
+                                                  widget.property.id!));
                                         }
-                                        return CustomApiGenericDropdown<FloorModel>(
+                                        return CustomApiGenericDropdown<
+                                            FloorModel>(
                                           hintText: 'Floor',
                                           menuItems: state.floors == null
                                               ? []
@@ -253,7 +260,8 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                             setState(() {
                                               selectedFloorId = value!.id!;
                                             });
-                                            print('My floor ${selectedFloorId}');
+                                            print(
+                                                'My floor ${selectedFloorId}');
                                           },
                                         );
                                       },
@@ -267,7 +275,8 @@ class _AddUnitFormState extends State<AddUnitForm> {
                               ),
 
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
@@ -288,12 +297,8 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                     ),
                                     width: 190,
                                   ),
-
                                 ],
                               ),
-
-
-
 
                               // Row(
                               //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -346,19 +351,21 @@ class _AddUnitFormState extends State<AddUnitForm> {
                               BlocBuilder<PeriodBloc, PeriodState>(
                                 builder: (context, state) {
                                   if (state.status == PeriodStatus.initial) {
-                                    context
-                                        .read<PeriodBloc>()
-                                        .add(LoadAllPeriodsEvent(widget.property.id!));
-                                  } if (state.status == PeriodStatus.success) {
+                                    context.read<PeriodBloc>().add(
+                                        LoadAllPeriodsEvent(
+                                            widget.property.id!));
+                                  }
+                                  if (state.status == PeriodStatus.success) {
                                     periodModel = state.periods!.firstWhere(
-                                          (period) => period.code == 'MONTHLY',
+                                      (period) => period.code == 'MONTHLY',
                                       // orElse: () => null as CurrencyModel,
                                     );
                                   }
                                   return CustomApiGenericDropdown<PeriodModel>(
                                     hintText: 'Period',
-                                    menuItems:
-                                    state.periods == null ? [] : state.periods!,
+                                    menuItems: state.periods == null
+                                        ? []
+                                        : state.periods!,
                                     onChanged: (value) {
                                       setState(() {
                                         selectedDurationId = value!.id!;
@@ -408,19 +415,20 @@ class _AddUnitFormState extends State<AddUnitForm> {
 
                               BlocBuilder<CurrencyBloc, CurrencyState>(
                                 builder: (context, state) {
-
-
                                   if (state.status == CurrencyStatus.initial) {
-                                    context
-                                        .read<CurrencyBloc>()
-                                        .add(LoadAllCurrenciesEvent(widget.property.id!));
-                                  }   if (state.status == CurrencyStatus.success) {
-                                    currencyModel = state.currencies!.firstWhere(
-                                          (currency) => currency.code == 'UGX',
+                                    context.read<CurrencyBloc>().add(
+                                        LoadAllCurrenciesEvent(
+                                            widget.property.id!));
+                                  }
+                                  if (state.status == CurrencyStatus.success) {
+                                    currencyModel =
+                                        state.currencies!.firstWhere(
+                                      (currency) => currency.code == 'UGX',
                                       // orElse: () => null as CurrencyModel,
                                     );
                                   }
-                                  return CustomApiGenericDropdown<CurrencyModel>(
+                                  return CustomApiGenericDropdown<
+                                      CurrencyModel>(
                                     hintText: 'Currency',
                                     menuItems: state.currencies == null
                                         ? []
@@ -431,8 +439,6 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                       });
                                     },
                                     defaultValue: currencyModel,
-
-
                                   );
                                 },
                               ),
@@ -461,8 +467,6 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                 obscureText: false,
                                 fillColor: AppTheme.itemBgColor,
                               ),
-
-
                             ],
                           ),
                         );
