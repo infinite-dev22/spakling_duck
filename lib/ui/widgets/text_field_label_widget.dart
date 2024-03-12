@@ -12,7 +12,7 @@ class TextFieldLabelWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(label, style: AppTheme.subText,),
+        Text(label, style: AppTheme.appTitle7,),
         SizedBox(width: 5,),
         showIcon ? Icon(Icons.emergency_rounded, color: AppTheme.red, size: 10,) : Container()
       ],

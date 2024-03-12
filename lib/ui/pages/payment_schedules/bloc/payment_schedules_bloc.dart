@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_tenant_unit_schedule_model.dart';
 import 'package:smart_rent/data_layer/repositories/implementation/payment_repo_impl.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 import 'package:bloc/bloc.dart';

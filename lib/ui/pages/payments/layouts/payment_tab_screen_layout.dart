@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/ui/pages/payment_schedules/bloc/payment_schedules_bloc.dart';
@@ -26,12 +27,16 @@ class PaymentTabScreenLayout extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return BlocConsumer<PaymentBloc, PaymentState>(
+    return BlocProvider(
+  create: (context) => PaymentBloc(),
+  child: BlocConsumer<PaymentBloc, PaymentState>(
       listener: (context, state) {
 
       },
       builder: (context, state) {
         if (state.status == PaymentStatus.initial) {
+          context.read<PaymentBloc>().add(LoadAllPayments(property.id!));
+        } if (state.status == PaymentStatus.successAdd) {
           context.read<PaymentBloc>().add(LoadAllPayments(property.id!));
         }
         if (state.status == PaymentStatus.loading) {
@@ -115,40 +120,70 @@ class PaymentTabScreenLayout extends StatelessWidget {
                 size: 25,
               ),
             ),
+
             body: ListView.builder(
               controller: floorsScrollController,
               padding: const EdgeInsets.only(top: 10),
-              itemBuilder: (context, index) => Container(
-                margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-                // width: width,
-                // height: height,
-                decoration: BoxDecoration(
-                  color: AppTheme.whiteColor,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.shadowColor.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: .1,
-                      offset: const Offset(0, 1), // changes position of shadow
+              itemBuilder: (context, index) {
+                var balanceAmount = int.parse(state.payments![index].amountDue.toString()) - int.parse(state.payments![index].amount.toString());
+                return Container(
+                    margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                    // width: width,
+                    // height: height,
+                    decoration: BoxDecoration(
+                      color: AppTheme.whiteColor,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.shadowColor.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: .1,
+                          offset: const Offset(0, 1), // changes position of shadow
+                        ),
+                      ],
                     ),
-                  ],
+                    child: ListTile(
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('${state.payments![index].tenantUnitModel!.tenant!.clientTypeId == 1
+                                    ? '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.firstName} ${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.lastName}'
+                                    : '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.companyName}'} - ${state.payments![index].tenantUnitModel!.unit!.name}', style: AppTheme.blueAppTitle3,),
+                                Text('${DateFormat('d MMM, yy').format(DateTime.parse(state.payments![index].date.toString()))}', style: AppTheme.subText,)
+
+                              ],
+                            ),
+                            // Text('Periods ${state.payments![index].paymentScheduleModel!.map((schedule) => schedule.fromDate.toString())}')
+                            Wrap(
+                              spacing: 10,
+                              children: state.payments![index].tenantUnitModel!.paymentScheduleModel!.map((schedule) => Text('(${DateFormat('d MMM, yy').format(schedule.fromDate! as DateTime)} - ${DateFormat('d MMM, yy').format(schedule.toDate! as DateTime)}),')).toList(),
+                            )
+                          ],
+                        ),
+                        subtitle: Wrap(
+                            spacing: 10,
+                            children: [
+                              Text('Amount Due: ${amountFormatter.format(state.payments![index].amountDue.toString())}/= ,', style: AppTheme.subTextBold,),
+                              Text('Paid: ${amountFormatter.format(state.payments![index].amount.toString())}/= ,',style: AppTheme.subTextBold, ),
+                              Text('Balance: ${amountFormatter.format(balanceAmount.toString())}/= ', style: AppTheme.subTextBold,),
+
+                ],
                 ),
-                child: ListTile(
-                  title: Text('${state.payments![index].tenantUnitModel!.tenant!.clientTypeId == 1
-                      ? '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.firstName} ${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.lastName}'
-                      : '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.companyName}'}'),
-                  subtitle: Text('amount due is ${amountFormatter.format(state.payments![index].amountDue.toString())}/='),
-                  trailing: Text('on ${DateFormat('dd.MM.yy').format(DateTime.parse(state.payments![index].date.toString()))}'),
+                // trailing: Text('on ${DateFormat('dd.MM.yy').format(DateTime.parse(state.payments![index].date.toString()))}'),
                 ),
-              ),
+                );
+              },
               itemCount: state.payments!.length,
             ),
           );
         }
         return const SmartWidget();
       },
-    );
+    ),
+);
   }
 
   PreferredSize _buildAppTitle() {

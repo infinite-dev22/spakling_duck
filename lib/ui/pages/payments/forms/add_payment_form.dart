@@ -182,10 +182,6 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
             BlocListener<PaymentBloc, PaymentState>(
               listener: (context, state) {
                 if (state.status == PaymentStatus.successAdd) {
-                  Fluttertoast.showToast(
-                      msg: state.message.toString(),
-                      backgroundColor: Colors.green,
-                      gravity: ToastGravity.TOP);
                   selectedDate1.value = DateTime.now();
                   selectedDate2.value = DateTime.now();
                   amountController.clear();
@@ -196,12 +192,18 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                   selectedPaymentScheduleId = 0;
                   selectedPaymentModeId = 0;
                   selectedPaymentAccountId = 0;
+                  Fluttertoast.showToast(
+                      msg: state.message.toString(),
+                      backgroundColor: Colors.green,
+                      gravity: ToastGravity.TOP);
 
+                  context.read<PaymentBloc>().add(LoadAllPayments(widget.property.id!));
                   context.read<PaymentSchedulesBloc>().add(
                       LoadAllPaymentSchedulesEvent(
                           selectedTenantUnitId, widget.property.id!));
                   _controller.options.clear();
                   Navigator.pop(context);
+
                 }
                 if (state.status == PaymentStatus.accessDeniedAdd) {
                   Fluttertoast.showToast(
@@ -466,7 +468,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                         // initialBalance = schedule.balance!;
                                         return ValueItem(
                                           label:
-                                          '${schedule.fromDate}-${schedule.toDate} || ${schedule.balance}',
+                                          '${schedule.fromdate}-${schedule.todate} || ${schedule.balance}',
                                           value: schedule,
                                           // '${schedule.units!
                                           //     .unitNumber}|${schedule.balance}'

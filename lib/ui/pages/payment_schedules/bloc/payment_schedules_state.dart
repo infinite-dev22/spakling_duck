@@ -5,7 +5,8 @@ enum PaymentSchedulesStatus { initial, loading, success, empty, error, accessDen
 }
 
  class PaymentSchedulesState extends Equatable {
-  final List<PaymentSchedulesModel>? paymentSchedules;
+  // final List<PaymentSchedulesModel>? paymentSchedules;
+  final List<PaymentTenantUnitScheduleModel>? paymentSchedules;
   final PaymentSchedulesStatus status;
   const PaymentSchedulesState({
     this.paymentSchedules,
@@ -16,7 +17,8 @@ enum PaymentSchedulesStatus { initial, loading, success, empty, error, accessDen
   List<Object?> get props => [paymentSchedules, status];
 
   PaymentSchedulesState copyWith({
-     List<PaymentSchedulesModel>? paymentSchedules,
+     // List<PaymentSchedulesModel>? paymentSchedules,
+     List<PaymentTenantUnitScheduleModel>? paymentSchedules,
      PaymentSchedulesStatus? status,
  }) {
     return PaymentSchedulesState(

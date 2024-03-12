@@ -6,7 +6,7 @@ import 'package:smart_rent/ui/pages/property_details/screens/documents_success_s
 import 'package:smart_rent/ui/pages/property_details/screens/payments_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/tenants_success_screen.dart';
 import 'package:smart_rent/ui/pages/property_details/screens/units_success_screen.dart';
-import 'package:smart_rent/ui/pages/tenant_unit/forms/tenant_unit_tab_screen_layout.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/layouts/tenant_unit_tab_screen_layout.dart';
 import 'package:smart_rent/ui/pages/units/layouts/unit_tab_screen_layout.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/appbar_content.dart';

@@ -219,6 +219,44 @@ class _RootPageState extends State<RootPage> {
                   ),
                 ],
               ),
+              Column(
+                children: [
+                  IconButton.outlined(
+                    style: const ButtonStyle(
+                      iconColor: MaterialStatePropertyAll(
+                        AppTheme.inActiveColor,
+                      ),
+                      side: MaterialStatePropertyAll(
+                        BorderSide(
+                          color: AppTheme.inActiveColor,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      showModalBottomSheet(
+                          useSafeArea: true,
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) {
+                            return AddFloorForm(
+                              addButtonText: 'Add',
+                              isUpdate: false,
+                            );
+                          });
+                    },
+                    icon: const Icon(Icons.bed),
+                    iconSize: 45,
+                  ),
+                  const Text(
+                    "Add Floor",
+                    style: TextStyle(
+                      color: AppTheme.inActiveColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

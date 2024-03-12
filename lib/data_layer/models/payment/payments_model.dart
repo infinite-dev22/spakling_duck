@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:smart_rent/data_layer/models/payment/payment_schedule_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
 import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
 
 List<List<PaymentsModel>> paymentsModelFromJson(String str) => List<List<PaymentsModel>>.from(json.decode(str).map((x) => List<PaymentsModel>.from(x.map((x) => PaymentsModel.fromJson(x)))));
@@ -27,7 +28,8 @@ class PaymentsModel {
   DateTime? updatedAt;
   Property? property;
   TenantUnitModel? tenantUnitModel;
-  PaymentScheduleModel? paymentScheduleModel;
+  // List<PaymentScheduleModel>? paymentScheduleModel;
+  // List<PaymentSchedulesModel>? paymentScheduleModel;
 
   PaymentsModel({
     this.id,
@@ -45,7 +47,7 @@ class PaymentsModel {
     this.updatedAt,
     this.property,
     this.tenantUnitModel,
-    this.paymentScheduleModel,
+    // this.paymentScheduleModel,
   });
 
   factory PaymentsModel.fromJson(Map<String, dynamic> json) => PaymentsModel(
@@ -64,7 +66,10 @@ class PaymentsModel {
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     property: json["property"] == null ? null : Property.fromJson(json["property"]),
     tenantUnitModel: json["tenant_unit"] == null ? null : TenantUnitModel.fromJson(json["tenant_unit"]),
-    paymentScheduleModel: json["schedules"] == null ? null : PaymentScheduleModel.fromJson(json["schedules"]),
+    // paymentScheduleModel: json["schedules"] == null
+    //     ? []
+    //     : List<PaymentSchedulesModel>.from(
+    //     json["schedules"]!.map((x) => PaymentSchedulesModel.fromJson(x))),
 
   );
 
@@ -84,7 +89,9 @@ class PaymentsModel {
     "updated_at": updatedAt?.toIso8601String(),
     "property": property?.toJson(),
     "tenant_unit": tenantUnitModel?.toJson(),
-    "schedules": paymentScheduleModel?.toJson(),
+    // "schedules": paymentScheduleModel == null
+    //     ? []
+    //     : List<dynamic>.from(paymentScheduleModel!.map((x) => x.toJson())),
   };
 }
 
