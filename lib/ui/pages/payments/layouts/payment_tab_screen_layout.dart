@@ -28,7 +28,7 @@ class PaymentTabScreenLayout extends StatelessWidget {
   Widget _buildBody() {
     return BlocConsumer<PaymentBloc, PaymentState>(
       listener: (context, state) {
-        // TODO: implement listener
+
       },
       builder: (context, state) {
         if (state.status == PaymentStatus.initial) {
@@ -51,18 +51,23 @@ class PaymentTabScreenLayout extends StatelessWidget {
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
-                    return MultiBlocProvider(
-                      providers: [
-                        BlocProvider(
-                            create: (context) => PaymentSchedulesBloc()),
-                        BlocProvider(create: (context) => TenantUnitBloc()),
-                      ],
-                      child: AddPaymentForm(
-                        addButtonText: 'Add',
-                        isUpdate: false,
-                        property: property,
-                      ),
+                    return AddPaymentForm(
+                      addButtonText: 'Add',
+                      isUpdate: false,
+                      property: property,
                     );
+                    // return MultiBlocProvider(
+                    //   providers: [
+                    //     BlocProvider(
+                    //         create: (context) => PaymentSchedulesBloc()),
+                    //     BlocProvider(create: (context) => TenantUnitBloc()),
+                    //   ],
+                    //   child: AddPaymentForm(
+                    //     addButtonText: 'Add',
+                    //     isUpdate: false,
+                    //     property: property,
+                    //   ),
+                    // );
                   }),
               backgroundColor: AppTheme.primary,
               child: const Center(
