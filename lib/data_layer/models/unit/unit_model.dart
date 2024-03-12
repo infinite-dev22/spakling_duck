@@ -39,7 +39,7 @@ class UnitModel extends SmartUnitModel{
   int? isAvailable;
   String? squareMeters;
   String? description;
-  // UnitTypeModel? unitTypeModel;
+  UnitTypeModel? unitTypeModel;
   int? floorId;
   int? scheduleId;
   int? propertyId;
@@ -60,7 +60,7 @@ class UnitModel extends SmartUnitModel{
     this.isAvailable,
     this.squareMeters,
     this.description,
-    // this.unitTypeModel,
+    this.unitTypeModel,
     this.floorId,
     this.scheduleId,
     this.propertyId,
@@ -81,7 +81,7 @@ class UnitModel extends SmartUnitModel{
     isAvailable: json["is_available"],
     squareMeters: json["square_meters"],
     description: json["description"],
-    // unitTypeModel: json["unit_type"] == null ? null : UnitTypeModel.fromJson(json["unit_type"]),
+    unitTypeModel: json["unit_type"] == null ? null : UnitTypeModel.fromJson(json["unit_type"]),
     floorId: json["floor_id"],
     scheduleId: json["schedule_id"],
     propertyId: json["property_id"],
@@ -102,7 +102,7 @@ class UnitModel extends SmartUnitModel{
     "is_available": isAvailable,
     "square_meters": squareMeters,
     "description": description,
-    // "unit_type": unitTypeModel?.toJson(),
+    "unit_type": unitTypeModel?.toJson(),
     "floor_id": floorId,
     "schedule_id": scheduleId,
     "property_id": propertyId,

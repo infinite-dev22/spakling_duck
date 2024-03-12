@@ -74,7 +74,7 @@ class _UnitCardWidgetState extends State<UnitCardWidget> {
                   width: 1,
                 ),
                 Text(
-                    '${amountFormatter.format(widget.unitModel.amount.toString())}/=',
+                    '${widget.unitModel.currencyModel!.code} ${amountFormatter.format(widget.unitModel.amount.toString())}/=',
                     style: AppTheme.appTitle3),
                 PopupMenuButton(
                   onSelected: (value) async {
@@ -112,12 +112,23 @@ class _UnitCardWidgetState extends State<UnitCardWidget> {
               ],
             ),
             subtitle: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Text(
-                //   '${widget.unitModel.unitTypeModel!.name}',
-                //   style: AppTheme.subText,
-                // ),
+                Text(
+                  '${widget.unitModel.unitTypeModel!.name}',
+                  style: AppTheme.subText,
+                ),
+
+                Text(
+                  '${widget.unitModel.floorModel!.name}',
+                  style: AppTheme.subText,
+                ),
+
+                Text(
+                  '${widget.unitModel.periodModel!.name}',
+                  style: AppTheme.subText,
+                ),
+
                 GestureDetector(
                   onTap: () async {
                     if (widget.unitModel.isAvailable == false) {

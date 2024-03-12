@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:smart_rent/data_layer/models/currency/currency_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
 import 'package:smart_rent/data_layer/models/period/period_model.dart';
 import 'package:smart_rent/data_layer/models/smart_model.dart';
@@ -50,6 +51,7 @@ class TenantUnitModel extends SmartTenantUnitsModel{
   TenantModel? tenant;
   TUnitModel? unit;
   PeriodModel? period;
+  CurrencyModel? currencyModel;
   // List<PaymentSchedulesModel>? paymentScheduleModel;
 
   TenantUnitModel({
@@ -72,6 +74,7 @@ class TenantUnitModel extends SmartTenantUnitsModel{
     this.tenant,
     this.unit,
     this.period,
+    this.currencyModel
     // this.paymentScheduleModel,
   });
 
@@ -95,6 +98,7 @@ class TenantUnitModel extends SmartTenantUnitsModel{
     tenant: json["tenant"] == null ? null : TenantModel.fromJson(json["tenant"]),
     unit: json["unit"] == null ? null : TUnitModel.fromJson(json["unit"]),
     period: json["period"] == null ? null : PeriodModel.fromJson(json["period"]),
+    currencyModel: json["currency"] == null ? null : CurrencyModel.fromJson(json["currency"]),
     // paymentScheduleModel: json["schedules"] == null ? [] : List<PaymentSchedulesModel>.from(json["schedules"]!.map((x) => PaymentSchedulesModel.fromJson(x))),
 
   );
@@ -119,6 +123,7 @@ class TenantUnitModel extends SmartTenantUnitsModel{
     "tenant": tenant?.toJson(),
     "unit": unit?.toJson(),
     "period": period?.toJson(),
+    "currency": currencyModel?.toJson(),
     // "schedules": paymentScheduleModel == null ? [] : List<dynamic>.from(paymentScheduleModel!.map((x) => x.toJson())),
 
   };

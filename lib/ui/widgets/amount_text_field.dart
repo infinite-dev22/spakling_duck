@@ -81,11 +81,7 @@ class AmountTextField extends StatelessWidget {
             color: AppTheme.inActiveColor,
             fontSize: 16,
           ),
-          suffix: Card(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-                child: Text(suffix.toString()),
-              )),
+
         ),
         keyboardType: keyBoardType ?? TextInputType.emailAddress,
         onTap: onTap,

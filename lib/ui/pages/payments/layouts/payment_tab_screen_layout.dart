@@ -28,7 +28,7 @@ class PaymentTabScreenLayout extends StatelessWidget {
   Widget _buildBody() {
     return BlocConsumer<PaymentBloc, PaymentState>(
       listener: (context, state) {
-        // TODO: implement listener
+
       },
       builder: (context, state) {
         if (state.status == PaymentStatus.initial) {
@@ -51,18 +51,23 @@ class PaymentTabScreenLayout extends StatelessWidget {
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
-                    return MultiBlocProvider(
-                      providers: [
-                        BlocProvider(
-                            create: (context) => PaymentSchedulesBloc()),
-                        BlocProvider(create: (context) => TenantUnitBloc()),
-                      ],
-                      child: AddPaymentForm(
-                        addButtonText: 'Add',
-                        isUpdate: false,
-                        property: property,
-                      ),
+                    return AddPaymentForm(
+                      addButtonText: 'Add',
+                      isUpdate: false,
+                      property: property,
                     );
+                    // return MultiBlocProvider(
+                    //   providers: [
+                    //     BlocProvider(
+                    //         create: (context) => PaymentSchedulesBloc()),
+                    //     BlocProvider(create: (context) => TenantUnitBloc()),
+                    //   ],
+                    //   child: AddPaymentForm(
+                    //     addButtonText: 'Add',
+                    //     isUpdate: false,
+                    //     property: property,
+                    //   ),
+                    // );
                   }),
               backgroundColor: AppTheme.primary,
               child: const Center(
@@ -130,12 +135,11 @@ class PaymentTabScreenLayout extends StatelessWidget {
                   ],
                 ),
                 child: ListTile(
-                  title: Text(
-                      'Paid ${amountFormatter.format(state.payments![index].amount.toString())}/='),
-                  subtitle: Text(
-                      'amount due is ${amountFormatter.format(state.payments![index].amountDue.toString())}/='),
-                  trailing: Text(
-                      'on ${DateFormat('dd.MM.yy').format(DateTime.parse(state.payments![index].date.toString()))}'),
+                  title: Text('${state.payments![index].tenantUnitModel!.tenant!.clientTypeId == 1
+                      ? '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.firstName} ${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.lastName}'
+                      : '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.companyName}'}'),
+                  subtitle: Text('amount due is ${amountFormatter.format(state.payments![index].amountDue.toString())}/='),
+                  trailing: Text('on ${DateFormat('dd.MM.yy').format(DateTime.parse(state.payments![index].date.toString()))}'),
                 ),
               ),
               itemCount: state.payments!.length,

@@ -153,12 +153,24 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
                             fit: BoxFit.cover,
                           )),
                       title: Text(
-                        tenantUnit.unit!.name.toString(),
-                        style: AppTheme.appTitle3,
+                        tenantUnit.tenant!.clientTypeId == 1
+                            ? '${tenantUnit.tenant!.clientProfiles!.first.firstName} ${tenantUnit.tenant!.clientProfiles!.first.lastName}'
+                            : '${tenantUnit.tenant!.clientProfiles!.first.companyName}',
+                        style: AppTheme.blueAppTitle3,
                       ),
-                      subtitle: Text(
-                        'from: ${DateFormat('MMM d yyyy').format(tenantUnit.fromDate!)} to: ${DateFormat('MMM d yyyy').format(tenantUnit.toDate!)} @${amountFormatter.format(tenantUnit.discountAmount.toString())}',
-                        style: AppTheme.subText,
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'from: ${DateFormat('dd-MM-yy').format(tenantUnit.fromDate!)} to: ${DateFormat('dd-MM-yy').format(tenantUnit.toDate!)}',
+                            style: AppTheme.subText,
+                          ),
+                          Text(
+                            '${tenantUnit.unit!.name} @${tenantUnit.currencyModel!.code} ${amountFormatter.format(tenantUnit.amount.toString())} ${tenantUnit.period!.name}',
+                            style: AppTheme.subText,
+                          ),
+                        ],
                       ),
                     ),
                   ),

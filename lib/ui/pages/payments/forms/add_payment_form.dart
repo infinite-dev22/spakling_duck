@@ -24,6 +24,7 @@ import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
 import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
+import 'package:smart_rent/ui/widgets/text_field_label_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
@@ -128,7 +129,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
       paymentDate(picked);
       // paymentDateController.text =
       //     '${DateFormat('MM/dd/yyyy').format(paymentDate.value)}';
-      var formatedDate1 = "${paymentDate.value.day}-${paymentDate.value.month}-${paymentDate.value.year}";
+      var formatedDate1 = "${paymentDate.value.year}-${paymentDate.value.month}-${paymentDate.value.day}";
       print('formatedFromDate1 $formatedDate1');
       paymentDateController.text = formatedDate1;
 
@@ -156,7 +157,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
     // TODO: implement initState
     super.initState();
     tenantUnitsDropdownCont = SingleValueDropDownController();
-    paymentDateController = TextEditingController(text: "${paymentDate.value.day}-${paymentDate.value.month}-${paymentDate.value.year}");
+    paymentDateController = TextEditingController(text: "${paymentDate.value.year}-${paymentDate.value.month}-${paymentDate.value.day}");
 
   }
 
@@ -310,7 +311,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                           child: Column(
                             children: [
 
-
+                              TextFieldLabelWidget(label: 'Date'),
                               AuthTextField(
                                 controller: paymentDateController,
                                 hintText: 'Payment Date',
@@ -322,7 +323,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                               const SizedBox(
                                 height: 10,
                               ),
-
+                              TextFieldLabelWidget(label: 'Tenant/ Unit'),
                               BlocListener<PaymentSchedulesBloc,
                                   PaymentSchedulesState>(
                                 listener: (context, state) {
@@ -370,6 +371,8 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                 ),
                               ),
 
+
+                              TextFieldLabelWidget(label: 'Period'),
                               BlocBuilder<PaymentSchedulesBloc,
                                   PaymentSchedulesState>(
                                 builder: (context, state) {
@@ -491,7 +494,10 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
                                     );
                                   }
-                                  return Container();
+                                  return AuthTextField(
+                                    hintText: 'No Schedule',
+                                    obscureText: false,
+                                    enabled: false,);
                                 },
                               ),
 
@@ -504,53 +510,64 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                  Row(
                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                    children: [
-                     Obx(() {
-                       return SizedBox(
-                         width: 190,
-                         child: AmountTextField(
-                           inputFormatters: [
-                             ThousandsFormatter(),
-                           ],
-                           controller: amountController,
-                           hintText: 'Amount Due',
-                           obscureText: false,
-                           keyBoardType: TextInputType.number,
-                           enabled: false,
-                           suffix: fitValue.value == 0
-                               ? ''
-                               : '$fitValue $fitUnit',
-                         ),
-                       );
-                     }),
 
-                     SizedBox(
-                       width: 190,
-                       child: AuthTextField(
-                         inputFormatters: [
-                           ThousandsFormatter(),
-                         ],
-                         controller: paidController,
-                         hintText: 'Paid',
-                         obscureText: false,
-                         keyBoardType: TextInputType.number,
-                         onChanged: (value) {
-                           balanceController.text = (int.parse(
-                               amountController.text
-                                   .trim()
-                                   .toString()
-                                   .replaceAll(',', '')) -
-                               int.parse(
-                                   paidController.text.isEmpty
-                                       ? '0'
-                                       : paidController.text
+                     Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         TextFieldLabelWidget(label: 'Amount Due'),
+                         SizedBox(
+                             width: 190,
+                             child: AmountTextField(
+                               inputFormatters: [
+                                 ThousandsFormatter(),
+                               ],
+                               controller: amountController,
+                               hintText: 'Amount Due',
+                               obscureText: false,
+                               keyBoardType: TextInputType.number,
+                               enabled: false,
+                               // suffix: fitValue.value == 0
+                               //     ? ''
+                               //     : '$fitValue $fitUnit',
+                             ),
+                           ),
+                       ],
+                     ),
+
+                     Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         TextFieldLabelWidget(label: 'Paid Amount'),
+                         SizedBox(
+                           width: 190,
+                           child: AuthTextField(
+                             inputFormatters: [
+                               ThousandsFormatter(),
+                             ],
+                             controller: paidController,
+                             hintText: 'Paid',
+                             obscureText: false,
+                             keyBoardType: TextInputType.number,
+                             onChanged: (value) {
+                               balanceController.text = (int.parse(
+                                   amountController.text
                                        .trim()
-                                       .replaceAll(',', '')))
-                               .toString()
-                               .replaceAll(',', '');
-                           print(
-                               'MY Balance == ${balanceController.text}');
-                         },
-                       ),
+                                       .toString()
+                                       .replaceAll(',', '')) -
+                                   int.parse(
+                                       paidController.text.isEmpty
+                                           ? '0'
+                                           : paidController.text
+                                           .trim()
+                                           .replaceAll(',', '')))
+                                   .toString()
+                                   .replaceAll(',', '');
+                               print(
+                                   'MY Balance == ${balanceController.text}');
+                             },
+                           ),
+                         ),
+                       ],
                      ),
 
 
@@ -564,81 +581,94 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(
-                                    child: BlocBuilder<PaymentModeBloc,
-                                        PaymentModeState>(
-                                      builder: (context, state) {
-                                        if (state.status ==
-                                            PaymentModeStatus.initial) {
-                                          context
-                                              .read<PaymentModeBloc>()
-                                              .add(LoadAllPaymentModesEvent(widget.property.id!));
-                                        }
-                                        if (state.status ==
-                                            PaymentModeStatus.success) {
-                                          paymentModeModel =
-                                              state.paymentModes!.firstWhere(
-                                                    (payments) => payments.code == 'CASH',
-                                                // orElse: () => null as CurrencyModel,
-                                              );
-                                        }
-                                        return CustomApiGenericDropdown<
-                                            PaymentModeModel>(
-                                          hintText: 'Payment Mode',
-                                          menuItems: state.paymentModes == null
-                                              ? []
-                                              : state.paymentModes!,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              selectedPaymentModeId = value!.id!;
-                                            });
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldLabelWidget(label: 'Payment Mode'),
+                                      SizedBox(
+                                        child: BlocBuilder<PaymentModeBloc,
+                                            PaymentModeState>(
+                                          builder: (context, state) {
+                                            if (state.status ==
+                                                PaymentModeStatus.initial) {
+                                              context
+                                                  .read<PaymentModeBloc>()
+                                                  .add(LoadAllPaymentModesEvent(widget.property.id!));
+                                            }
+                                            if (state.status ==
+                                                PaymentModeStatus.success) {
+                                              paymentModeModel =
+                                                  state.paymentModes!.firstWhere(
+                                                        (payments) => payments.code == 'CASH',
+                                                    // orElse: () => null as CurrencyModel,
+                                                  );
+                                            }
+                                            return CustomApiGenericDropdown<
+                                                PaymentModeModel>(
+                                              hintText: 'Payment Mode',
+                                              menuItems: state.paymentModes == null
+                                                  ? []
+                                                  : state.paymentModes!,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  selectedPaymentModeId = value!.id!;
+                                                });
+                                              },
+                                              defaultValue: paymentModeModel,
+                                            );
                                           },
-                                          defaultValue: paymentModeModel,
-                                        );
-                                      },
-                                    ),
-                                    width: 190,
+                                        ),
+                                        width: 190,
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                      width: 190,
-                                      child: BlocBuilder<PaymentAccountBloc,
-                                          PaymentAccountState>(
-                                        builder: (context, state) {
-                                          if (state.status ==
-                                              PaymentAccountStatus.initial) {
-                                            context.read<PaymentAccountBloc>().add(
-                                                LoadAllPaymentAccountsEvent(widget.property.id!));
-                                          }   if (state.status ==
-                                              PaymentAccountStatus.success) {
-                                            paymentAccountsModel =
-                                                state.paymentAccounts!.firstWhere(
-                                                      (accounts) => accounts.number == 'PETTYCASH',
-                                                  // orElse: () => null as CurrencyModel,
-                                                );
-                                          }
-                                          return CustomApiGenericDropdown<
-                                              PaymentAccountsModel>(
-                                            hintText: 'Credited Account',
-                                            menuItems:
-                                            state.paymentAccounts == null
-                                                ? []
-                                                : state.paymentAccounts!,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                selectedPaymentAccountId =
-                                                value!.id!;
-                                              });
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldLabelWidget(label: 'Credited Account'),
+                                      SizedBox(
+                                          width: 190,
+                                          child: BlocBuilder<PaymentAccountBloc,
+                                              PaymentAccountState>(
+                                            builder: (context, state) {
+                                              if (state.status ==
+                                                  PaymentAccountStatus.initial) {
+                                                context.read<PaymentAccountBloc>().add(
+                                                    LoadAllPaymentAccountsEvent(widget.property.id!));
+                                              }   if (state.status ==
+                                                  PaymentAccountStatus.success) {
+                                                paymentAccountsModel =
+                                                    state.paymentAccounts!.firstWhere(
+                                                          (accounts) => accounts.number == 'PETTYCASH',
+                                                      // orElse: () => null as CurrencyModel,
+                                                    );
+                                              }
+                                              return CustomApiGenericDropdown<
+                                                  PaymentAccountsModel>(
+                                                hintText: 'Credited Account',
+                                                menuItems:
+                                                state.paymentAccounts == null
+                                                    ? []
+                                                    : state.paymentAccounts!,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedPaymentAccountId =
+                                                    value!.id!;
+                                                  });
+                                                },
+                                                defaultValue: paymentAccountsModel,
+                                              );
                                             },
-                                            defaultValue: paymentAccountsModel,
-                                          );
-                                        },
-                                      )),
+                                          )),
+                                    ],
+                                  ),
                                 ],
                               ),
 
                               const SizedBox(
                                 height: 10,
                               ),
+                              TextFieldLabelWidget(label: 'Description', showIcon: false,),
                               AppMaxTextField(
                                   controller: descriptionController,
                                   hintText: 'Description',
@@ -646,7 +676,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                 fillColor: AppTheme.itemBgColor,
                               ),
 
-
+                              TextFieldLabelWidget(label: 'Upload Payment Pic', showIcon: false,),
                               GestureDetector(
                                 onTap: () {
                                   FullPicker(
