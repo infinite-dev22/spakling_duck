@@ -2,11 +2,28 @@ part of 'currency_bloc.dart';
 
 enum CurrencyStatus { initial, loading, success, empty, error, accessDenied }
 
-class CurrencyState extends Equatable {
-  final List<CurrencyModel>? currencies;
-  final CurrencyStatus? status;
+extension CurrencyStatusX on CurrencyStatus {
+  bool get isInitial => this == CurrencyStatus.initial;
 
-  const CurrencyState({this.currencies, this.status = CurrencyStatus.initial});
+  bool get isLoading => this == CurrencyStatus.loading;
+
+  bool get isSuccess => this == CurrencyStatus.success;
+
+  bool get isError => this == CurrencyStatus.error;
+
+  bool get isEmpty => this == CurrencyStatus.empty;
+
+  bool get isAccessDenied => this == CurrencyStatus.accessDenied;
+}
+
+class CurrencyState extends Equatable {
+  final List<CurrencyModel> currencies;
+  final CurrencyStatus status;
+
+  const CurrencyState({
+    List<CurrencyModel>? currencies,
+    this.status = CurrencyStatus.initial,
+  }) : currencies = currencies ?? const [];
 
   @override
   // TODO: implement props

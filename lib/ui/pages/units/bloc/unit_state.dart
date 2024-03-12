@@ -21,12 +21,25 @@ enum UnitStatus {
   accessDeniedAdd,
   errorAdd,
   emptyAdd,
+}
 
+extension UnitStatusX on UnitStatus {
+  bool get isInitial => this == UnitStatus.initial;
+
+  bool get isLoading => this == UnitStatus.loading;
+
+  bool get isSuccess => this == UnitStatus.success;
+
+  bool get isError => this == UnitStatus.error;
+
+  bool get isEmpty => this == UnitStatus.empty;
+
+  bool get isAccessDenied => this == UnitStatus.accessDenied;
 }
 
 @immutable
 class UnitState extends Equatable {
-  final List<UnitModel>? units;
+  final List<UnitModel> units;
   final UnitStatus status;
   final UnitModel? unitModel;
   final bool? isLoading;
@@ -35,14 +48,14 @@ class UnitState extends Equatable {
   final String? message;
 
   const UnitState(
-      {this.units,
+      {List<UnitModel>? units,
       this.status = UnitStatus.initial,
       this.unitModel,
       this.isLoading = false,
       this.unitTypes,
-        this.addUnitResponse,
-        this.message = ''
-      });
+      this.addUnitResponse,
+      this.message = ''})
+      : units = units ?? const [];
 
   UnitState copyWith({
     List<UnitModel>? units,
@@ -66,7 +79,15 @@ class UnitState extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object?> get props => [units, status, unitModel, isLoading, unitTypes, addUnitResponse, message];
+  List<Object?> get props => [
+        units,
+        status,
+        unitModel,
+        isLoading,
+        unitTypes,
+        addUnitResponse,
+        message
+      ];
 }
 
 class UnitInitial extends UnitState {

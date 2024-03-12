@@ -126,7 +126,7 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
                         ));
                   }
                 },
-                isElevated: isTitleElevated,
+                isElevated: true,
                 onCancel: () {
                   titleController.clear();
                   locationController.clear();
@@ -393,7 +393,7 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
 //                   name: '${isUpdate ? "Edit" : "New"}  Property',
 //                   addButtonText: isUpdate ? "Update" : "Add",
 //                   onSave: submitFormData,
-//                   isElevated: isTitleElevated,
+//                   isElevated: true,
 //                 ),
 //                 Expanded(
 //                   child: GestureDetector(

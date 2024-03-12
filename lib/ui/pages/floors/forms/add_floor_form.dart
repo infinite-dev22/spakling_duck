@@ -109,7 +109,7 @@ class _AddFloorFormState extends State<AddFloorForm> {
                         ));
                   }
                 },
-                isElevated: isTitleElevated,
+                isElevated: true,
                 onCancel: () {
                   floorController.clear();
                   floorDescriptionController.clear();
@@ -257,7 +257,7 @@ class _AddFloorFormState extends State<AddFloorForm> {
 //                   name: '${isUpdate ? "Edit" : "New"}  Property',
 //                   addButtonText: isUpdate ? "Update" : "Add",
 //                   onSave: submitFormData,
-//                   isElevated: isTitleElevated,
+//                   isElevated: true,
 //                 ),
 //                 Expanded(
 //                   child: GestureDetector(
