@@ -21,6 +21,7 @@ import 'package:smart_rent/ui/widgets/custom_accordion.dart';
 import 'package:smart_rent/ui/widgets/custom_textbox.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
+import 'package:smart_rent/utilities/extra.dart';
 
 class TenantUnitForm extends StatelessWidget {
   final String addButtonText;

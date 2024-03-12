@@ -22,13 +22,13 @@ import 'package:smart_rent/utilities/app_init.dart';
 class AddUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
-  final Property property;
+
 
   const AddUnitForm(
       {super.key,
       required this.addButtonText,
       required this.isUpdate,
-      required this.property});
+     });
 
   @override
   State<AddUnitForm> createState() => _AddUnitFormState();
@@ -101,7 +101,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                   unitNumberController.clear();
                   context
                       .read<UnitBloc>()
-                      .add(LoadAllUnitsEvent(widget.property.id!));
+                      .add(LoadAllUnitsEvent(selectedPropertyId));
                   Navigator.pop(context);
                 }
                 if (state.status == UnitStatus.accessDeniedAdd) {
@@ -156,7 +156,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                               .toString()
                               .replaceAll(',', '')),
                           descriptionController.text.trim().toString(),
-                          widget.property.id!,
+                          selectedPropertyId,
                         ));
                   }
                 },
@@ -223,7 +223,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                             UnitStatus.initial) {
                                           context.read<UnitBloc>().add(
                                               LoadUnitTypesEvent(
-                                                  widget.property.id!));
+                                                  selectedPropertyId));
                                         }
                                         return CustomApiGenericDropdown<UnitTypeModel>(
                                           hintText: 'Unit Type',
@@ -247,7 +247,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                             FloorStatus.initial) {
                                           context.read<FloorBloc>().add(
                                               LoadAllFloorsEvent(
-                                                  widget.property.id!));
+                                                  selectedPropertyId));
                                         }
                                         return CustomApiGenericDropdown<
                                             FloorModel>(
@@ -352,7 +352,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                   if (state.status == PeriodStatus.initial) {
                                     context.read<PeriodBloc>().add(
                                         LoadAllPeriodsEvent(
-                                            widget.property.id!));
+                                            selectedPropertyId));
                                   }
                                   if (state.status == PeriodStatus.success) {
                                     periodModel = state.periods!.firstWhere(
@@ -417,7 +417,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                   if (state.status == CurrencyStatus.initial) {
                                     context.read<CurrencyBloc>().add(
                                         LoadAllCurrenciesEvent(
-                                            widget.property.id!));
+                                            selectedPropertyId));
                                   }
                                   if (state.status == CurrencyStatus.success) {
                                     currencyModel =

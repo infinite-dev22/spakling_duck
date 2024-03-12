@@ -5,6 +5,7 @@ import 'package:smart_rent/configs/app_configs.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_account_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_mode_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_tenant_unit_schedule_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payments_model.dart';
 import 'package:smart_rent/data_layer/repositories/interfaces/payment_repo.dart';
 import 'package:flutter/foundation.dart';
@@ -99,8 +100,41 @@ class PaymentRepoImpl implements PaymentRepo {
   }
 
 
+  // @override
+  // Future<List<PaymentSchedulesModel>> getAllPaymentSchedules(
+  //     String token, int tenantUnitId,
+  //     ) async {
+  //   var client = RetryClient(http.Client());
+  //   try {
+  //     var headers = {
+  //       HttpHeaders.contentTypeHeader: 'application/json',
+  //       HttpHeaders.acceptHeader: 'application/json',
+  //       HttpHeaders.authorizationHeader: 'Bearer $token'
+  //     };
+  //
+  //     // var url = Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
+  //     var url = Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
+  //     // var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$tenantUnitId');
+  //     // var url =  Uri.parse('$appUrl/api/rent/tenantunits/$tenantUnitId');
+  //
+  //
+  //     var response = await client.get(url, headers: headers);
+  //     List schedulesData = jsonDecode(response.body);
+  //     if (kDebugMode) {
+  //       print("payment schedules RESPONSE: $response");
+  //       print("payment schedules Data: ${response.body}");
+  //       print("payment schedules List: $schedulesData");
+  //     }
+  //     return schedulesData
+  //         .map((payment) => PaymentSchedulesModel.fromJson(payment))
+  //         .toList();
+  //   } finally {
+  //     client.close();
+  //   }
+  // }
+
   @override
-  Future<List<PaymentSchedulesModel>> getAllPaymentSchedules(
+  Future<List<PaymentTenantUnitScheduleModel>> getAllPaymentSchedules(
       String token, int tenantUnitId,
       ) async {
     var client = RetryClient(http.Client());
@@ -125,7 +159,7 @@ class PaymentRepoImpl implements PaymentRepo {
         print("payment schedules List: $schedulesData");
       }
       return schedulesData
-          .map((payment) => PaymentSchedulesModel.fromJson(payment))
+          .map((payment) => PaymentTenantUnitScheduleModel.fromJson(payment))
           .toList();
     } finally {
       client.close();

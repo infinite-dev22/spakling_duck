@@ -28,7 +28,9 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return BlocConsumer<TenantUnitBloc, TenantUnitState>(
+    return BlocProvider(
+  create: (context) => TenantUnitBloc(),
+  child: BlocConsumer<TenantUnitBloc, TenantUnitState>(
       listener: (context, state) {
         // TODO: implement listener
       },
@@ -152,22 +154,28 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
                             'https://img.freepik.com/free-photo/real-estate-broker-agent-presenting-consult-customer-decision-making-sign-insurance-form-agreement_1150-15023.jpg?w=996&t=st=1708346770~exp=1708347370~hmac=d7c8476699ac83e0dbb2375a511e548c2d78c4e1b2d69da7cc5ce31d4c915c90',
                             fit: BoxFit.cover,
                           )),
-                      title: Text(
-                        tenantUnit.tenant!.clientTypeId == 1
-                            ? '${tenantUnit.tenant!.clientProfiles!.first.firstName} ${tenantUnit.tenant!.clientProfiles!.first.lastName}'
-                            : '${tenantUnit.tenant!.clientProfiles!.first.companyName}',
-                        style: AppTheme.blueAppTitle3,
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tenantUnit.tenant!.clientTypeId == 1
+                                ? '${tenantUnit.tenant!.clientProfiles!.first.firstName} ${tenantUnit.tenant!.clientProfiles!.first.lastName}'
+                                : '${tenantUnit.tenant!.clientProfiles!.first.companyName}',
+                            style: AppTheme.blueAppTitle3,
+                          ),
+                          Text(tenantUnit.unit!.name.toString(), style: AppTheme.blueAppTitle3,)
+                        ],
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            'from: ${DateFormat('dd-MM-yy').format(tenantUnit.fromDate!)} to: ${DateFormat('dd-MM-yy').format(tenantUnit.toDate!)}',
+                            'start: ${DateFormat('dd-MM-yy').format(tenantUnit.fromDate!)} to: ${DateFormat('dd-MM-yy').format(tenantUnit.toDate!)}',
                             style: AppTheme.subText,
                           ),
                           Text(
-                            '${tenantUnit.unit!.name} @${tenantUnit.currencyModel!.code} ${amountFormatter.format(tenantUnit.amount.toString())} ${tenantUnit.period!.name}',
+                            '@${tenantUnit.currencyModel!.code} ${amountFormatter.format(tenantUnit.amount.toString())} ${tenantUnit.period!.name}',
                             style: AppTheme.subText,
                           ),
                         ],
@@ -182,7 +190,8 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
         }
         return const SmartWidget();
       },
-    );
+    ),
+);
   }
 
   PreferredSize _buildAppTitle() {

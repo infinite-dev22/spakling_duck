@@ -52,7 +52,7 @@ class TenantUnitModel extends SmartTenantUnitsModel{
   TUnitModel? unit;
   PeriodModel? period;
   CurrencyModel? currencyModel;
-  // List<PaymentSchedulesModel>? paymentScheduleModel;
+  List<PaymentSchedulesModel>? paymentScheduleModel;
 
   TenantUnitModel({
     this.id,
@@ -74,8 +74,8 @@ class TenantUnitModel extends SmartTenantUnitsModel{
     this.tenant,
     this.unit,
     this.period,
-    this.currencyModel
-    // this.paymentScheduleModel,
+    this.currencyModel,
+    this.paymentScheduleModel,
   });
 
   factory TenantUnitModel.fromJson(Map<String, dynamic> json) => TenantUnitModel(
@@ -99,7 +99,7 @@ class TenantUnitModel extends SmartTenantUnitsModel{
     unit: json["unit"] == null ? null : TUnitModel.fromJson(json["unit"]),
     period: json["period"] == null ? null : PeriodModel.fromJson(json["period"]),
     currencyModel: json["currency"] == null ? null : CurrencyModel.fromJson(json["currency"]),
-    // paymentScheduleModel: json["schedules"] == null ? [] : List<PaymentSchedulesModel>.from(json["schedules"]!.map((x) => PaymentSchedulesModel.fromJson(x))),
+    paymentScheduleModel: json["schedules"] == null ? [] : List<PaymentSchedulesModel>.from(json["schedules"]!.map((x) => PaymentSchedulesModel.fromJson(x))),
 
   );
 
@@ -124,7 +124,7 @@ class TenantUnitModel extends SmartTenantUnitsModel{
     "unit": unit?.toJson(),
     "period": period?.toJson(),
     "currency": currencyModel?.toJson(),
-    // "schedules": paymentScheduleModel == null ? [] : List<dynamic>.from(paymentScheduleModel!.map((x) => x.toJson())),
+    "schedules": paymentScheduleModel == null ? [] : List<dynamic>.from(paymentScheduleModel!.map((x) => x.toJson())),
 
   };
 
