@@ -4,6 +4,9 @@
 
 import 'dart:convert';
 
+import 'package:smart_rent/data_layer/models/payment/payment_schedule_model.dart';
+import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
+
 List<List<PaymentsModel>> paymentsModelFromJson(String str) => List<List<PaymentsModel>>.from(json.decode(str).map((x) => List<PaymentsModel>.from(x.map((x) => PaymentsModel.fromJson(x)))));
 
 String paymentsModelToJson(List<List<PaymentsModel>> data) => json.encode(List<dynamic>.from(data.map((x) => List<dynamic>.from(x.map((x) => x.toJson())))));
@@ -23,6 +26,8 @@ class PaymentsModel {
   DateTime? createdAt;
   DateTime? updatedAt;
   Property? property;
+  TenantUnitModel? tenantUnitModel;
+  PaymentScheduleModel? paymentScheduleModel;
 
   PaymentsModel({
     this.id,
@@ -39,6 +44,8 @@ class PaymentsModel {
     this.createdAt,
     this.updatedAt,
     this.property,
+    this.tenantUnitModel,
+    this.paymentScheduleModel,
   });
 
   factory PaymentsModel.fromJson(Map<String, dynamic> json) => PaymentsModel(
@@ -56,6 +63,9 @@ class PaymentsModel {
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     property: json["property"] == null ? null : Property.fromJson(json["property"]),
+    tenantUnitModel: json["tenant_unit"] == null ? null : TenantUnitModel.fromJson(json["tenant_unit"]),
+    paymentScheduleModel: json["schedules"] == null ? null : PaymentScheduleModel.fromJson(json["schedules"]),
+
   );
 
   Map<String, dynamic> toJson() => {
@@ -73,6 +83,8 @@ class PaymentsModel {
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
     "property": property?.toJson(),
+    "tenant_unit": tenantUnitModel?.toJson(),
+    "schedules": paymentScheduleModel?.toJson(),
   };
 }
 

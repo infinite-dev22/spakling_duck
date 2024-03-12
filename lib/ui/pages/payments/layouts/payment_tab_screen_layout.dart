@@ -117,7 +117,9 @@ class PaymentTabScreenLayout extends StatelessWidget {
                   ],
                 ),
                 child: ListTile(
-                  title: Text('Paid ${amountFormatter.format(state.payments![index].amount.toString())}/='),
+                  title: Text('${state.payments![index].tenantUnitModel!.tenant!.clientTypeId == 1
+                      ? '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.firstName} ${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.lastName}'
+                      : '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.companyName}'}'),
                   subtitle: Text('amount due is ${amountFormatter.format(state.payments![index].amountDue.toString())}/='),
                   trailing: Text('on ${DateFormat('dd.MM.yy').format(DateTime.parse(state.payments![index].date.toString()))}'),
                 ),
