@@ -29,169 +29,185 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
 
   Widget _buildBody() {
     return BlocProvider(
-  create: (context) => TenantUnitBloc(),
-  child: BlocConsumer<TenantUnitBloc, TenantUnitState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
-      builder: (context, state) {
-        if (state.status == TenantUnitStatus.initial) {
-          context
-              .read<TenantUnitBloc>()
-              .add(LoadTenantUnitsEvent(property.id!));
-        }
-        if (state.status == TenantUnitStatus.loading) {
-          return const LoadingWidget();
-        }
-        if (state.status == TenantUnitStatus.accessDenied) {
-          return const NotFoundWidget();
-        }
-        if (state.status == TenantUnitStatus.empty) {
-          return Scaffold(
-            backgroundColor: AppTheme.appBgColor,
-            appBar: _buildAppTitle(),
-            floatingActionButton: FloatingActionButton(
-              heroTag: "add_tenant_unit",
-              onPressed: () => showModalBottomSheet(
-                  useSafeArea: true,
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return MultiBlocListener(
-                      listeners: [
-                        BlocProvider(create: (context) => TenantBloc()),
-                        BlocProvider(create: (context) => UnitBloc()),
-                        BlocProvider(create: (context) => PeriodBloc()),
-                        BlocProvider(create: (context) => CurrencyBloc()),
-                      ],
-                      child: TenantUnitForm(
-                        addButtonText: 'Add Tenant',
-                        isUpdate: false,
-                        property: property,
-                      ),
-                    );
-                  }),
-              backgroundColor: AppTheme.primary,
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 25,
-              ),
-            ),
-            body: const NoDataWidget(),
-          );
-        }
-        if (state.status == TenantUnitStatus.error) {
-          return const SmartErrorWidget();
-        }
-        if (state.status == TenantUnitStatus.success) {
-          return Scaffold(
-            backgroundColor: AppTheme.appBgColor,
-            appBar: _buildAppTitle(),
-            floatingActionButton: FloatingActionButton(
-              heroTag: "add_tenant_unit",
-              onPressed: () => showModalBottomSheet(
-                  useSafeArea: true,
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) {
-                    return MultiBlocListener(
-                      listeners: [
-                        BlocProvider(create: (context) => TenantBloc()),
-                        BlocProvider(create: (context) => UnitBloc()),
-                        BlocProvider(create: (context) => PeriodBloc()),
-                        BlocProvider(create: (context) => CurrencyBloc()),
-                      ],
-                      child: TenantUnitForm(
-                        addButtonText: 'Add Tenant',
-                        isUpdate: false,
-                        property: property,
-                      ),
-                    );
-                  }),
-              backgroundColor: AppTheme.primary,
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 25,
-              ),
-            ),
-            body: ListView.builder(
-              controller: tenantUnitsScrollController,
-              padding: const EdgeInsets.only(top: 10),
-              itemBuilder: (context, index) {
-                var tenantUnit = state.tenantUnits![index];
-                return GestureDetector(
-                  onTap: () {
-                    // Get.to(() => TenantDetailsScreen(
-                    //   tenantController: tenantController,
-                    //   tenantId: entry.tenantId!,
-                    //   tenantModel: entry.tenantModel!,
-                    // ));
-                  },
-                  child: Container(
-                    margin:
-                        const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-                    // width: width,
-                    // height: height,
-                    decoration: BoxDecoration(
-                      color: AppTheme.whiteColor,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.shadowColor.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: .1,
-                          offset:
-                              const Offset(0, 1), // changes position of shadow
+      create: (context) => TenantUnitBloc(),
+      child: BlocConsumer<TenantUnitBloc, TenantUnitState>(
+        listener: (context, state) {
+          // TODO: implement listener
+        },
+        builder: (context, state) {
+          if (state.status == TenantUnitStatus.initial) {
+            context
+                .read<TenantUnitBloc>()
+                .add(LoadTenantUnitsEvent(property.id!));
+          }
+          if (state.status == TenantUnitStatus.loading) {
+            return const LoadingWidget();
+          }
+          if (state.status == TenantUnitStatus.accessDenied) {
+            return const NotFoundWidget();
+          }
+          if (state.status == TenantUnitStatus.empty) {
+            return Scaffold(
+              backgroundColor: AppTheme.appBgColor,
+              appBar: _buildAppTitle(),
+              floatingActionButton: FloatingActionButton(
+                heroTag: "add_tenant_unit",
+                onPressed: () => showModalBottomSheet(
+                    useSafeArea: true,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return MultiBlocListener(
+                        listeners: [
+                          BlocProvider(create: (context) => TenantBloc()),
+                          BlocProvider(create: (context) => UnitBloc()),
+                          BlocProvider(create: (context) => PeriodBloc()),
+                          BlocProvider(create: (context) => CurrencyBloc()),
+                        ],
+                        child: TenantUnitForm(
+                          addButtonText: 'Add Tenant',
+                          isUpdate: false,
+                          property: property,
                         ),
-                      ],
-                    ),
-                    child: ListTile(
-                      leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            'https://img.freepik.com/free-photo/real-estate-broker-agent-presenting-consult-customer-decision-making-sign-insurance-form-agreement_1150-15023.jpg?w=996&t=st=1708346770~exp=1708347370~hmac=d7c8476699ac83e0dbb2375a511e548c2d78c4e1b2d69da7cc5ce31d4c915c90',
-                            fit: BoxFit.cover,
-                          )),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            tenantUnit.tenant!.clientTypeId == 1
-                                ? '${tenantUnit.tenant!.clientProfiles!.first.firstName} ${tenantUnit.tenant!.clientProfiles!.first.lastName}'
-                                : '${tenantUnit.tenant!.clientProfiles!.first.companyName}',
-                            style: AppTheme.blueAppTitle3,
+                      );
+                    }),
+                backgroundColor: AppTheme.primary,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 25,
+                ),
+              ),
+              body: NoDataWidget(
+                message: "No tenant units",
+                onPressed: () {
+                  context
+                      .read<TenantUnitBloc>()
+                      .add(LoadTenantUnitsEvent(property.id!));
+                },
+              ),
+            );
+          }
+          if (state.status == TenantUnitStatus.error) {
+            return SmartErrorWidget(
+              message: 'Error loading tenant units',
+              onPressed: () {
+                context
+                    .read<TenantUnitBloc>()
+                    .add(LoadTenantUnitsEvent(property.id!));
+              },);
+          }
+          if (state.status == TenantUnitStatus.success) {
+            return Scaffold(
+              backgroundColor: AppTheme.appBgColor,
+              appBar: _buildAppTitle(),
+              floatingActionButton: FloatingActionButton(
+                heroTag: "add_tenant_unit",
+                onPressed: () => showModalBottomSheet(
+                    useSafeArea: true,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return MultiBlocListener(
+                        listeners: [
+                          BlocProvider(create: (context) => TenantBloc()),
+                          BlocProvider(create: (context) => UnitBloc()),
+                          BlocProvider(create: (context) => PeriodBloc()),
+                          BlocProvider(create: (context) => CurrencyBloc()),
+                        ],
+                        child: TenantUnitForm(
+                          addButtonText: 'Add Tenant',
+                          isUpdate: false,
+                          property: property,
+                        ),
+                      );
+                    }),
+                backgroundColor: AppTheme.primary,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 25,
+                ),
+              ),
+              body: ListView.builder(
+                controller: tenantUnitsScrollController,
+                padding: const EdgeInsets.only(top: 10),
+                itemBuilder: (context, index) {
+                  var tenantUnit = state.tenantUnits![index];
+                  return GestureDetector(
+                    onTap: () {
+                      // Get.to(() => TenantDetailsScreen(
+                      //   tenantController: tenantController,
+                      //   tenantId: entry.tenantId!,
+                      //   tenantModel: entry.tenantModel!,
+                      // ));
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                          bottom: 10, left: 10, right: 10),
+                      // width: width,
+                      // height: height,
+                      decoration: BoxDecoration(
+                        color: AppTheme.whiteColor,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.shadowColor.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: .1,
+                            offset: const Offset(
+                                0, 1), // changes position of shadow
                           ),
-                          Text(tenantUnit.unit!.name.toString(), style: AppTheme.blueAppTitle3,)
                         ],
                       ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            'start: ${DateFormat('dd-MM-yy').format(tenantUnit.fromDate!)} to: ${DateFormat('dd-MM-yy').format(tenantUnit.toDate!)}',
-                            style: AppTheme.subText,
-                          ),
-                          Text(
-                            '@${tenantUnit.currencyModel!.code} ${amountFormatter.format(tenantUnit.amount.toString())} ${tenantUnit.period!.name}',
-                            style: AppTheme.subText,
-                          ),
-                        ],
+                      child: ListTile(
+                        leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              'https://img.freepik.com/free-photo/real-estate-broker-agent-presenting-consult-customer-decision-making-sign-insurance-form-agreement_1150-15023.jpg?w=996&t=st=1708346770~exp=1708347370~hmac=d7c8476699ac83e0dbb2375a511e548c2d78c4e1b2d69da7cc5ce31d4c915c90',
+                              fit: BoxFit.cover,
+                            )),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tenantUnit.tenant!.clientTypeId == 1
+                                  ? '${tenantUnit.tenant!.clientProfiles!.first.firstName} ${tenantUnit.tenant!.clientProfiles!.first.lastName}'
+                                  : '${tenantUnit.tenant!.clientProfiles!.first.companyName}',
+                              style: AppTheme.blueAppTitle3,
+                            ),
+                            Text(
+                              tenantUnit.unit!.name.toString(),
+                              style: AppTheme.blueAppTitle3,
+                            )
+                          ],
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'start: ${DateFormat('dd-MM-yy').format(tenantUnit.fromDate!)} to: ${DateFormat('dd-MM-yy').format(tenantUnit.toDate!)}',
+                              style: AppTheme.subText,
+                            ),
+                            Text(
+                              '@${tenantUnit.currencyModel!.code} ${amountFormatter.format(tenantUnit.amount.toString())} ${tenantUnit.period!.name}',
+                              style: AppTheme.subText,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
-              itemCount: state.tenantUnits!.length,
-            ),
-          );
-        }
-        return const SmartWidget();
-      },
-    ),
-);
+                  );
+                },
+                itemCount: state.tenantUnits!.length,
+              ),
+            );
+          }
+          return const SmartWidget();
+        },
+      ),
+    );
   }
 
   PreferredSize _buildAppTitle() {

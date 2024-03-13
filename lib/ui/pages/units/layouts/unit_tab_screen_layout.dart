@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
-import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
-import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/no_data_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/not_found_widget.dart';
-import 'package:smart_rent/ui/pages/tenant_unit/forms/tenant_unit_form.dart';
-import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/pages/units/forms/add_unit_form.dart';
 import 'package:smart_rent/ui/pages/units/widgets/unit_card_widget.dart';
@@ -57,25 +53,34 @@ class UnitsTabScreenLayout extends StatelessWidget {
                     size: 25,
                   ),
                 ),
-                onPressed: () =>
-                    showModalBottomSheet(
-                        useSafeArea: true,
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (context) {
-                          return AddUnitForm(
-                            addButtonText: 'Add Tenant',
-                            isUpdate: false,
-                            property: property,
-                          );
-                        }),
+                onPressed: () => showModalBottomSheet(
+                    useSafeArea: true,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return AddUnitForm(
+                        addButtonText: 'Add Tenant',
+                        isUpdate: false,
+                        property: property,
+                      );
+                    }),
                 backgroundColor: AppTheme.primary,
               ),
-              body: const NoDataWidget(),
+              body: NoDataWidget(
+                message: "No tenant units",
+                onPressed: () {
+                  context.read<UnitBloc>().add(LoadAllUnitsEvent(property.id!));
+                },
+              ),
             );
           }
           if (state.status == UnitStatus.error) {
-            return const SmartErrorWidget();
+            return SmartErrorWidget(
+              message: 'Error loading units',
+              onPressed: () {
+                context.read<UnitBloc>().add(LoadAllUnitsEvent(property.id!));
+              },
+            );
           }
           if (state.status == UnitStatus.success) {
             return Scaffold(
@@ -90,18 +95,17 @@ class UnitsTabScreenLayout extends StatelessWidget {
                     size: 25,
                   ),
                 ),
-                onPressed: () =>
-                    showModalBottomSheet(
-                        useSafeArea: true,
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (context) {
-                          return AddUnitForm(
-                            addButtonText: 'Add',
-                            isUpdate: false,
-                            property: property,
-                          );
-                        }),
+                onPressed: () => showModalBottomSheet(
+                    useSafeArea: true,
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return AddUnitForm(
+                        addButtonText: 'Add',
+                        isUpdate: false,
+                        property: property,
+                      );
+                    }),
                 backgroundColor: AppTheme.primary,
               ),
               body: ListView.builder(

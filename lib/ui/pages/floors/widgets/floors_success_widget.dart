@@ -61,11 +61,21 @@ class FloorsSuccessWidget extends StatelessWidget {
                 size: 25,
               ),
             ),
-            body: const NoDataWidget(),
+            body: NoDataWidget(
+              message: "No floors",
+              onPressed: () {
+                context.read<FloorBloc>().add(LoadAllFloorsEvent(property.id!));
+              },
+            ),
           );
         }
         if (state.status.isError) {
-          return const SmartErrorWidget();
+          return SmartErrorWidget(
+            message: 'Error loading floors',
+            onPressed: () {
+              context.read<FloorBloc>().add(LoadAllFloorsEvent(property.id!));
+            },
+          );
         }
         if (state.status.isSuccess) {
           return Scaffold(
