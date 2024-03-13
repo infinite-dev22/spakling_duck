@@ -179,8 +179,10 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
             .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           children: [
-            BlocListener<PaymentBloc, PaymentState>(
-              listener: (context, state) {
+            MultiBlocListener(
+              listeners: [
+                BlocListener<PaymentBloc, PaymentState>(
+                  listener: (context, state) {
                 if (state.status == PaymentStatus.successAdd) {
                   selectedDate1.value = DateTime.now();
                   selectedDate2.value = DateTime.now();
@@ -214,6 +216,13 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
               },
+                ),
+                BlocListener<PaymentSchedulesBloc, PaymentSchedulesState>(
+                  listener: (context, state) {
+
+                  },
+                ),
+              ],
               child: FormTitle(
                 name: '${widget.isUpdate ? "Edit" : "New"}  Payment',
                 addButtonText: widget.isUpdate ? "Update" : "Add",
@@ -280,7 +289,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                   Navigator.pop(context);
                 },
               ),
-            ),
+),
             Expanded(
               child: GestureDetector(
                 onTap: () {
@@ -364,7 +373,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                           context
                                               .read<PaymentSchedulesBloc>()
                                               .add(LoadAllPaymentSchedulesEvent(
-                                              newValue, widget.property.id!));
+                                              selectedTenantUnitId, widget.property.id!));
                                         });
 
                                       },
@@ -378,7 +387,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                               BlocBuilder<PaymentSchedulesBloc,
                                   PaymentSchedulesState>(
                                 builder: (context, state) {
-                                  if(state.status == PaymentSchedulesStatus.initial){
+                                  if(state.status == PaymentSchedulesStatus.initial || state.status == PaymentSchedulesStatus.success){
                                     context.read<PaymentSchedulesBloc>().add(LoadAllPaymentSchedulesEvent(selectedTenantUnitId, widget.property.id!));
 
                                   }

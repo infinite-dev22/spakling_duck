@@ -117,7 +117,16 @@ class _AddUnitFormState extends State<AddUnitForm> {
                 name: '${widget.isUpdate ? "Edit" : "New"}  Unit',
                 addButtonText: widget.isUpdate ? "Update" : "Add",
                 onSave: () {
-                  if (roomNumberController.text.isEmpty) {
+
+                  if (selectedUnitTypeId == 0) {
+                    Fluttertoast.showToast(
+                        msg: 'please select a unit type',
+                        gravity: ToastGravity.TOP);
+                  }  else if (selectedFloorId == 0) {
+                    Fluttertoast.showToast(
+                        msg: 'please select a floor',
+                        gravity: ToastGravity.TOP);
+                  } else if (roomNumberController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'unit name required', gravity: ToastGravity.TOP);
                   } else if (roomNumberController.text.length <= 1) {
@@ -126,22 +135,6 @@ class _AddUnitFormState extends State<AddUnitForm> {
                   } else if (amountController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'amount required', gravity: ToastGravity.TOP);
-                  } else if (selectedUnitTypeId == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select a unit type',
-                        gravity: ToastGravity.TOP);
-                  } else if (selectedFloorId == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select a floor',
-                        gravity: ToastGravity.TOP);
-                  } else if (selectedDurationId == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select a period',
-                        gravity: ToastGravity.TOP);
-                  } else if (selectedCurrency == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select a currency',
-                        gravity: ToastGravity.TOP);
                   } else {
                     context.read<UnitBloc>().add(AddUnitEvent(
                           currentUserToken.toString(),
@@ -149,8 +142,8 @@ class _AddUnitFormState extends State<AddUnitForm> {
                           selectedFloorId,
                           roomNumberController.text.trim().toString(),
                           sizeController.text.trim().toString(),
-                          selectedDurationId,
-                          selectedCurrency,
+                      selectedDurationId == 0 ? periodModel!.id!.toInt() : selectedDurationId,
+                      selectedCurrency == 0 ? currencyModel!.id!.toInt() : selectedCurrency,
                           int.parse(amountController.text
                               .trim()
                               .toString()
@@ -166,6 +159,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                   selectedCurrency == 0;
                   selectedUnitTypeId == 0;
                   selectedDurationId == 0;
+                  selectedPropertyId == 0;
                   sizeController.clear();
                   roomNumberController.clear();
                   amountController.clear();

@@ -1,3 +1,4 @@
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:smart_rent/data_layer/models/unit/unit_type_model.dart';
 import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
+import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
@@ -19,22 +21,22 @@ import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 
-class AddUnitForm extends StatefulWidget {
+class AddHomeUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
 
 
-  const AddUnitForm(
+  const AddHomeUnitForm(
       {super.key,
       required this.addButtonText,
       required this.isUpdate,
      });
 
   @override
-  State<AddUnitForm> createState() => _AddUnitFormState();
+  State<AddHomeUnitForm> createState() => _AddHomeUnitFormState();
 }
 
-class _AddUnitFormState extends State<AddUnitForm> {
+class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
   final TextEditingController roomNameController = TextEditingController();
   final TextEditingController roomNumberController = TextEditingController();
   final TextEditingController sizeController = TextEditingController();
@@ -56,10 +58,13 @@ class _AddUnitFormState extends State<AddUnitForm> {
 
   final ScrollController scrollController = ScrollController();
 
+  late SingleValueDropDownController _propertyModelCont;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _propertyModelCont =  SingleValueDropDownController();
   }
 
   @override
@@ -117,7 +122,19 @@ class _AddUnitFormState extends State<AddUnitForm> {
                 name: '${widget.isUpdate ? "Edit" : "New"}  Unit',
                 addButtonText: widget.isUpdate ? "Update" : "Add",
                 onSave: () {
-                  if (roomNumberController.text.isEmpty) {
+                   if (selectedPropertyId == 0) {
+                     Fluttertoast.showToast(
+                         msg: 'please select a property',
+                         gravity: ToastGravity.TOP);
+                  } else if (selectedUnitTypeId == 0) {
+                     Fluttertoast.showToast(
+                         msg: 'please select a unit type',
+                         gravity: ToastGravity.TOP);
+                   }  else if (selectedFloorId == 0) {
+                     Fluttertoast.showToast(
+                         msg: 'please select a floor',
+                         gravity: ToastGravity.TOP);
+                   } else if (roomNumberController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'unit name required', gravity: ToastGravity.TOP);
                   } else if (roomNumberController.text.length <= 1) {
@@ -126,31 +143,15 @@ class _AddUnitFormState extends State<AddUnitForm> {
                   } else if (amountController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'amount required', gravity: ToastGravity.TOP);
-                  } else if (selectedUnitTypeId == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select a unit type',
-                        gravity: ToastGravity.TOP);
-                  } else if (selectedFloorId == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select a floor',
-                        gravity: ToastGravity.TOP);
-                  } else if (selectedDurationId == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select a period',
-                        gravity: ToastGravity.TOP);
-                  } else if (selectedCurrency == 0) {
-                    Fluttertoast.showToast(
-                        msg: 'please select a currency',
-                        gravity: ToastGravity.TOP);
-                  } else {
+                  }  else {
                     context.read<UnitBloc>().add(AddUnitEvent(
                           currentUserToken.toString(),
                           selectedUnitTypeId,
                           selectedFloorId,
                           roomNumberController.text.trim().toString(),
                           sizeController.text.trim().toString(),
-                          selectedDurationId,
-                          selectedCurrency,
+                          selectedDurationId == 0 ? periodModel!.id!.toInt() : selectedDurationId,
+                          selectedCurrency == 0 ? currencyModel!.id!.toInt() : selectedCurrency,
                           int.parse(amountController.text
                               .trim()
                               .toString()
@@ -166,6 +167,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                   selectedCurrency == 0;
                   selectedUnitTypeId == 0;
                   selectedDurationId == 0;
+                  selectedPropertyId == 0;
                   sizeController.clear();
                   roomNumberController.clear();
                   amountController.clear();
@@ -210,6 +212,42 @@ class _AddUnitFormState extends State<AddUnitForm> {
                               SizedBox(
                                 height: 10,
                               ),
+                              BlocBuilder<PropertyBloc, PropertyState>(
+                                builder: (context, state) {
+                                  if (state.status == PropertyStatus.initial) {
+                                    context
+                                        .read<PropertyBloc>()
+                                        .add(LoadPropertiesEvent());
+                                  }
+                                  if (state.status == PropertyStatus.empty) {
+                                    return Center(
+                                      child: Text('No Properties'),
+                                    );
+                                  }
+                                  if (state.status == PropertyStatus.error) {
+                                    return Center(
+                                      child: Text('An Error Occurred'),
+                                    );
+                                  }
+                                  return SearchablePropertyModelListDropDown<
+                                      Property>(
+                                    hintText: 'Property',
+                                    menuItems: state.properties == null
+                                        ? []
+                                        : state.properties!,
+                                    controller: _propertyModelCont,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedPropertyId = value.value.id;
+                                      });
+                                      context.read<FloorBloc>().add(LoadAllFloorsEvent(selectedPropertyId));
+
+                                      print('Property is $selectedPropertyId}');
+                                    },
+                                  );
+                                },
+                              ),
+
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -355,7 +393,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                             selectedPropertyId));
                                   }
                                   if (state.status == PeriodStatus.success) {
-                                    periodModel = state.periods!.firstWhere(
+                                    periodModel = state.periods.firstWhere(
                                       (period) => period.code == 'MONTHLY',
                                       // orElse: () => null as CurrencyModel,
                                     );
@@ -421,7 +459,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                   }
                                   if (state.status == CurrencyStatus.success) {
                                     currencyModel =
-                                        state.currencies!.firstWhere(
+                                        state.currencies.firstWhere(
                                       (currency) => currency.code == 'UGX',
                                       // orElse: () => null as CurrencyModel,
                                     );
