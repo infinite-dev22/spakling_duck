@@ -1303,10 +1303,12 @@ class DateAccordion extends StatefulWidget {
     super.key,
     required this.dateController,
     required this.title,
+    this.onChanged,
   });
 
   final TextEditingController dateController;
   final String title;
+  final Function()? onChanged;
 
   @override
   State<DateAccordion> createState() => _DateAccordionState();
@@ -1347,6 +1349,7 @@ class _DateAccordionState extends State<DateAccordion> {
                       widget.dateController.text = selectedDate;
 
                       _showContent = false;
+                      if (widget.onChanged != null) widget.onChanged!.call();
                     });
                   },
                 ),
@@ -1724,10 +1727,10 @@ class _InvoiceDateTimeAccordionState extends State<InvoiceDateTimeAccordion> {
 class TenantUnitDropdown<T extends SmartUnitModel> extends StatelessWidget {
   const TenantUnitDropdown(
       {super.key,
-        required this.hintText,
-        required this.menuItems,
-        this.onChanged,
-        this.defaultValue});
+      required this.hintText,
+      required this.menuItems,
+      this.onChanged,
+      this.defaultValue});
 
   final String hintText;
   final List<T> menuItems;
@@ -1759,18 +1762,18 @@ class TenantUnitDropdown<T extends SmartUnitModel> extends StatelessWidget {
             hint: Text(
               hintText,
               style:
-              const TextStyle(color: AppTheme.inActiveColor, fontSize: 15),
+                  const TextStyle(color: AppTheme.inActiveColor, fontSize: 15),
             ),
             items: menuItems
                 .map((item) => DropdownMenuItem<T>(
-              value: item,
-              child: Text(
-                item.getUnitName(),
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ))
+                      value: item,
+                      child: Text(
+                        item.getUnitName(),
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    ))
                 .toList(),
             validator: (value) {
               if (value == null) {

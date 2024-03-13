@@ -1,11 +1,15 @@
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/custom_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/custom_image.dart';
 
 class DetailsSuccessScreen extends StatelessWidget {
-  const DetailsSuccessScreen({super.key});
+  final Property property;
+
+  const DetailsSuccessScreen({super.key, required this.property});
 
   @override
   Widget build(BuildContext context) {
@@ -54,91 +58,95 @@ class DetailsSuccessScreen extends StatelessWidget {
   }
 
   Widget _buildPropertyDetails() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Property Name",
+                property.getName(),
                 softWrap: true,
                 overflow: TextOverflow.clip,
                 maxLines: 3,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   color: AppTheme.darker,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.star_half_sharp,
                     color: Colors.grey,
                     size: 16,
                   ),
+                  const SizedBox(width: 10),
                   Text(
-                    "P-23453453546545",
-                    style: TextStyle(
+                    property.getNumber(),
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Spacer(),
-                  Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.tag,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
-                      Text(
-                        "Commercial",
-                        style: TextStyle(
-                          fontSize: 14,
+                  const Spacer(),
+                  if (property.propertyCategoryModel != null)
+                    Row(
+                      children: [
+                        const Icon(
+                          CupertinoIcons.tag,
                           color: Colors.grey,
-                          fontWeight: FontWeight.w500,
+                          size: 16,
                         ),
-                      ),
-                    ],
-                  )
+                        const SizedBox(width: 10),
+                        Text(
+                          property.getPropertyCategoryName(),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    )
                 ],
               ),
-              SizedBox(
-                height: 5,
-              ),
+              const SizedBox(height: 5),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.location_on_outlined,
                     color: Colors.grey,
                     size: 16,
                   ),
+                  const SizedBox(width: 10),
                   Text(
-                    "Location",
-                    style: TextStyle(
+                    property.getLocation(),
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         FontAwesomeIcons.rulerCombined,
                         color: Colors.grey,
                         size: 16,
                       ),
+                      const SizedBox(width: 10),
                       Text(
-                        "5,000 SQM",
-                        style: TextStyle(
+                        "${property.getSquareMeters()} SQM",
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
                           fontWeight: FontWeight.w500,
@@ -148,36 +156,36 @@ class DetailsSuccessScreen extends StatelessWidget {
                   )
                 ],
               ),
-              SizedBox(
-                height: 5,
-              ),
+              const SizedBox(height: 5),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     CupertinoIcons.sparkles,
                     color: Colors.grey,
                     size: 16,
                   ),
+                  const SizedBox(width: 10),
                   Text(
-                    "Mall",
-                    style: TextStyle(
+                    property.propertyType!.getName(),
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   if (true)
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           CupertinoIcons.calendar,
                           color: Colors.grey,
                           size: 16,
                         ),
+                        const SizedBox(width: 10),
                         Text(
-                          "01/01/2000",
-                          style: TextStyle(
+                          DateFormat("dd/MM/yyyy").format(property.createdAt!),
+                          style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
                             fontWeight: FontWeight.w500,
@@ -190,7 +198,7 @@ class DetailsSuccessScreen extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 100,
         ),
       ],

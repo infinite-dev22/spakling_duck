@@ -35,7 +35,7 @@ class PropertyDetailsLayout extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            const DetailsSuccessScreen(),
+            DetailsSuccessScreen(property: property),
             const DocumentsSuccessScreen(),
             FloorsPage(property: property),
             // UnitsSuccessScreen(property: property),
