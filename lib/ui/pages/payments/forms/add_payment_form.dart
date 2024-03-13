@@ -408,7 +408,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                     return MultiSelectDialogField<PaymentTenantUnitScheduleModel>(
                                       searchable: true,
                                       searchHint: 'search for schedule',
-
+                                      backgroundColor: AppTheme.appBgColor,
                                       title: Text('Payment Schedules', style: AppTheme.appTitle7,),
                                       items: state.paymentSchedules == null
                                             ? []
