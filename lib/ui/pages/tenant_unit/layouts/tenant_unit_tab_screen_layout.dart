@@ -9,6 +9,7 @@ import 'package:smart_rent/ui/pages/properties/widgets/no_data_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/not_found_widget.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/forms/tenant_unit_form.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/layouts/tenant_unit_details_page_layout.dart';
 import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
@@ -136,11 +137,7 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
                   var tenantUnit = state.tenantUnits![index];
                   return GestureDetector(
                     onTap: () {
-                      // Get.to(() => TenantDetailsScreen(
-                      //   tenantController: tenantController,
-                      //   tenantId: entry.tenantId!,
-                      //   tenantModel: entry.tenantModel!,
-                      // ));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> TenantUnitDetailsPageLayout(tenantUnitModel: tenantUnit,)));
                     },
                     child: Container(
                       margin: const EdgeInsets.only(
