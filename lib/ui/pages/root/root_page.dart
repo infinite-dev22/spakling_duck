@@ -121,32 +121,7 @@ class _RootPageState extends State<RootPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  IconButton.outlined(
-                    style: const ButtonStyle(
-                      iconColor: MaterialStatePropertyAll(
-                        AppTheme.inActiveColor,
-                      ),
-                      side: MaterialStatePropertyAll(
-                        BorderSide(
-                          color: AppTheme.inActiveColor,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    icon: const Icon(Icons.person),
-                    iconSize: 45,
-                  ),
-                  const Text(
-                    "Add Tenant",
-                    style: TextStyle(
-                      color: AppTheme.inActiveColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+
               Column(
                 children: [
                   IconButton.outlined(
@@ -266,6 +241,34 @@ class _RootPageState extends State<RootPage> {
                   ),
                 ],
               ),
+
+              Column(
+                children: [
+                  IconButton.outlined(
+                    style: const ButtonStyle(
+                      iconColor: MaterialStatePropertyAll(
+                        AppTheme.inActiveColor,
+                      ),
+                      side: MaterialStatePropertyAll(
+                        BorderSide(
+                          color: AppTheme.inActiveColor,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {},
+                    icon: const Icon(Icons.person),
+                    iconSize: 45,
+                  ),
+                  const Text(
+                    "Add Tenant",
+                    style: TextStyle(
+                      color: AppTheme.inActiveColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+
             ],
           ),
         ),
