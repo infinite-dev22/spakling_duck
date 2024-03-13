@@ -21,29 +21,50 @@ import 'package:smart_rent/ui/widgets/custom_accordion.dart';
 import 'package:smart_rent/ui/widgets/custom_textbox.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
-import 'package:smart_rent/utilities/extra.dart';
 
-class TenantUnitForm extends StatelessWidget {
+class TenantUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
   final Property property;
-
-  TextEditingController durationController = TextEditingController();
-  TextEditingController unitAmountController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController discountedAmountController = TextEditingController();
-  TextEditingController startDateController = TextEditingController();
-  TextEditingController endDateController = TextEditingController();
-  TenantModel tenant = TenantModel();
-  UnitModel unit = UnitModel();
-  PeriodModel period = PeriodModel();
-  CurrencyModel currency = CurrencyModel();
 
   TenantUnitForm(
       {super.key,
       required this.addButtonText,
       required this.isUpdate,
       required this.property});
+
+  @override
+  State<TenantUnitForm> createState() => _TenantUnitFormState();
+}
+
+class _TenantUnitFormState extends State<TenantUnitForm> {
+  TextEditingController durationController = TextEditingController();
+
+  TextEditingController unitAmountController = TextEditingController();
+
+  TextEditingController descriptionController = TextEditingController();
+
+  TextEditingController discountedAmountController = TextEditingController();
+
+  TextEditingController startDateController = TextEditingController();
+
+  TextEditingController endDateController = TextEditingController();
+
+  TenantModel tenant = TenantModel();
+
+  UnitModel unit = UnitModel();
+
+  PeriodModel period = PeriodModel();
+
+  CurrencyModel currency = CurrencyModel();
+  var numberFormat = NumberFormat("###,###,###,###,###");
+
+  @override
+  void initState() {
+    super.initState();
+    startDateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    endDateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,14 +95,11 @@ class TenantUnitForm extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context, TenantUnitState state) {
-    startDateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
-    endDateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
-    var numberFormat = NumberFormat("###,###,###,###,###");
     return ListView(
       children: [
         FormTitle(
-          name: '${isUpdate ? "Edit" : "New"}  Tenant',
-          addButtonText: isUpdate ? "Update" : "Add",
+          name: '${widget.isUpdate ? "Edit" : "New"}  Tenant',
+          addButtonText: widget.isUpdate ? "Update" : "Add",
           onSave: () {
             context.read<TenantUnitBloc>().add(
                   AddTenantUnitEvent(
@@ -90,13 +108,15 @@ class TenantUnitForm extends StatelessWidget {
                     unit.id!,
                     period.id!,
                     durationController.text,
-                    DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(startDateController.text)),
-                    DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(endDateController.text)),
+                    DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
+                        .parse(startDateController.text)),
+                    DateFormat('yyyy-MM-dd').format(
+                        DateFormat('dd/MM/yyyy').parse(endDateController.text)),
                     unitAmountController.text,
                     currency.id!,
                     discountedAmountController.text,
                     descriptionController.text,
-                    property.id!,
+                    widget.property.id!,
                   ),
                 );
           },
@@ -176,7 +196,7 @@ class TenantUnitForm extends StatelessWidget {
                   if (state.status.isInitial) {
                     context
                         .read<UnitBloc>()
-                        .add(LoadAllUnitsEvent(property.id!));
+                        .add(LoadAllUnitsEvent(widget.property.id!));
                   }
                   if (state.status.isSuccess) {
                     return TenantUnitDropdown<UnitModel>(
@@ -238,7 +258,7 @@ class TenantUnitForm extends StatelessWidget {
                   if (state.status.isInitial) {
                     context
                         .read<PeriodBloc>()
-                        .add(LoadAllPeriodsEvent(property.id!));
+                        .add(LoadAllPeriodsEvent(widget.property.id!));
                   }
                   if (state.status.isSuccess ||
                       state.status.isDurationSelected) {
@@ -265,7 +285,8 @@ class TenantUnitForm extends StatelessWidget {
                                 if (state.status.isDurationSelected)
                                   Expanded(
                                     child: SmartCaseTextField(
-                                      hint: _placeHolder(state.durationIdSelected!),
+                                      hint: _placeHolder(
+                                          state.durationIdSelected!),
                                       maxLength: 50,
                                       minLines: 1,
                                       maxLines: 1,
@@ -290,6 +311,15 @@ class TenantUnitForm extends StatelessWidget {
                         DateAccordion(
                           dateController: startDateController,
                           title: "From",
+                          onChanged: () {
+                            _durationCalc(
+                              state.durationIdSelected!,
+                              int.parse(
+                                durationController.text,
+                              ),
+                            );
+                            setState(() {});
+                          },
                         ),
                         Container(
                           height: 50,
@@ -372,7 +402,7 @@ class TenantUnitForm extends StatelessWidget {
                   if (state.status.isInitial) {
                     context
                         .read<CurrencyBloc>()
-                        .add(LoadAllCurrenciesEvent(property.id!));
+                        .add(LoadAllCurrenciesEvent(widget.property.id!));
                   }
                   if (state.status.isSuccess) {
                     return Row(
@@ -449,6 +479,7 @@ class TenantUnitForm extends StatelessWidget {
 
   _durationCalc(int selectedDurationId, int duration) {
     DateTime date = DateTime.now();
+    print("SELECTED ID: ${selectedDurationId}");
     switch (selectedDurationId) {
       case 1:
         date = Jiffy.parse(startDateController.text, pattern: 'dd/MM/yyyy')
