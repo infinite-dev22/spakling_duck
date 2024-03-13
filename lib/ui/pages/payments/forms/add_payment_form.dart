@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:smart_rent/data_layer/models/currency/currency_model.dart';
 import 'package:smart_rent/data_layer/models/floor/floor_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_account_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_mode_model.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_tenant_unit_schedule_model.dart';
 import 'package:smart_rent/data_layer/models/period/period_model.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
@@ -151,6 +154,9 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
 
   final ScrollController scrollController = ScrollController();
+
+  List<PaymentTenantUnitScheduleModel> selectedSchedules = [];
+  late int sumBalances;
 
   @override
   void initState() {
@@ -376,6 +382,10 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                               selectedTenantUnitId, widget.property.id!));
                                         });
 
+                                        paidController.clear();
+                                        amountController.clear();
+                                        balanceController.clear();
+
                                       },
                                     );
                                   },
@@ -387,124 +397,84 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                               BlocBuilder<PaymentSchedulesBloc,
                                   PaymentSchedulesState>(
                                 builder: (context, state) {
-                                  if(state.status == PaymentSchedulesStatus.initial || state.status == PaymentSchedulesStatus.success){
+                                  if(state.status == PaymentSchedulesStatus.initial){
                                     context.read<PaymentSchedulesBloc>().add(LoadAllPaymentSchedulesEvent(selectedTenantUnitId, widget.property.id!));
 
                                   }
                                   if (state.status ==
                                       PaymentSchedulesStatus.success) {
                                     print("ITEMS: ${state.paymentSchedules}");
-                                    return MultiSelectDropDown(
-                                      onOptionRemoved: (int intValue, ValueItem<dynamic> valueItem){
-                                        print('RemovedInt = $intValue');
-                                        print('Removed ValueItem = ${valueItem.value.balance}');
-                                        _controller.clearSelection(valueItem);
-                                        amountController.text = (int.parse(paidController.text.trim().toString().replaceAll(',', '').toString()) -int.parse(valueItem.value.balance.toString().replaceAll(',', '').toString())).toString();
-                                        print('new Amount = ${amountController.text}');
-                                        print('My Selected Options = ${_controller.selectedOptions}');
-                                        print('My Selected Options count= ${_controller.selectedOptions.length}');
-                                        if(_controller.selectedOptions.isEmpty){
-                                          _controller.clearAllSelection();
+
+                                    return MultiSelectDialogField<PaymentTenantUnitScheduleModel>(
+                                      searchable: true,
+                                      searchHint: 'search for schedule',
+
+                                      title: Text('Payment Schedules', style: AppTheme.appTitle7,),
+                                      items: state.paymentSchedules == null
+                                            ? []
+                                            : state.paymentSchedules!.map((schedule) => MultiSelectItem(schedule, '${schedule.fromdate}-${schedule.todate} || ${schedule.balance}')).toList(),
+                                      listType: MultiSelectListType.CHIP,
+                                      decoration: BoxDecoration(
+                                          color: AppTheme.itemBgColor,
+                                          borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      onConfirm: (values) {
+                                        selectedSchedules = values;
+
+                                        if(selectedSchedules.isEmpty){
                                           paidController.clear();
                                           amountController.clear();
                                           balanceController.clear();
 
                                         } else {
 
-                                        }
-
-                                      },
-
-                                      controller: _controller,
-                                      inputDecoration: BoxDecoration(
-                                        color: AppTheme.itemBgColor,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      clearIcon: const Icon(Icons.clear),
-                                      // showClearIcon: true,
-                                      hint: 'Select Payment Schedule',
-                                      hintStyle: const TextStyle(
-                                        color: AppTheme.inActiveColor,
-                                        fontSize: 16,
-                                      ),
-
-                                      onOptionSelected: (options) {
-                                        for (var element in options) {
-                                          print('My selected element = $element');
-
-                                          myPaymentSchedules = options
-                                              .map((e) => e.value)
-                                              .toList();
-                                          print(
-                                              'My Options selected schedules = $myPaymentSchedules');
-
-                                          myBalances = options
-                                              .map((e) => e.value)
-                                              .toList();
-                                          myPaymentScheduleIDs = options
-                                              .map((e) => e.value)
-                                              .toList();
-
-
-                                          print('My selected balances = ${myBalances.map((e) => e.balance).toList()}');
-                                          print('My selected ps ids = ${myPaymentScheduleIDs.map((e) => e.id).toList()}');
-
-                                          int sumBalances = myBalances.map((e) => int.parse(e.balance.replaceAll(',',''))).toList().reduce((value, element) => value + element);
-                                          // int sumBalances = myBalances.map((e) => e.balance).toList().reduce((value, element) => value + element);
-
                                           print('My Toatal balance = $sumBalances');
                                           amountController.text = sumBalances.toString();
                                           paidController.text = sumBalances.toString();
                                           balanceController.text = (int.parse(amountController.text.trim()) - int.parse(paidController.text.trim())).toString();
-                                          // balanceController.text = int.parse(tenantController.specificPaymentBalance.value.toString()) as String;
-
-                                          bool exists = myPaymentScheduleIDs.contains(element);
-
-                                          if (exists) {
-                                            print('The object exists in the list.');
-                                          } else {
-                                            print('The object does not exist in the list.');
-                                          }
 
 
 
                                         }
+
+                                        print('My New selected schedules= $selectedSchedules');
                                       },
-                                      options: state.paymentSchedules == null
-                                          ? []
-                                          : state.paymentSchedules!
-                                          .map((schedule) {
-                                        // initialBalance = schedule.balance!;
-                                        return ValueItem(
-                                          label:
-                                          '${schedule.fromdate}-${schedule.todate} || ${schedule.balance}',
-                                          value: schedule,
-                                          // '${schedule.units!
-                                          //     .unitNumber}|${schedule.balance}'
-                                        );
-                                      }).toList(),
-                                      // optionBuilder: (context, valueItem, isSelected) {
-                                      //   return  ListTile(
-                                      //     title: Text(valueItem.label),
-                                      //     // subtitle: Text(valueItem.value.toString()),
-                                      //     trailing: isSelected
-                                      //         ? const Icon(Icons.check_circle)
-                                      //         : const Icon(Icons.radio_button_unchecked),
-                                      //   );
-                                      // },
-                                      selectionType: SelectionType.multi,
-                                      chipConfig: const ChipConfig(
-                                        wrapType: WrapType.wrap,
-                                      ),
-                                      borderColor: Colors.white,
-                                      optionTextStyle:
-                                      const TextStyle(fontSize: 16),
-                                      selectedOptionIcon:
-                                      const Icon(Icons.check_circle),
 
 
+
+                                      onSelectionChanged: (options){
+
+                                            for (var element in options) {
+                                              print('My selected element = $element');
+
+                                              myPaymentSchedules = options
+                                                  .map((e) => e)
+                                                  .toList();
+                                              print(
+                                                  'My Options selected schedules = $myPaymentSchedules');
+
+                                              myBalances = options
+                                                  .map((e) => e)
+                                                  .toList();
+                                              myPaymentScheduleIDs = options
+                                                  .map((e) => e)
+                                                  .toList();
+
+
+                                              print('My selected balances = ${myBalances.map((e) => e.balance).toList()}');
+                                              print('My selected ps ids = ${myPaymentScheduleIDs.map((e) => e.id).toList()}');
+
+                                               sumBalances = myBalances.map((e) => int.parse(e.balance.replaceAll(',',''))).toList().reduce((value, element) => value + element);
+                                              // int sumBalances = myBalances.map((e) => e.balance).toList().reduce((value, element) => value + element);
+
+
+                                            }
+
+                                      },
+                                      isDismissible: false,
                                     );
                                   }
+
                                   return AuthTextField(
                                     hintText: 'No Schedule',
                                     obscureText: false,

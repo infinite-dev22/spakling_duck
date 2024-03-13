@@ -161,12 +161,15 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
                         ],
                       ),
                       child: ListTile(
-                        leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              'https://img.freepik.com/free-photo/real-estate-broker-agent-presenting-consult-customer-decision-making-sign-insurance-form-agreement_1150-15023.jpg?w=996&t=st=1708346770~exp=1708347370~hmac=d7c8476699ac83e0dbb2375a511e548c2d78c4e1b2d69da7cc5ce31d4c915c90',
-                              fit: BoxFit.cover,
-                            )),
+
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: NetworkImage('https://img.freepik.com/free-photo/real-estate-broker-agent-presenting-consult-customer-decision-making-sign-insurance-form-agreement_1150-15023.jpg?w=996&t=st=1708346770~exp=1708347370~hmac=d7c8476699ac83e0dbb2375a511e548c2d78c4e1b2d69da7cc5ce31d4c915c90'),
+                            ),
+                          ],
+                        ),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
