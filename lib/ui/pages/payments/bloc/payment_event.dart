@@ -4,12 +4,18 @@ abstract class PaymentEvent extends Equatable {
   const PaymentEvent();
 }
 
-
 class LoadAllPayments extends PaymentEvent{
   final int propertyId;
   const LoadAllPayments( this.propertyId);
   @override
-  // TODO: implement props
+  List<Object?> get props => [propertyId];
+
+}
+
+class RefreshPaymentsEvent extends PaymentEvent{
+  final int propertyId;
+  const RefreshPaymentsEvent( this.propertyId);
+  @override
   List<Object?> get props => [propertyId];
 
 }
@@ -30,7 +36,6 @@ class AddPaymentsEvent extends PaymentEvent {
       this.paymentScheduleId);
 
   @override
-  // TODO: implement props
   List<Object?> get props => [token, paid, amountDue, date, tenantUnitId,
     accountId, paymentModeId, propertyId, paymentScheduleId
   ];

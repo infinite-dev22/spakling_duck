@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
@@ -78,6 +80,9 @@ class FloorsSuccessWidget extends StatelessWidget {
           );
         }
         if (state.status.isSuccess) {
+          Timer.run(() async {
+            context.read<FloorBloc>().add(RefreshFloorsEvent(property.id!));
+          });
           return Scaffold(
             backgroundColor: AppTheme.appBgColor,
             appBar: _buildAppTitle(),

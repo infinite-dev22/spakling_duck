@@ -14,12 +14,33 @@ part 'tenant_unit_event.dart';part 'tenant_unit_state.dart';
 class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
   TenantUnitBloc() : super(const TenantUnitState()) {
     on<LoadTenantUnitsEvent>(_mapFetchTenantUnitsToState);
+    on<RefreshTenantUnitsEvent>(_mapRefreshTenantUnitsToState);
     on<AddTenantUnitEvent>(_mapAddTenantUnitEventToState);
   }
 
   _mapFetchTenantUnitsToState(
       LoadTenantUnitsEvent event, Emitter<TenantUnitState> emit) async {
     emit(state.copyWith(status: TenantUnitStatus.loading));
+    await TenantUnitRepoImpl()
+        .getALlTenantUnits(currentUserToken.toString(), event.id)
+        .then((tenantUnits) {
+      if (tenantUnits.isNotEmpty) {
+        emit(state.copyWith(
+            status: TenantUnitStatus.success, tenantUnits: tenantUnits));
+      } else {
+        emit(state.copyWith(status: TenantUnitStatus.empty));
+      }
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(status: TenantUnitStatus.error));
+      if (kDebugMode) {
+        print("Error: $error");
+        print("Stacktrace: $stackTrace");
+      }
+    });
+  }
+
+  _mapRefreshTenantUnitsToState(
+      RefreshTenantUnitsEvent event, Emitter<TenantUnitState> emit) async {
     await TenantUnitRepoImpl()
         .getALlTenantUnits(currentUserToken.toString(), event.id)
         .then((tenantUnits) {

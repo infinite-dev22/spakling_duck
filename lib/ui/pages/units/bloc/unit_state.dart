@@ -4,6 +4,8 @@ enum UnitStatus {
   initial,
   success,
   loading,
+  reLoading,
+  reLoaded,
   accessDenied,
   error,
   empty,
@@ -33,6 +35,10 @@ extension UnitStatusX on UnitStatus {
   bool get isError => this == UnitStatus.error;
 
   bool get isEmpty => this == UnitStatus.empty;
+
+  bool get isReloaded => this == UnitStatus.reLoaded;
+
+  bool get isReloading => this == UnitStatus.reLoading;
 
   bool get isAccessDenied => this == UnitStatus.accessDenied;
 }

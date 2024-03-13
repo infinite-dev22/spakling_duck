@@ -99,9 +99,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                   descriptionController.clear();
                   roomNameController.clear();
                   unitNumberController.clear();
-                  context
-                      .read<UnitBloc>()
-                      .add(LoadAllUnitsEvent(widget.property.id!));
+            context.read<UnitBloc>().add(LoadAllUnitsEvent(widget.property.id!));
                   Navigator.pop(context);
                 }
                 if (state.status == UnitStatus.accessDeniedAdd) {
@@ -207,7 +205,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                         return Form(
                           child: Column(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               Row(
@@ -225,7 +223,8 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                               LoadUnitTypesEvent(
                                                   widget.property.id!));
                                         }
-                                        return CustomApiGenericDropdown<UnitTypeModel>(
+                                        return CustomApiGenericDropdown<
+                                            UnitTypeModel>(
                                           hintText: 'Unit Type',
                                           menuItems: state.unitTypes == null
                                               ? []
@@ -269,7 +268,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                 ],
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -279,22 +278,22 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
+                                    width: 190,
                                     child: AuthTextField(
                                       controller: roomNumberController,
                                       hintText: 'Unit Name/Number',
                                       obscureText: false,
                                       keyBoardType: TextInputType.text,
                                     ),
-                                    width: 190,
                                   ),
                                   SizedBox(
+                                    width: 190,
                                     child: AuthTextField(
                                       controller: sizeController,
                                       hintText: 'Square Meters',
                                       obscureText: false,
                                       keyBoardType: TextInputType.text,
                                     ),
-                                    width: 190,
                                   ),
                                 ],
                               ),
@@ -343,7 +342,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                               //   ],
                               // ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -374,11 +373,9 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                   );
                                 },
                               ),
-
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
-
                               // Row(
                               //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               //   crossAxisAlignment: CrossAxisAlignment.center,
@@ -442,7 +439,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                 },
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -456,7 +453,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                 ],
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 

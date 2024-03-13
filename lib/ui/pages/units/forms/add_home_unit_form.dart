@@ -6,7 +6,6 @@ import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:smart_rent/data_layer/models/currency/currency_model.dart';
 import 'package:smart_rent/data_layer/models/floor/floor_model.dart';
 import 'package:smart_rent/data_layer/models/period/period_model.dart';
-import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/data_layer/models/unit/unit_type_model.dart';
 import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
@@ -23,12 +22,11 @@ class AddUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
 
-
-  const AddUnitForm(
-      {super.key,
-      required this.addButtonText,
-      required this.isUpdate,
-     });
+  const AddUnitForm({
+    super.key,
+    required this.addButtonText,
+    required this.isUpdate,
+  });
 
   @override
   State<AddUnitForm> createState() => _AddUnitFormState();
@@ -225,7 +223,8 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                               LoadUnitTypesEvent(
                                                   selectedPropertyId));
                                         }
-                                        return CustomApiGenericDropdown<UnitTypeModel>(
+                                        return CustomApiGenericDropdown<
+                                            UnitTypeModel>(
                                           hintText: 'Unit Type',
                                           menuItems: state.unitTypes == null
                                               ? []

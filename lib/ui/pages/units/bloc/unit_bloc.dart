@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:smart_rent/data_layer/dtos/implementation/unit_dto_impl.dart';
 import 'package:smart_rent/data_layer/models/unit/add_unit_response.dart';
@@ -18,6 +19,7 @@ part 'unit_state.dart';
 class UnitBloc extends Bloc<UnitEvent, UnitState> {
   UnitBloc() : super(UnitState()) {
     on<LoadAllUnitsEvent>(_mapFetchUnitsToState);
+    on<RefreshUnitsEvent>(_mapRefreshUnitsToState);
     on<LoadUnitTypesEvent>(_mapFetchUnitTypesToState);
     on<AddUnitEvent>(_mapAddUnitEventToState);
   }
@@ -30,6 +32,26 @@ class UnitBloc extends Bloc<UnitEvent, UnitState> {
         .then((units) {
       if (units.isNotEmpty) {
         emit(state.copyWith(status: UnitStatus.success, units: units));
+      } else {
+        emit(state.copyWith(status: UnitStatus.empty));
+      }
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(status: UnitStatus.error));
+      if (kDebugMode) {
+        print("Error: $error");
+        print("Stacktrace: $stackTrace");
+      }
+    });
+  }
+
+  _mapRefreshUnitsToState(
+      RefreshUnitsEvent event, Emitter<UnitState> emit) async {
+    // emit(state.copyWith(status: UnitStatus.reLoading));
+    await UnitRepoImpl()
+        .getALlUnits(currentUserToken.toString(), event.id)
+        .then((units) {
+      if (units.isNotEmpty) {
+        emit(state.copyWith(status: UnitStatus.reLoaded, units: units));
       } else {
         emit(state.copyWith(status: UnitStatus.empty));
       }
@@ -109,26 +131,26 @@ class UnitBloc extends Bloc<UnitEvent, UnitState> {
 
   @override
   void onEvent(UnitEvent event) {
-    print(event);
+    log(event.toString());
     super.onEvent(event);
   }
 
   @override
   void onTransition(Transition<UnitEvent, UnitState> transition) {
-    print(transition);
+    log(transition.toString());
     super.onTransition(transition);
   }
 
   @override
   void onChange(Change<UnitState> change) {
-    print(change);
+    log(change.toString());
     super.onChange(change);
   }
 
   @override
   void onError(Object error, StackTrace stackTrace) {
-    print(error);
-    print(stackTrace);
+    log(error.toString());
+    log(stackTrace.toString());
     super.onError(error, stackTrace);
   }
 }

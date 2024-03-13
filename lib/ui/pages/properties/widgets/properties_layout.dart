@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
@@ -26,10 +28,14 @@ class PropertiesLayout extends StatelessWidget {
             message: 'Error loading properties',
             onPressed: () {
               context.read<PropertyBloc>().add(LoadPropertiesEvent());
-            },);
+            },
+          );
         }
         if (state.status.isSuccess) {
-          return SuccessWidget();
+          Timer.run(() async {
+            context.read<PropertyBloc>().add(RefreshPropertiesEvent());
+          });
+          return const SuccessWidget();
         }
         if (state.status.isEmpty) {
           return NoDataWidget(

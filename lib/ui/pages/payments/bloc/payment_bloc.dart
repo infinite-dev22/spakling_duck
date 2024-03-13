@@ -1,21 +1,20 @@
 import 'dart:async';
 
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:smart_rent/data_layer/dtos/implementation/payment_dto_impl.dart';
 import 'package:smart_rent/data_layer/models/payment/add_payment_response_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payments_model.dart';
 import 'package:smart_rent/data_layer/repositories/implementation/payment_repo_impl.dart';
 import 'package:smart_rent/utilities/app_init.dart';
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 
-
-part 'payment_event.dart';
-part 'payment_state.dart';
+part 'payment_event.dart';part 'payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   PaymentBloc() : super(PaymentState()) {
     on<AddPaymentsEvent>(_mapAddPaymentsEventToState);
+    on<RefreshPaymentsEvent>(_mapRefreshPaymentsEventToState);
     on<LoadAllPayments>(_mapFetchPaymentsToState);
   }
 
@@ -28,29 +27,51 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         .then((floors) {
       if (floors.isNotEmpty) {
         emit(state.copyWith(status: PaymentStatus.success, payments: floors));
-
       } else {
         emit(state.copyWith(status: PaymentStatus.empty));
-
       }
-
     }).onError((error, stackTrace) {
       emit(state.copyWith(status: PaymentStatus.error));
       if (kDebugMode) {
         print("Error: $error");
         print("Stacktrace: $stackTrace");
-        print("JON MARK 3");
+      }
+    });
+  }
+
+  _mapRefreshPaymentsEventToState(
+      RefreshPaymentsEvent event, Emitter<PaymentState> emit) async {
+    await PaymentRepoImpl()
+        .getAllPayments(currentUserToken.toString(), event.propertyId)
+        .then((floors) {
+      if (floors.isNotEmpty) {
+        emit(state.copyWith(status: PaymentStatus.success, payments: floors));
+      } else {
+        emit(state.copyWith(status: PaymentStatus.empty));
+      }
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(status: PaymentStatus.error));
+      if (kDebugMode) {
+        print("Error: $error");
+        print("Stacktrace: $stackTrace");
       }
     });
   }
 
   _mapAddPaymentsEventToState(
       AddPaymentsEvent event, Emitter<PaymentState> emit) async {
-    emit(state.copyWith(status: PaymentStatus.loadingAdd, isPaymentLoading: true));
+    emit(state.copyWith(
+        status: PaymentStatus.loadingAdd, isPaymentLoading: true));
     await PaymentDtoImpl.addPayment(
-        currentUserToken.toString(), event.paid, event.amountDue, event.date,
-        event.tenantUnitId, event.accountId, event.paymentModeId,
-        event.propertyId, event.paymentScheduleId)
+            currentUserToken.toString(),
+            event.paid,
+            event.amountDue,
+            event.date,
+            event.tenantUnitId,
+            event.accountId,
+            event.paymentModeId,
+            event.propertyId,
+            event.paymentScheduleId)
         .then((response) {
       print('success ${response.message}');
 
@@ -59,8 +80,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
             status: PaymentStatus.successAdd,
             isPaymentLoading: false,
             addPaymentResponseModel: response,
-          message: response.message
-        ));
+            message: response.message));
       } else {
         emit(state.copyWith(
           status: PaymentStatus.accessDeniedAdd,
@@ -74,8 +94,6 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
           message: error.toString()));
     });
   }
-
-
 
   @override
   void onEvent(PaymentEvent event) {
@@ -101,5 +119,4 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     print(stackTrace);
     super.onError(error, stackTrace);
   }
-
 }

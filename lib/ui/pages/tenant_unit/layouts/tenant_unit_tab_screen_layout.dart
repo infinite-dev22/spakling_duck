@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -98,6 +100,9 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
               },);
           }
           if (state.status == TenantUnitStatus.success) {
+            Timer.run(() async {
+              context.read<TenantUnitBloc>().add(RefreshTenantUnitsEvent(property.id!));
+            });
             return Scaffold(
               backgroundColor: AppTheme.appBgColor,
               appBar: _buildAppTitle(),

@@ -15,31 +15,45 @@ part 'floor_event.dart';part 'floor_state.dart';
 class FloorBloc extends Bloc<FloorEvent, FloorState> {
   FloorBloc() : super(FloorState()) {
     on<LoadAllFloorsEvent>(_mapFetchFloorsToState);
+    on<RefreshFloorsEvent>(_mapRefreshFloorsToState);
     on<AddFloorEvent>(_mapAddFloorEventToState);
   }
 
   _mapFetchFloorsToState(
       LoadAllFloorsEvent event, Emitter<FloorState> emit) async {
-    print("JON MARK");
     emit(state.copyWith(status: FloorStatus.loading));
-    print("JANET");
     await FloorRepoImpl()
         .getALlFloors(currentUserToken.toString(), event.id)
         .then((floors) {
       if (floors.isNotEmpty) {
         emit(state.copyWith(status: FloorStatus.success, floors: floors));
-        print("JANET 2");
       } else {
         emit(state.copyWith(status: FloorStatus.empty));
-        print("JANET 3");
       }
-      print("JON MARK 2");
     }).onError((error, stackTrace) {
       emit(state.copyWith(status: FloorStatus.error));
       if (kDebugMode) {
         print("Error: $error");
         print("Stacktrace: $stackTrace");
-        print("JON MARK 3");
+      }
+    });
+  }
+
+  _mapRefreshFloorsToState(
+      RefreshFloorsEvent event, Emitter<FloorState> emit) async {
+    await FloorRepoImpl()
+        .getALlFloors(currentUserToken.toString(), event.id)
+        .then((floors) {
+      if (floors.isNotEmpty) {
+        emit(state.copyWith(status: FloorStatus.success, floors: floors));
+      } else {
+        emit(state.copyWith(status: FloorStatus.empty));
+      }
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(status: FloorStatus.error));
+      if (kDebugMode) {
+        print("Error: $error");
+        print("Stacktrace: $stackTrace");
       }
     });
   }

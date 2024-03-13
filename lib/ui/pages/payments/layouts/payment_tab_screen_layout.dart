@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -101,6 +103,9 @@ class PaymentTabScreenLayout extends StatelessWidget {
               },);
           }
           if (state.status == PaymentStatus.success) {
+            Timer.run(() async {
+              context.read<PaymentBloc>().add(RefreshPaymentsEvent(property.id!));
+            });
             return Scaffold(
               backgroundColor: AppTheme.appBgColor,
               appBar: _buildAppTitle(),
