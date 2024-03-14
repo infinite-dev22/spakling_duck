@@ -1,5 +1,6 @@
 import 'package:smart_rent/ui/pages/dashboard/dashboard_page.dart';
 import 'package:smart_rent/ui/pages/employees/employees_page.dart';
+import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/forms/add_floor_form.dart';
 import 'package:smart_rent/ui/pages/properties/forms/add_property_form.dart';
 import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:smart_rent/ui/pages/root/widgets/bottom_nav_bar.dart';
 import 'package:smart_rent/ui/pages/root/widgets/screen.dart';
 import 'package:smart_rent/ui/pages/settings/settings_page.dart';
 import 'package:smart_rent/ui/pages/tenants/tenants_page.dart';
+import 'package:smart_rent/ui/pages/units/forms/add_home_unit_form.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -119,32 +121,7 @@ class _RootPageState extends State<RootPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  IconButton.outlined(
-                    style: const ButtonStyle(
-                      iconColor: MaterialStatePropertyAll(
-                        AppTheme.inActiveColor,
-                      ),
-                      side: MaterialStatePropertyAll(
-                        BorderSide(
-                          color: AppTheme.inActiveColor,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    icon: const Icon(Icons.person),
-                    iconSize: 45,
-                  ),
-                  const Text(
-                    "Add Tenant",
-                    style: TextStyle(
-                      color: AppTheme.inActiveColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+
               Column(
                 children: [
                   IconButton.outlined(
@@ -239,9 +216,16 @@ class _RootPageState extends State<RootPage> {
                           isScrollControlled: true,
                           context: context,
                           builder: (context) {
-                            return AddFloorForm(
-                              addButtonText: 'Add',
-                              isUpdate: false,
+                            return MultiBlocProvider(
+                              providers: [
+                                BlocProvider(
+                                  create: (context) => FloorBloc(),
+                                ),
+                              ],
+                              child: AddHomeUnitForm(
+                                addButtonText: 'Add',
+                                isUpdate: false,
+                              ),
                             );
                           });
                     },
@@ -249,7 +233,7 @@ class _RootPageState extends State<RootPage> {
                     iconSize: 45,
                   ),
                   const Text(
-                    "Add Floor",
+                    "Add Unit",
                     style: TextStyle(
                       color: AppTheme.inActiveColor,
                       fontWeight: FontWeight.bold,
@@ -257,6 +241,34 @@ class _RootPageState extends State<RootPage> {
                   ),
                 ],
               ),
+
+              Column(
+                children: [
+                  IconButton.outlined(
+                    style: const ButtonStyle(
+                      iconColor: MaterialStatePropertyAll(
+                        AppTheme.inActiveColor,
+                      ),
+                      side: MaterialStatePropertyAll(
+                        BorderSide(
+                          color: AppTheme.inActiveColor,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {},
+                    icon: const Icon(Icons.person),
+                    iconSize: 45,
+                  ),
+                  const Text(
+                    "Add Tenant",
+                    style: TextStyle(
+                      color: AppTheme.inActiveColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+
             ],
           ),
         ),

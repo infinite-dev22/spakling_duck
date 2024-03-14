@@ -11,6 +11,7 @@ import 'package:smart_rent/ui/pages/properties/widgets/no_data_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/not_found_widget.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/forms/tenant_unit_form.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/layouts/tenant_unit_details_page_layout.dart';
 import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
@@ -141,11 +142,7 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
                   var tenantUnit = state.tenantUnits![index];
                   return GestureDetector(
                     onTap: () {
-                      // Get.to(() => TenantDetailsScreen(
-                      //   tenantController: tenantController,
-                      //   tenantId: entry.tenantId!,
-                      //   tenantModel: entry.tenantModel!,
-                      // ));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> TenantUnitDetailsPageLayout(tenantUnitModel: tenantUnit,)));
                     },
                     child: Container(
                       margin: const EdgeInsets.only(
@@ -166,12 +163,15 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
                         ],
                       ),
                       child: ListTile(
-                        leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              'https://img.freepik.com/free-photo/real-estate-broker-agent-presenting-consult-customer-decision-making-sign-insurance-form-agreement_1150-15023.jpg?w=996&t=st=1708346770~exp=1708347370~hmac=d7c8476699ac83e0dbb2375a511e548c2d78c4e1b2d69da7cc5ce31d4c915c90',
-                              fit: BoxFit.cover,
-                            )),
+
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: NetworkImage('https://img.freepik.com/free-photo/real-estate-broker-agent-presenting-consult-customer-decision-making-sign-insurance-form-agreement_1150-15023.jpg?w=996&t=st=1708346770~exp=1708347370~hmac=d7c8476699ac83e0dbb2375a511e548c2d78c4e1b2d69da7cc5ce31d4c915c90'),
+                            ),
+                          ],
+                        ),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
