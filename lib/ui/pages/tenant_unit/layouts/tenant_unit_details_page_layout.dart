@@ -40,7 +40,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.appBgColor,
+      backgroundColor: AppTheme.whiteColor,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         title: const TitleBarImageHolder(),
@@ -55,101 +55,95 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
           children: [
             SizedBox(height: 10,),
 
-            Card(
-              elevation: 8,
-              surfaceTintColor: AppTheme.whiteColor,
-              clipBehavior: Clip.antiAlias,
-              color: AppTheme.whiteColor,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text('Tenant:', style: AppTheme.appTitle7,),
-                        SizedBox(width: 5,),
-                        Text(widget.tenantUnitModel.tenant!.getName(), style: AppTheme.blueAppTitle3,),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                       Container(
-                         child: Row(
-                           children: [
-                             Text('Unit:', style: AppTheme.appTitle7,),
-                             SizedBox(width: 5,),
-                             Text(widget.tenantUnitModel.unit!.name.toString(), style: AppTheme.blueAppTitle3,)
-                           ],
-                         ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text('Tenant:', style: AppTheme.appTitle7,),
+                      SizedBox(width: 5,),
+                      Text(widget.tenantUnitModel.tenant!.getName(), style: AppTheme.blueAppTitle3,),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                     Container(
+                       child: Row(
+                         children: [
+                           Text('Unit:', style: AppTheme.appTitle7,),
+                           SizedBox(width: 5,),
+                           Text(widget.tenantUnitModel.unit!.name.toString(), style: AppTheme.blueAppTitle3,)
+                         ],
                        ),
-                        Container(
-                          child: Row(
-                            children: [
-                              Text('Currency:', style: AppTheme.appTitle7,),
-                              SizedBox(width: 5,),
-                              Text(widget.tenantUnitModel.currencyModel!.code.toString(), style: AppTheme.blueAppTitle3,)
-                            ],
-                          ),
+                     ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Text('Currency:', style: AppTheme.appTitle7,),
+                            SizedBox(width: 5,),
+                            Text(widget.tenantUnitModel.currencyModel!.code.toString(), style: AppTheme.blueAppTitle3,)
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
 
-                    Divider(),
+                  Divider(),
 
-                    Text('Tenancy Details', style: AppTheme.subText,),
+                  Text('Tenancy Details', style: AppTheme.appTitle7,),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: Row(
-                            children: [
-                              Text('Period:', style: AppTheme.appTitle7,),
-                              SizedBox(width: 5,),
-                              Text(widget.tenantUnitModel.period!.name.toString(), style: AppTheme.blueAppTitle3,)
-                            ],
-                          ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        child: Row(
+                          children: [
+                            Text('Period:', style: AppTheme.appTitle7,),
+                            SizedBox(width: 5,),
+                            Text(widget.tenantUnitModel.period!.name.toString(), style: AppTheme.blueAppTitle3,)
+                          ],
                         ),
-                        Container(
-                          child: Row(
-                            children: [
-                              Text('Number:', style: AppTheme.appTitle7,),
-                              SizedBox(width: 5,),
-                              Text(widget.tenantUnitModel.paymentScheduleModel!.length.toString(), style: AppTheme.blueAppTitle3,)
-                            ],
-                          ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Text('Number:', style: AppTheme.appTitle7,),
+                            SizedBox(width: 5,),
+                            Text(widget.tenantUnitModel.paymentScheduleModel!.length.toString(), style: AppTheme.blueAppTitle3,)
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: Row(
-                            children: [
-                              Text('Start:', style: AppTheme.appTitle7,),
-                              SizedBox(width: 5,),
-                              Text(DateFormat('d MMM, yy').format(widget.tenantUnitModel.fromDate!), style: AppTheme.blueAppTitle3,)
-                            ],
-                          ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        child: Row(
+                          children: [
+                            Text('Start:', style: AppTheme.appTitle7,),
+                            SizedBox(width: 5,),
+                            Text(DateFormat('d MMM, yy').format(widget.tenantUnitModel.fromDate!), style: AppTheme.blueAppTitle3,)
+                          ],
                         ),
-                        Container(
-                          child: Row(
-                            children: [
-                              Text('End:', style: AppTheme.appTitle7,),
-                              SizedBox(width: 5,),
-                              Text(DateFormat('d MMM, yy').format(widget.tenantUnitModel.toDate!), style: AppTheme.blueAppTitle3,)
-                            ],
-                          ),
+                      ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Text('End:', style: AppTheme.appTitle7,),
+                            SizedBox(width: 5,),
+                            Text(DateFormat('d MMM, yy').format(widget.tenantUnitModel.toDate!), style: AppTheme.blueAppTitle3,)
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
 
-                  ],
-                ),
+                ],
               ),
             ),
             SizedBox(height: 10,),
@@ -184,6 +178,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
                 ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
 
                 : Expanded(child: _buildDataTable(tenantUnitPaymentScheduleDataSource)),
+
                 // : Expanded(child: MyDataTable(tenantUnitModel: widget.tenantUnitModel)),
 
             // widget.tenantUnitModel.paymentScheduleModel!.isEmpty
