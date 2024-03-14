@@ -1,10 +1,9 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/custom_image.dart';
-import 'package:flutter/material.dart';
-
 
 class PropertyItemWidget extends StatelessWidget {
   final Property property;
@@ -50,8 +49,9 @@ class PropertyItemWidget extends StatelessWidget {
               radius: 10,
               height: 200,
               width: 150,
+              isElevated: false,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             PropertyDetails(property: property),
           ],
         ),

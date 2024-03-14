@@ -74,10 +74,16 @@ class PaymentsWidget extends StatelessWidget {
         headerHoverColor: AppTheme.gray.withOpacity(.3),
       ),
       child: SfDataGrid(
-        allowSorting: true,
-        allowFiltering: true,
+        onQueryRowHeight: (details) {
+          if(details.rowIndex == 0) {
+            return 30;
+          }
+          return details.getIntrinsicRowHeight(details.rowIndex);
+        },
+        // allowSorting: true,
+        // allowFiltering: true,
         allowSwiping: false,
-        allowTriStateSorting: true,
+        // allowTriStateSorting: true,
         source: paymentDataSource,
         columnWidthMode: ColumnWidthMode.fill,
         gridLinesVisibility: GridLinesVisibility.both,
@@ -92,7 +98,6 @@ class PaymentsWidget extends StatelessWidget {
       GridColumn(
           columnName: 'date',
           label: Container(
-              padding: const EdgeInsets.all(16.0),
               alignment: Alignment.center,
               child: const Text(
                 'Date',
@@ -100,13 +105,11 @@ class PaymentsWidget extends StatelessWidget {
       GridColumn(
           columnName: 'name',
           label: Container(
-              padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
               child: const Text('Name'))),
       GridColumn(
           columnName: 'paid',
           label: Container(
-              padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
               child: const Text(
                 'Paid',
@@ -461,9 +464,15 @@ class PaymentsWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          OutlinedButton(
-            onPressed: () {},
-            child: const Text("Filter"),
+          SizedBox(
+            height: 30,
+            child: OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppTheme.primary),
+              ),
+              child: const Text("Filter"),
+            ),
           ),
           // DropdownButtonHideUnderline(
           //   child: DropdownButton2<String>(

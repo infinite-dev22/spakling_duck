@@ -52,9 +52,15 @@ class OccupancyWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              OutlinedButton(
-                onPressed: () {},
-                child: const Text("Filter"),
+              SizedBox(
+                height: 30,
+                child: OutlinedButton(
+                  onPressed: () {},
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: AppTheme.primary),
+                  ),
+                  child: const Text("Filter"),
+                ),
               ),
               // DropdownButtonHideUnderline(
               //   child: DropdownButton2<String>(
@@ -94,42 +100,41 @@ class OccupancyWidget extends StatelessWidget {
               const Text("Units: 28 of 39"),
             ],
           ),
+          const SizedBox(height: 10),
           DefaultTabController(
               length: 2,
               child: Column(
                 children: [
-                  const TabBar(
-                    indicatorColor: AppTheme.darker,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: BoxDecoration(
-                      color: AppTheme.darker,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
+                  SizedBox(
+                    height: 30,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: AppTheme.whiteColor,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
                       ),
-                      // border: Border(
-                      //   bottom: BorderSide(
-                      //     color: Color(0xFF2D80E3),
-                      //   ),
-                      // ),
+                      child: const TabBar(
+                        labelColor: AppTheme.whiteColor,
+                        unselectedLabelColor: AppTheme.darker,
+                        dividerColor: Colors.transparent,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicator: BoxDecoration(
+                          color: AppTheme.darker,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        tabs: [
+                          Tab(
+                            child: Text("Occupied"),
+                          ),
+                          Tab(
+                            child: Text("Available"),
+                          ),
+                        ],
+                      ),
                     ),
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          "Occupied",
-                          style: TextStyle(
-                            color: Color(0xFF2D80E3),
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        child: Text(
-                          "Available",
-                          style: TextStyle(
-                            color: Color(0xFF2D80E3),
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                   SizedBox(
                     width: constraints.minWidth,
@@ -214,10 +219,16 @@ class DataTable2 extends StatelessWidget {
         headerHoverColor: AppTheme.gray.withOpacity(.3),
       ),
       child: SfDataGrid(
-        allowSorting: true,
-        allowFiltering: true,
+        onQueryRowHeight: (details) {
+          if(details.rowIndex == 0) {
+            return 30;
+          }
+          return details.getIntrinsicRowHeight(details.rowIndex);
+        },
+        // allowSorting: true,
+        // allowFiltering: true,
         allowSwiping: false,
-        allowTriStateSorting: true,
+        // allowTriStateSorting: true,
         source: paymentDataSource,
         columnWidthMode: ColumnWidthMode.fill,
         gridLinesVisibility: GridLinesVisibility.both,
@@ -231,18 +242,17 @@ class DataTable2 extends StatelessWidget {
     return <GridColumn>[
       GridColumn(
           columnName: 'property',
-          label: Container(
-              padding: const EdgeInsets.all(16.0),
-              alignment: Alignment.center,
-              child: const Text(
-                'Property',
-              ))),
+          label: SizedBox(
+            child: Container(
+                alignment: Alignment.center,
+                child: const Text(
+                  'Property',
+                )),
+          )),
       GridColumn(
           columnName: 'unit',
           label: Container(
-              padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.center,
-              child: const Text('Unit'))),
+              alignment: Alignment.center, child: const Text('Unit'))),
     ];
   }
 
@@ -788,10 +798,16 @@ class DataTable1 extends StatelessWidget {
         headerHoverColor: AppTheme.gray.withOpacity(.3),
       ),
       child: SfDataGrid(
-        allowSorting: true,
-        allowFiltering: true,
+        onQueryRowHeight: (details) {
+          if(details.rowIndex == 0) {
+            return 30;
+          }
+          return details.getIntrinsicRowHeight(details.rowIndex);
+        },
+        // allowSorting: true,
+        // allowFiltering: true,
         allowSwiping: false,
-        allowTriStateSorting: true,
+        // allowTriStateSorting: true,
         source: paymentDataSource,
         columnWidthMode: ColumnWidthMode.fill,
         gridLinesVisibility: GridLinesVisibility.both,
@@ -806,7 +822,6 @@ class DataTable1 extends StatelessWidget {
       GridColumn(
           columnName: 'property',
           label: Container(
-              padding: const EdgeInsets.all(16.0),
               alignment: Alignment.center,
               child: const Text(
                 'Property',
@@ -814,13 +829,11 @@ class DataTable1 extends StatelessWidget {
       GridColumn(
           columnName: 'unit',
           label: Container(
-              padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
               child: const Text('Unit'))),
       GridColumn(
           columnName: 'tenant',
           label: Container(
-              padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
               child: const Text(
                 'Tenant',

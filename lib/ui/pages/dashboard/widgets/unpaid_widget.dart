@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:smart_rent/data_layer/models/payment/payments_model.dart';
-import 'package:smart_rent/data_layer/models/tenant/tenant_model.dart';
-import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
 import 'package:smart_rent/ui/pages/payments/bloc/payment_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 ///Core theme import
@@ -76,10 +74,16 @@ class UnpaidWidget extends StatelessWidget {
         headerHoverColor: AppTheme.gray.withOpacity(.3),
       ),
       child: SfDataGrid(
-        allowSorting: true,
-        allowFiltering: true,
+        onQueryRowHeight: (details) {
+          if (details.rowIndex == 0) {
+            return 30;
+          }
+          return details.getIntrinsicRowHeight(details.rowIndex);
+        },
+        // allowSorting: true,
+        // allowFiltering: true,
         allowSwiping: false,
-        allowTriStateSorting: true,
+        // allowTriStateSorting: true,
         source: paymentDataSource,
         columnWidthMode: ColumnWidthMode.fill,
         gridLinesVisibility: GridLinesVisibility.both,
@@ -94,7 +98,6 @@ class UnpaidWidget extends StatelessWidget {
       GridColumn(
           columnName: 'tenant',
           label: Container(
-              padding: const EdgeInsets.all(16.0),
               alignment: Alignment.center,
               child: const Text(
                 'Tenant',
@@ -102,13 +105,10 @@ class UnpaidWidget extends StatelessWidget {
       GridColumn(
           columnName: 'period',
           label: Container(
-              padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.center,
-              child: const Text('Period'))),
+              alignment: Alignment.center, child: const Text('Period'))),
       GridColumn(
           columnName: 'amount',
           label: Container(
-              padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
               child: const Text(
                 'Amount',
@@ -865,9 +865,15 @@ class UnpaidWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          OutlinedButton(
-            onPressed: () {},
-            child: const Text("Filter"),
+          SizedBox(
+            height: 30,
+            child: OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppTheme.primary),
+              ),
+              child: const Text("Filter"),
+            ),
           ),
           // DropdownButtonHideUnderline(
           //   child: DropdownButton2<String>(
@@ -918,7 +924,8 @@ class PaymentDataSource extends DataGridSource {
   PaymentDataSource({required List<PaymentsModel> paymentData}) {
     _paymentData = paymentData
         .map<DataGridRow>((e) => DataGridRow(cells: [
-              DataGridCell<String>(columnName: 'tenant', value: e.property!.name),
+              DataGridCell<String>(
+                  columnName: 'tenant', value: e.property!.name),
               DataGridCell<DateTime>(columnName: 'period', value: e.date),
               DataGridCell<int>(columnName: 'amount', value: e.amount)
             ]))

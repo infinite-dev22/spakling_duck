@@ -166,7 +166,7 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
                       ),
                       child: ListTile(
 
-                        leading: Column(
+                        leading: const Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             CircleAvatar(

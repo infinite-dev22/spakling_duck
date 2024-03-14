@@ -68,6 +68,7 @@ dependencies:
   multi_select_flutter: ^4.1.3
   data_table_2: ^2.5.11
   syncfusion_flutter_datagrid: ^24.2.9
+  syncfusion_flutter_core: ^24.2.9
 
 dev_dependencies:
   flutter_test:
