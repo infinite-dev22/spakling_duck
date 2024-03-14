@@ -15,15 +15,37 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   PaymentBloc() : super(PaymentState()) {
     on<AddPaymentsEvent>(_mapAddPaymentsEventToState);
     on<RefreshPaymentsEvent>(_mapRefreshPaymentsEventToState);
-    on<LoadAllPayments>(_mapFetchPaymentsToState);
+    on<LoadAllPayments>(_mapFetchAllPaymentsToState);
+    on<LoadPayments>(_mapFetchPaymentsToState);
   }
 
-  _mapFetchPaymentsToState(
+  _mapFetchAllPaymentsToState(
       LoadAllPayments event, Emitter<PaymentState> emit) async {
     emit(state.copyWith(status: PaymentStatus.loading));
 
     await PaymentRepoImpl()
         .getAllPayments(currentUserToken.toString(), event.propertyId)
+        .then((floors) {
+      if (floors.isNotEmpty) {
+        emit(state.copyWith(status: PaymentStatus.success, payments: floors));
+      } else {
+        emit(state.copyWith(status: PaymentStatus.empty));
+      }
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(status: PaymentStatus.error));
+      if (kDebugMode) {
+        print("Error: $error");
+        print("Stacktrace: $stackTrace");
+      }
+    });
+  }
+
+  _mapFetchPaymentsToState(
+      LoadPayments event, Emitter<PaymentState> emit) async {
+    emit(state.copyWith(status: PaymentStatus.loading));
+
+    await PaymentRepoImpl()
+        .getPayments(currentUserToken.toString())
         .then((floors) {
       if (floors.isNotEmpty) {
         emit(state.copyWith(status: PaymentStatus.success, payments: floors));

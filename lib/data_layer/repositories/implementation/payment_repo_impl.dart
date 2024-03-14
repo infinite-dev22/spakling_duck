@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/retry.dart';
 import 'package:smart_rent/configs/app_configs.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_account_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_mode_model.dart';
@@ -8,17 +11,11 @@ import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dar
 import 'package:smart_rent/data_layer/models/payment/payment_tenant_unit_schedule_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payments_model.dart';
 import 'package:smart_rent/data_layer/repositories/interfaces/payment_repo.dart';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/retry.dart';
-
 
 class PaymentRepoImpl implements PaymentRepo {
-
   @override
   Future<List<PaymentAccountsModel>> getAllPaymentAccounts(
-      String token, int propertyId
-      ) async {
+      String token, int propertyId) async {
     var client = RetryClient(http.Client());
     try {
       var headers = {
@@ -27,7 +24,8 @@ class PaymentRepoImpl implements PaymentRepo {
         HttpHeaders.authorizationHeader: 'Bearer $token'
       };
 
-      var url = Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
+      var url =
+          Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
 
       var response = await client.get(url, headers: headers);
       List accountData = jsonDecode(response.body)['accounts'];
@@ -45,8 +43,7 @@ class PaymentRepoImpl implements PaymentRepo {
 
   @override
   Future<List<PaymentsModel>> getAllPayments(
-      String token, int propertyId
-      ) async {
+      String token, int propertyId) async {
     var client = RetryClient(http.Client());
     try {
       var headers = {
@@ -72,9 +69,7 @@ class PaymentRepoImpl implements PaymentRepo {
   }
 
   @override
-  Future<List<PaymentModeModel>> getAllPaymentModes(
-      String token, int propertyId
-      ) async {
+  Future<List<PaymentsModel>> getPayments(String token) async {
     var client = RetryClient(http.Client());
     try {
       var headers = {
@@ -83,7 +78,35 @@ class PaymentRepoImpl implements PaymentRepo {
         HttpHeaders.authorizationHeader: 'Bearer $token'
       };
 
-      var url = Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
+      var url = Uri.parse('$appUrl/api/rent/payments');
+
+      var response = await client.get(url, headers: headers);
+      List paymentsData = jsonDecode(response.body);
+      if (kDebugMode) {
+        print("payments RESPONSE: ${response.body}");
+        print("payments data: ${paymentsData}");
+      }
+      return paymentsData
+          .map((payment) => PaymentsModel.fromJson(payment))
+          .toList();
+    } finally {
+      client.close();
+    }
+  }
+
+  @override
+  Future<List<PaymentModeModel>> getAllPaymentModes(
+      String token, int propertyId) async {
+    var client = RetryClient(http.Client());
+    try {
+      var headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token'
+      };
+
+      var url =
+          Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
 
       var response = await client.get(url, headers: headers);
       List modeData = jsonDecode(response.body)['paymentmodes'];
@@ -98,7 +121,6 @@ class PaymentRepoImpl implements PaymentRepo {
       client.close();
     }
   }
-
 
   // @override
   // Future<List<PaymentSchedulesModel>> getAllPaymentSchedules(
@@ -135,8 +157,9 @@ class PaymentRepoImpl implements PaymentRepo {
 
   @override
   Future<List<PaymentTenantUnitScheduleModel>> getAllPaymentSchedules(
-      String token, int tenantUnitId,
-      ) async {
+    String token,
+    int tenantUnitId,
+  ) async {
     var client = RetryClient(http.Client());
     try {
       var headers = {
@@ -146,10 +169,10 @@ class PaymentRepoImpl implements PaymentRepo {
       };
 
       // var url = Uri.parse('$appUrl/api/rent/payments/create/prefill/$propertyId');
-      var url = Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
+      var url =
+          Uri.parse('$appUrl/api/rent/gettenantunitschedules/$tenantUnitId');
       // var url =  Uri.parse('$appUrl/api/rent/tenantunitsonproperty/$tenantUnitId');
       // var url =  Uri.parse('$appUrl/api/rent/tenantunits/$tenantUnitId');
-
 
       var response = await client.get(url, headers: headers);
       List schedulesData = jsonDecode(response.body);
@@ -166,11 +189,17 @@ class PaymentRepoImpl implements PaymentRepo {
     }
   }
 
-
   @override
-  Future<dynamic> addPayment(String token, String paid, String amountDue,
-      String date, int tenantUnitId, int accountId, int paymentModeId,
-      int propertyId, List<String> paymentScheduleId) async {
+  Future<dynamic> addPayment(
+      String token,
+      String paid,
+      String amountDue,
+      String date,
+      int tenantUnitId,
+      int accountId,
+      int paymentModeId,
+      int propertyId,
+      List<String> paymentScheduleId) async {
     var client = RetryClient(http.Client());
     try {
       var headers = {
@@ -208,5 +237,4 @@ class PaymentRepoImpl implements PaymentRepo {
       client.close();
     }
   }
-
 }

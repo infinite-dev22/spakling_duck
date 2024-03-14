@@ -4,20 +4,27 @@ abstract class PaymentEvent extends Equatable {
   const PaymentEvent();
 }
 
-class LoadAllPayments extends PaymentEvent{
+class LoadAllPayments extends PaymentEvent {
   final int propertyId;
-  const LoadAllPayments( this.propertyId);
+
+  const LoadAllPayments(this.propertyId);
+
   @override
   List<Object?> get props => [propertyId];
-
 }
 
-class RefreshPaymentsEvent extends PaymentEvent{
+class LoadPayments extends PaymentEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class RefreshPaymentsEvent extends PaymentEvent {
   final int propertyId;
-  const RefreshPaymentsEvent( this.propertyId);
+
+  const RefreshPaymentsEvent(this.propertyId);
+
   @override
   List<Object?> get props => [propertyId];
-
 }
 
 class AddPaymentsEvent extends PaymentEvent {
@@ -31,13 +38,27 @@ class AddPaymentsEvent extends PaymentEvent {
   final int propertyId;
   final List<String> paymentScheduleId;
 
-  const AddPaymentsEvent(this.token, this.paid, this.amountDue, this.date,
-      this.tenantUnitId, this.accountId, this.paymentModeId, this.propertyId,
+  const AddPaymentsEvent(
+      this.token,
+      this.paid,
+      this.amountDue,
+      this.date,
+      this.tenantUnitId,
+      this.accountId,
+      this.paymentModeId,
+      this.propertyId,
       this.paymentScheduleId);
 
   @override
-  List<Object?> get props => [token, paid, amountDue, date, tenantUnitId,
-    accountId, paymentModeId, propertyId, paymentScheduleId
-  ];
-
+  List<Object?> get props => [
+        token,
+        paid,
+        amountDue,
+        date,
+        tenantUnitId,
+        accountId,
+        paymentModeId,
+        propertyId,
+        paymentScheduleId
+      ];
 }
