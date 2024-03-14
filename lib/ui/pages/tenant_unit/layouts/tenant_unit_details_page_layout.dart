@@ -3,11 +3,19 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
+
 import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/layouts/search_tenant_unit_payment_schedule_screen_layout.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/layouts/test.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/appbar_content.dart';
 import 'package:smart_rent/utilities/extra.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+
+///Core theme import
+import 'package:syncfusion_flutter_core/theme.dart';
+
 
 class TenantUnitDetailsPageLayout extends StatefulWidget {
   final TenantUnitModel tenantUnitModel;
@@ -18,6 +26,15 @@ class TenantUnitDetailsPageLayout extends StatefulWidget {
 }
 
 class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayout> {
+
+  late TenantUnitPaymentScheduleDataSource tenantUnitPaymentScheduleDataSource;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    tenantUnitPaymentScheduleDataSource = TenantUnitPaymentScheduleDataSource(paymentData: widget.tenantUnitModel.paymentScheduleModel!);
+  }
 
 
   @override
@@ -146,7 +163,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
                     onTap: (){
                       showSearch(
                         context: context,
-                        delegate: DataTableSearch(widget.tenantUnitModel.paymentScheduleModel!, widget.tenantUnitModel),
+                        delegate: TenantUnitPaymentScheduleTableSearch(widget.tenantUnitModel.paymentScheduleModel!, widget.tenantUnitModel),
                       );
                     },
                     child: Container(
@@ -166,7 +183,8 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
             widget.tenantUnitModel.paymentScheduleModel!.isEmpty
                 ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
 
-                : Expanded(child: MyDataTable(tenantUnitModel: widget.tenantUnitModel)),
+                : Expanded(child: _buildDataTable(tenantUnitPaymentScheduleDataSource)),
+                // : Expanded(child: MyDataTable(tenantUnitModel: widget.tenantUnitModel)),
 
             // widget.tenantUnitModel.paymentScheduleModel!.isEmpty
             //     ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
@@ -204,4 +222,98 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
 
     );
   }
+
+
+}
+
+
+Widget _buildDataTable(TenantUnitPaymentScheduleDataSource tenantUnitPaymentScheduleDataSource) {
+  return SfDataGridTheme(
+    data: SfDataGridThemeData(
+      headerColor: AppTheme.gray.withOpacity(.2),
+      headerHoverColor: AppTheme.gray.withOpacity(.3),
+    ),
+    child: SfDataGrid(
+      // allowSorting: true,
+      // allowFiltering: true,
+      allowSwiping: false,
+      allowTriStateSorting: true,
+      source: tenantUnitPaymentScheduleDataSource,
+      columnWidthMode: ColumnWidthMode.fill,
+      gridLinesVisibility: GridLinesVisibility.both,
+      headerGridLinesVisibility: GridLinesVisibility.both,
+      columns: _getColumns(),
+    ),
+  );
+}
+
+
+
+class TenantUnitPaymentScheduleDataSource extends DataGridSource {
+  /// Creates the employee data source class with required details.
+  TenantUnitPaymentScheduleDataSource({required List<PaymentSchedulesModel> paymentData}) {
+    _paymentData = paymentData
+        .map<DataGridRow>((schedule) => DataGridRow(cells: [
+      DataGridCell<String>(columnName: 'period', value: '${DateFormat('d MMM, yy').format(schedule.fromDate!)}\n${DateFormat('d MMM, yy').format(schedule.toDate!)}'),
+      DataGridCell<String>(columnName: 'amount', value: amountFormatter.format(schedule.discountAmount.toString())),
+      DataGridCell<String>(columnName: 'paid', value: amountFormatter.format(schedule.paid.toString())),
+      DataGridCell<String>(columnName: 'balance', value: amountFormatter.format(schedule.balance.toString()))
+    ]))
+        .toList();
+  }
+
+  List<DataGridRow> _paymentData = [];
+
+  @override
+  List<DataGridRow> get rows => _paymentData;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((e) {
+          return Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(8.0),
+            child: Text(e.value.toString()),
+          );
+        }).toList());
+  }
+}
+
+
+List<GridColumn> _getColumns() {
+  return <GridColumn>[
+    GridColumn(
+        columnName: 'period',
+        label: Container(
+            padding: const EdgeInsets.all(16.0),
+            alignment: Alignment.center,
+            child: const Text(
+              'Period',
+            ))),
+    GridColumn(
+        columnName: 'amount',
+        label: Container(
+            padding: const EdgeInsets.all(8.0),
+            alignment: Alignment.center,
+            child: const Text('Amount'))),
+    GridColumn(
+        columnName: 'paid',
+        label: Container(
+            padding: const EdgeInsets.all(8.0),
+            alignment: Alignment.center,
+            child: const Text(
+              'Paid',
+              overflow: TextOverflow.ellipsis,
+            ))),
+    GridColumn(
+        columnName: 'balance',
+        label: Container(
+            padding: const EdgeInsets.all(8.0),
+            alignment: Alignment.center,
+            child: const Text(
+              'Balance',
+              overflow: TextOverflow.ellipsis,
+            ))),
+  ];
 }
