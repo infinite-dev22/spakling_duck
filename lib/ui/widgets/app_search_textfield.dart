@@ -12,6 +12,7 @@ class AppSearchTextField extends StatelessWidget {
   final bool enabled;
   final String? title;
   final VoidCallback function;
+  final ValueChanged<String>? onCahnged;
 
   const AppSearchTextField({
     super.key,
@@ -25,6 +26,7 @@ class AppSearchTextField extends StatelessWidget {
     this.enabled = true,
     this.title,
     required this.function,
+    this.onCahnged
   });
 
   @override
@@ -36,6 +38,7 @@ class AppSearchTextField extends StatelessWidget {
         SizedBox(
           height: 50,
           child: TextFormField(
+            onChanged: onCahnged,
             validator: (val) =>
                 val!.isEmpty ? 'Required field, Please fill in.' : null,
             controller: controller,
@@ -66,7 +69,7 @@ class AppSearchTextField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               // fillColor: fillColor,
-              fillColor: AppTheme.itemBgColor,
+              fillColor: fillColor,
               filled: true,
               hintText: hintText,
               hintStyle: const TextStyle(

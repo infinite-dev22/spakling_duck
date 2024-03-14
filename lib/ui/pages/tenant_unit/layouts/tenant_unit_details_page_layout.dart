@@ -9,6 +9,7 @@ import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart'
 import 'package:smart_rent/ui/pages/tenant_unit/layouts/search_tenant_unit_payment_schedule_screen_layout.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/layouts/test.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/app_search_textfield.dart';
 import 'package:smart_rent/ui/widgets/appbar_content.dart';
 import 'package:smart_rent/utilities/extra.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -29,11 +30,46 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
 
   late TenantUnitPaymentScheduleDataSource tenantUnitPaymentScheduleDataSource;
 
+  final TextEditingController searchController = TextEditingController();
+
+  late List<PaymentSchedulesModel> filteredData;
+
+  // void filterData(String query) {
+  //   setState(() {
+  //     filteredData = widget.tenantUnitModel.paymentScheduleModel!
+  //         .where((schedule) =>
+  //     DateFormat('d MMM, yy').format(schedule.fromDate!).toString().toLowerCase().contains(query.toLowerCase()) || DateFormat('d MMM, yy').format(schedule.fromDate!).toLowerCase().contains(query.toLowerCase()))
+  //         .toList();
+  //   });
+  //
+  //   print('New Q = $query');
+  // }
+
+  void filterData(String query) {
+    setState(() {
+      filteredData = widget.tenantUnitModel.paymentScheduleModel!
+          .where((schedule) =>
+      DateFormat('d MMM, yy')
+          .format(schedule.fromDate!)
+          .toString()
+          .toLowerCase()
+          .contains(query.toLowerCase()) ||
+          DateFormat('d MMM, yy')
+              .format(schedule.fromDate!)
+              .toLowerCase()
+              .contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    tenantUnitPaymentScheduleDataSource = TenantUnitPaymentScheduleDataSource(paymentData: widget.tenantUnitModel.paymentScheduleModel!);
+    // tenantUnitPaymentScheduleDataSource = TenantUnitPaymentScheduleDataSource(paymentData: widget.tenantUnitModel.paymentScheduleModel!);
+    filteredData = widget.tenantUnitModel.paymentScheduleModel!;
+    // tenantUnitPaymentScheduleDataSource = TenantUnitPaymentScheduleDataSource(paymentData: filteredData);
+
   }
 
 
@@ -146,38 +182,69 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
                 ],
               ),
             ),
-            SizedBox(height: 10,),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Breakdown', style: AppTheme.subText,),
-                  GestureDetector(
-                    onTap: (){
-                      showSearch(
-                        context: context,
-                        delegate: TenantUnitPaymentScheduleTableSearch(widget.tenantUnitModel.paymentScheduleModel!, widget.tenantUnitModel),
-                      );
-                    },
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Icon(Icons.search),
-                          Text('search schedule', style: AppTheme.blueSubText,),
-                        ],
-                      ),
-                    ),
-                  )
+            // SizedBox(height: 10,),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Text('Breakdown', style: AppTheme.subText,),
+            //       GestureDetector(
+            //         onTap: (){
+            //           showSearch(
+            //             context: context,
+            //             delegate: TenantUnitPaymentScheduleTableSearch(widget.tenantUnitModel.paymentScheduleModel!, widget.tenantUnitModel),
+            //           );
+            //         },
+            //         child: Container(
+            //           child: Row(
+            //             children: [
+            //               Icon(Icons.search),
+            //               Text('search schedule', style: AppTheme.blueSubText,),
+            //             ],
+            //           ),
+            //         ),
+            //       )
+            //
+            //     ],
+            //   ),
+            // ),
 
-                ],
+            // Padding(
+            //   padding: EdgeInsets.all(8.0),
+            //   child: TextField(
+            //     onChanged: filterData,
+            //     decoration: InputDecoration(
+            //       labelText: 'Search',
+            //       border: OutlineInputBorder(),
+            //     ),
+            //   ),
+            // ),
+
+            Container(
+              padding: const EdgeInsets.only(
+                top: 15,
+                left: 10,
+                right: 10,
+                bottom: 15,
+              ),
+              // decoration: const BoxDecoration(color: Colors.transparent),
+              child: AppSearchTextField(
+                controller: searchController,
+                hintText: 'Search schedule',
+                obscureText: false,
+                onCahnged: filterData,
+                function: (){
+
+                },
+                fillColor: AppTheme.fillColor,
               ),
             ),
 
             widget.tenantUnitModel.paymentScheduleModel!.isEmpty
                 ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
 
-                : Expanded(child: _buildDataTable(tenantUnitPaymentScheduleDataSource)),
+                : Expanded(child: _buildDataTable(filteredData)),
 
                 // : Expanded(child: MyDataTable(tenantUnitModel: widget.tenantUnitModel)),
 
@@ -222,7 +289,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
 }
 
 
-Widget _buildDataTable(TenantUnitPaymentScheduleDataSource tenantUnitPaymentScheduleDataSource) {
+Widget _buildDataTable(List<PaymentSchedulesModel> payments) {
   return SfDataGridTheme(
     data: SfDataGridThemeData(
       headerColor: AppTheme.gray.withOpacity(.2),
@@ -233,7 +300,8 @@ Widget _buildDataTable(TenantUnitPaymentScheduleDataSource tenantUnitPaymentSche
       // allowFiltering: true,
       allowSwiping: false,
       allowTriStateSorting: true,
-      source: tenantUnitPaymentScheduleDataSource,
+      // source: tenantUnitPaymentScheduleDataSource,
+      source: TenantUnitPaymentScheduleDataSource(paymentData: payments),
       columnWidthMode: ColumnWidthMode.fill,
       gridLinesVisibility: GridLinesVisibility.both,
       headerGridLinesVisibility: GridLinesVisibility.both,
