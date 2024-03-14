@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
@@ -90,52 +91,56 @@ class LoginWidget extends StatelessWidget {
         const SizedBox(
           height: 30,
         ),
-        Column(
-          children: [
-            Focus(
-              child: AuthTextField(
-                hintText: 'email',
-                enabled: !state.status.isLoading,
-                controller: emailController,
-                obscureText: false,
-                isEmail: true,
-                style: const TextStyle(color: AppTheme.gray45),
-                borderSide: const BorderSide(color: AppTheme.gray45),
-                fillColor: Colors.transparent,
-              ),
-              onFocusChange: (hasFocus) {
-                // if (context.read<LoginBloc>().state.isPasswordFocus) {
-                //   context.read<LoginBloc>().add(FocusEmail());
-                // }
-                // (context.read<LoginBloc>().state.isEmailFocused)
-                //     ? _height = 0
-                //     : _height = 40;
+        AutofillGroup(
+          child: Column(
+            children: [
+              Focus(
+                child: AuthTextField(
+                  autofillHints: const [AutofillHints.email],
+                  hintText: 'email',
+                  enabled: !state.status.isLoading,
+                  controller: emailController,
+                  obscureText: false,
+                  isEmail: true,
+                  style: const TextStyle(color: AppTheme.gray45),
+                  borderSide: const BorderSide(color: AppTheme.gray45),
+                  fillColor: Colors.transparent,
+                ),
+                onFocusChange: (hasFocus) {
+                  // if (context.read<LoginBloc>().state.isPasswordFocus) {
+                  //   context.read<LoginBloc>().add(FocusEmail());
+                  // }
+                  // (context.read<LoginBloc>().state.isEmailFocused)
+                  //     ? _height = 0
+                  //     : _height = 40;
 
-                // context.read<LoginBloc>().add(RefreshScreen());
-              },
-            ),
-            const SizedBox(height: 10),
-            Focus(
-              child: AuthPasswordTextField(
-                controller: passwordController,
-                hintText: 'password',
-                enabled: !state.status.isLoading,
-                borderSide: const BorderSide(color: AppTheme.gray45),
-                style: const TextStyle(color: AppTheme.gray45),
-                fillColor: Colors.transparent,
-                iconColor: AppTheme.gray45,
+                  // context.read<LoginBloc>().add(RefreshScreen());
+                },
               ),
-              onFocusChange: (hasFocus) {
-                if (context.read<LoginBloc>().state.isEmailFocused) {
-                  context.read<LoginBloc>().add(FocusPassword());
-                }
-                (context.read<LoginBloc>().state.isPasswordFocus)
-                    ? _height = 0
-                    : _height = 40;
-                // context.read<LoginBloc>().add(RefreshScreen());
-              },
-            ),
-          ],
+              const SizedBox(height: 10),
+              Focus(
+                child: AuthPasswordTextField(
+                  autofillHints: const [AutofillHints.password],
+                  controller: passwordController,
+                  hintText: 'password',
+                  enabled: !state.status.isLoading,
+                  borderSide: const BorderSide(color: AppTheme.gray45),
+                  style: const TextStyle(color: AppTheme.gray45),
+                  fillColor: Colors.transparent,
+                  iconColor: AppTheme.gray45,
+                ),
+                onFocusChange: (hasFocus) {
+                  if (context.read<LoginBloc>().state.isEmailFocused) {
+                    context.read<LoginBloc>().add(FocusPassword());
+                  }
+                  (context.read<LoginBloc>().state.isPasswordFocus)
+                      ? _height = 0
+                      : _height = 40;
+                  // context.read<LoginBloc>().add(RefreshScreen());
+                },
+              ),
+            ],
+          ),
         ),
         const SizedBox(
           height: 10,

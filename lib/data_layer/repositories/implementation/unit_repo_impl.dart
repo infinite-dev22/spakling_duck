@@ -25,7 +25,7 @@ class UnitRepoImpl implements UnitRepo {
       var url = Uri.parse('$appUrl/api/rent/unitsonproperty/$id');
 
       var response = await client.get(url, headers: headers);
-      List unitData = jsonDecode(response.body)['units'];
+      List unitData = jsonDecode(response.body)['units'] ?? [];
       if (kDebugMode) {
         print("unit RESPONSE: $response");
       }

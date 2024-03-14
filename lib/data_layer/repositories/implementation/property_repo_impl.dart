@@ -24,7 +24,7 @@ class PropertyRepoImpl implements PropertyRepo {
       var url = Uri.parse('$appUrl/api/rent/properties');
 
       var response = await client.get(url, headers: headers);
-      List propertyData = jsonDecode(response.body)['properties'];
+      List propertyData = jsonDecode(response.body)['properties'] ?? [];
       if (kDebugMode) {
         print("property RESPONSE: $response");
         print("property Data: $propertyData");

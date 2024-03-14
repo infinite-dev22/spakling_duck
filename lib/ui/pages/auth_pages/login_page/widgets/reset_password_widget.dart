@@ -1,12 +1,11 @@
-import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 
 class ResetPasswordWidget extends StatelessWidget {
   TextEditingController emailController = TextEditingController();
@@ -57,15 +56,18 @@ class ResetPasswordWidget extends StatelessWidget {
           style: TextStyle(color: AppTheme.whiteColor, fontSize: 18),
         ),
         const SizedBox(height: 20),
-        AuthTextField(
-          controller: emailController,
-          hintText: 'email',
-          enabled: !state.status.isLoading,
-          obscureText: false,
-          isEmail: true,
-          style: const TextStyle(color: AppTheme.whiteColor),
-          borderSide: const BorderSide(color: AppTheme.whiteColor),
-          fillColor: AppTheme.primary,
+        AutofillGroup(
+          child: AuthTextField(
+            autofillHints: const [AutofillHints.email],
+            controller: emailController,
+            hintText: 'email',
+            enabled: !state.status.isLoading,
+            obscureText: false,
+            isEmail: true,
+            style: const TextStyle(color: AppTheme.whiteColor),
+            borderSide: const BorderSide(color: AppTheme.whiteColor),
+            fillColor: AppTheme.primary,
+          ),
         ),
         const SizedBox(height: 10),
         _buildButtons(context, state),
