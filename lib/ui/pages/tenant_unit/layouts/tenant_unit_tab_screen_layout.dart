@@ -198,7 +198,7 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
                               style: AppTheme.subText,
                             ),
                             Text(
-                              '@${tenantUnit.currencyModel!.code} ${amountFormatter.format(tenantUnit.amount.toString())} ${tenantUnit.period!.name}',
+                              '@${tenantUnit.currencyModel!.code} ${amountFormatter.format(tenantUnit.discountAmount.toString())} ${tenantUnit.period!.name}',
                               style: AppTheme.subText,
                             ),
                           ],

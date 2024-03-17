@@ -416,7 +416,7 @@ class SearchableUnitDropDown<T extends SmartUnitModel> extends StatelessWidget {
             .map((item) => DropDownValueModel(
                 value: item,
                 name:
-                    '${item.getUnitName()}          @${amountFormatter.format(item.getAmount().toString())}/='))
+                    '${item.getUnitName()} @${amountFormatter.format(item.getAmount().toString())}/='))
             .toList(),
         onChanged: onChanged,
       ),
@@ -1560,6 +1560,7 @@ class SearchablePropertyModelListDropDown<T extends SmartPropertyModel>
       height: 50,
       margin: const EdgeInsets.only(bottom: 10),
       child: DropDownTextField(
+        
         controller: controller,
         enableSearch: true,
         dropdownColor: Colors.white,

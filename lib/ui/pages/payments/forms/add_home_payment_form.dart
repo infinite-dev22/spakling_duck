@@ -19,6 +19,7 @@ import 'package:smart_rent/ui/pages/payment_mode/bloc/payment_mode_bloc.dart';
 import 'package:smart_rent/ui/pages/payment_schedules/bloc/payment_schedules_bloc.dart';
 import 'package:smart_rent/ui/pages/payments/bloc/payment_bloc.dart';
 import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
+import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
@@ -26,6 +27,7 @@ import 'package:smart_rent/ui/widgets/amount_text_field.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
 import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
+import 'package:smart_rent/ui/widgets/custom_textbox.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/ui/widgets/text_field_label_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
@@ -44,19 +46,18 @@ import 'package:smart_rent/utilities/extra.dart';
 
 
 
-class AddPaymentForm extends StatefulWidget {
+class AddHomePaymentForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
-  final Property property;
 
-  const AddPaymentForm(
-      {super.key, required this.addButtonText, required this.isUpdate, required this.property});
+  const AddHomePaymentForm(
+      {super.key, required this.addButtonText, required this.isUpdate,});
 
   @override
-  State<AddPaymentForm> createState() => _AddPaymentFormState();
+  State<AddHomePaymentForm> createState() => _AddHomePaymentFormState();
 }
 
-class _AddPaymentFormState extends State<AddPaymentForm> {
+class _AddHomePaymentFormState extends State<AddHomePaymentForm> {
   File? paymentPic;
   String? paymentImagePath;
   String? paymentImageExtension;
@@ -159,13 +160,16 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
   List<PaymentTenantUnitScheduleModel> selectedSchedules = [];
   late int sumBalances;
 
+  late SingleValueDropDownController _propertyModelCont;
+  int selectedPropertyId = 0;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     tenantUnitsDropdownCont = SingleValueDropDownController();
     paymentDateController = TextEditingController(text: "${paymentDate.value.year}-${paymentDate.value.month}-${paymentDate.value.day}");
-
+    _propertyModelCont =  SingleValueDropDownController();
   }
 
   @override
@@ -206,10 +210,10 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                       backgroundColor: Colors.green,
                       gravity: ToastGravity.TOP);
 
-                  context.read<PaymentBloc>().add(LoadAllPayments(widget.property.id!));
+                  context.read<PaymentBloc>().add(LoadAllPayments(selectedPropertyId));
                   context.read<PaymentSchedulesBloc>().add(
                       LoadAllPaymentSchedulesEvent(
-                          selectedTenantUnitId, widget.property.id!));
+                          selectedTenantUnitId, selectedPropertyId));
                   _controller.options.clear();
                   Navigator.pop(context);
 
@@ -280,7 +284,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                       selectedTenantUnitId,
                       selectedPaymentAccountId == 0 ? paymentAccountsModel!.id!.toInt() : selectedPaymentModeId,
                       selectedPaymentModeId == 0 ? paymentModeModel!.id!.toInt() : selectedPaymentModeId,
-                      widget.property.id!,
+                      selectedPropertyId,
                       stringScheduleList,
                     ));
                   }
@@ -341,6 +345,50 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                               const SizedBox(
                                 height: 10,
                               ),
+
+                              TextFieldLabelWidget(label: 'Property'),
+                              BlocBuilder<PropertyBloc, PropertyState>(
+                                builder: (context, state) {
+                                  if (state.status == PropertyStatus.initial) {
+                                    context
+                                        .read<PropertyBloc>()
+                                        .add(LoadPropertiesEvent());
+                                  }
+                                  if (state.status == PropertyStatus.empty) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: AuthTextField(
+                                        hintText: 'No Properties',
+                                        obscureText: false,
+                                        enabled: false,),
+                                    );
+                                  }
+                                  if (state.status == PropertyStatus.error) {
+                                    return Center(
+                                      child: Text('An Error Occurred'),
+                                    );
+                                  }
+                                  return SearchablePropertyModelListDropDown<
+                                      Property>(
+                                    hintText: 'Property',
+                                    menuItems: state.properties == null
+                                        ? []
+                                        : state.properties!,
+                                    controller: _propertyModelCont,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedPropertyId = value.value.id;
+                                      });
+                                      context.read<TenantUnitBloc>().add(LoadTenantUnitsEvent(selectedPropertyId));
+                                      print('Property is $selectedPropertyId}');
+                                    },
+                                  );
+                                },
+                              ),
+                              // const SizedBox(
+                              //   height: 10,
+                              // ),
+
                               TextFieldLabelWidget(label: 'Tenant/ Unit'),
                               BlocListener<PaymentSchedulesBloc,
                                   PaymentSchedulesState>(
@@ -349,7 +397,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                       PaymentSchedulesStatus.initial) {
                                     context.read<PaymentSchedulesBloc>().add(
                                         LoadAllPaymentSchedulesEvent(
-                                            selectedTenantUnitId, widget.property.id!));
+                                            selectedTenantUnitId, selectedPropertyId));
 
                                   }
                                 },
@@ -360,7 +408,14 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                         TenantUnitStatus.initial) {
                                       context
                                           .read<TenantUnitBloc>()
-                                          .add(LoadTenantUnitsEvent(widget.property.id!));
+                                          .add(LoadTenantUnitsEvent(selectedPropertyId));
+                                    } else if (state.status ==
+                                        TenantUnitStatus.loading) {
+                                      return SmartCaseTextField(
+                                        hint: 'Loading tenant units',
+                                        controller: TextEditingController(),
+                                        readOnly: true,
+                                      );
                                     }
                                     return SearchableTenantUnitDropDown<
                                         TenantUnitModel>(
@@ -380,7 +435,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                           context
                                               .read<PaymentSchedulesBloc>()
                                               .add(LoadAllPaymentSchedulesEvent(
-                                              selectedTenantUnitId, widget.property.id!));
+                                              selectedTenantUnitId, selectedPropertyId));
                                         });
 
                                         paidController.clear();
@@ -399,7 +454,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                   PaymentSchedulesState>(
                                 builder: (context, state) {
                                   if(state.status == PaymentSchedulesStatus.initial){
-                                    context.read<PaymentSchedulesBloc>().add(LoadAllPaymentSchedulesEvent(selectedTenantUnitId, widget.property.id!));
+                                    context.read<PaymentSchedulesBloc>().add(LoadAllPaymentSchedulesEvent(selectedTenantUnitId, selectedPropertyId));
 
                                   }
                                   if (state.status ==
@@ -429,12 +484,10 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
                                         } else {
 
-
                                           print('My Total balance = $sumBalances');
                                           amountController.text = amountFormatter.format(sumBalances.toString());
                                           paidController.text = amountFormatter.format(sumBalances.toString());
                                           balanceController.text = (int.parse(amountController.text.trim()) - int.parse(paidController.text.trim())).toString();
-
 
 
 
@@ -577,7 +630,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                                 PaymentModeStatus.initial) {
                                               context
                                                   .read<PaymentModeBloc>()
-                                                  .add(LoadAllPaymentModesEvent(widget.property.id!));
+                                                  .add(LoadAllPaymentModesEvent(selectedPropertyId));
                                             }
                                             if (state.status ==
                                                 PaymentModeStatus.success) {
@@ -618,7 +671,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                               if (state.status ==
                                                   PaymentAccountStatus.initial) {
                                                 context.read<PaymentAccountBloc>().add(
-                                                    LoadAllPaymentAccountsEvent(widget.property.id!));
+                                                    LoadAllPaymentAccountsEvent(selectedPropertyId));
                                               }   if (state.status ==
                                                   PaymentAccountStatus.success) {
                                                 paymentAccountsModel =

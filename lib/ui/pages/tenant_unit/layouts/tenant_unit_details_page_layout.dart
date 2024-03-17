@@ -349,34 +349,39 @@ List<GridColumn> _getColumns() {
     GridColumn(
         columnName: 'period',
         label: Container(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(1.0),
             alignment: Alignment.center,
-            child: const Text(
+            child:  Text(
               'Period',
+              style: AppTheme.darkBlueTitle,
             ))),
     GridColumn(
         columnName: 'amount',
         label: Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(1.0),
             alignment: Alignment.center,
-            child: const Text('Amount'))),
+            child:  Text('Amount',
+              style: AppTheme.darkBlueTitle,
+            ))),
     GridColumn(
         columnName: 'paid',
         label: Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(1.0),
             alignment: Alignment.center,
-            child: const Text(
+            child:  Text(
               'Paid',
               overflow: TextOverflow.ellipsis,
+              style: AppTheme.darkBlueTitle,
             ))),
     GridColumn(
         columnName: 'balance',
         label: Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(1.0),
             alignment: Alignment.center,
-            child: const Text(
+            child:  Text(
               'Balance',
               overflow: TextOverflow.ellipsis,
+              style: AppTheme.darkBlueTitle,
             ))),
   ];
 }

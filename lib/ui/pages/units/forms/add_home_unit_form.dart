@@ -220,8 +220,12 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                         .add(LoadPropertiesEvent());
                                   }
                                   if (state.status == PropertyStatus.empty) {
-                                    return Center(
-                                      child: Text('No Properties'),
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      child: AuthTextField(
+                                        hintText: 'No Properties',
+                                        obscureText: false,
+                                        enabled: false,),
                                     );
                                   }
                                   if (state.status == PropertyStatus.error) {

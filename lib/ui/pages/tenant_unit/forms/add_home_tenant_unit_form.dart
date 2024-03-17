@@ -1,9 +1,11 @@
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:smart_rent/data_layer/models/currency/currency_model.dart';
 import 'package:smart_rent/data_layer/models/period/period_model.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
@@ -11,33 +13,36 @@ import 'package:smart_rent/data_layer/models/tenant/tenant_model.dart';
 import 'package:smart_rent/data_layer/models/unit/unit_model.dart';
 import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
+import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
 import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/amount_text_field.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
+import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:smart_rent/ui/widgets/custom_accordion.dart';
 import 'package:smart_rent/ui/widgets/custom_textbox.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
+import 'package:smart_rent/utilities/extra.dart';
 
-class TenantUnitForm extends StatefulWidget {
+class AddHomeTenantUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
-  final Property property;
 
-  TenantUnitForm(
+  AddHomeTenantUnitForm(
       {super.key,
       required this.addButtonText,
       required this.isUpdate,
-      required this.property});
+     });
 
   @override
-  State<TenantUnitForm> createState() => _TenantUnitFormState();
+  State<AddHomeTenantUnitForm> createState() => _AddHomeTenantUnitFormState();
 }
 
-class _TenantUnitFormState extends State<TenantUnitForm> {
+class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
   TextEditingController durationController = TextEditingController();
 
   TextEditingController unitAmountController = TextEditingController();
@@ -59,11 +64,22 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
   CurrencyModel currency = CurrencyModel();
   var numberFormat = NumberFormat("###,###,###,###,###");
 
+  late SingleValueDropDownController _propertyModelCont;
+  int selectedPropertyId = 0;
+
+  late SingleValueDropDownController unitController;
+
+  CurrencyModel? currencyModel;
+
+  int selectedCurrency = 0;
+
   @override
   void initState() {
     super.initState();
     startDateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
     endDateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    _propertyModelCont = SingleValueDropDownController();
+    unitController = SingleValueDropDownController();
   }
 
   @override
@@ -100,24 +116,32 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
           name: '${widget.isUpdate ? "Edit" : "New"}  Tenant',
           addButtonText: widget.isUpdate ? "Update" : "Add",
           onSave: () {
-            context.read<TenantUnitBloc>().add(
-                  AddTenantUnitEvent(
-                    currentUserToken.toString(),
-                    tenant.id!,
-                    unit.id!,
-                    period.id!,
-                    durationController.text,
-                    DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
-                        .parse(startDateController.text)),
-                    DateFormat('yyyy-MM-dd').format(
-                        DateFormat('dd/MM/yyyy').parse(endDateController.text)),
-                    unitAmountController.text,
-                    currency.id!,
-                    discountedAmountController.text,
-                    descriptionController.text,
-                    widget.property.id!,
-                  ),
-                );
+
+             if (selectedPropertyId == 0) {
+            Fluttertoast.showToast(
+            msg: 'please select property',
+            gravity: ToastGravity.TOP);
+            } else {
+               context.read<TenantUnitBloc>().add(
+                 AddTenantUnitEvent(
+                   currentUserToken.toString(),
+                   tenant.id!,
+                   unit.id!,
+                   period.id!,
+                   durationController.text,
+                   DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
+                       .parse(startDateController.text)),
+                   DateFormat('yyyy-MM-dd').format(
+                       DateFormat('dd/MM/yyyy').parse(endDateController.text)),
+                   unitAmountController.text,
+                   currency.id!,
+                   discountedAmountController.text,
+                   descriptionController.text,
+                   selectedPropertyId,
+                 ),
+               );
+             }
+
           },
           isElevated: true,
           onCancel: () {
@@ -128,6 +152,46 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
           child: Column(
             children: [
+
+              BlocBuilder<PropertyBloc, PropertyState>(
+                builder: (context, state) {
+                  if (state.status == PropertyStatus.initial) {
+                    context
+                        .read<PropertyBloc>()
+                        .add(LoadPropertiesEvent());
+                  }
+                  if (state.status == PropertyStatus.empty) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: AuthTextField(
+                        hintText: 'No Properties',
+                        obscureText: false,
+                        enabled: false,),
+                    );
+                  }
+                  if (state.status == PropertyStatus.error) {
+                    return Center(
+                      child: Text('An Error Occurred'),
+                    );
+                  }
+                  return SearchablePropertyModelListDropDown<
+                      Property>(
+                    hintText: 'Property',
+                    menuItems: state.properties == null
+                        ? []
+                        : state.properties!,
+                    controller: _propertyModelCont,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedPropertyId = value.value.id;
+                      });
+                      context.read<UnitBloc>().add(LoadAllUnitsEvent(selectedPropertyId));
+                      print('Property is $selectedPropertyId}');
+                    },
+                  );
+                },
+              ),
+
               BlocBuilder<TenantBloc, TenantState>(
                 builder: (context, state) {
                   if (state.status.isInitial) {
@@ -195,22 +259,39 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                   if (state.status.isInitial) {
                     context
                         .read<UnitBloc>()
-                        .add(LoadAllUnitsEvent(widget.property.id!));
+                        .add(LoadAllUnitsEvent(selectedPropertyId));
                   }
                   if (state.status.isSuccess) {
-                    return TenantUnitDropdown<UnitModel>(
-                      hintText: 'Select unit name/number',
-                      menuItems: state.units.where((unit) => unit.isAvailable == 1 ).toList(),
-                      onChanged: (value) {
-                        if (value != null) {
-                          unit = value;
-                          unitAmountController.text =
-                              numberFormat.format(value.amount);
-                          discountedAmountController.text =
-                              numberFormat.format(value.amount);
-                        }
+                    return SearchableUnitDropDown<UnitModel>(
+                        hintText: 'Select unit name/number',
+                          menuItems: state.units.where((unit) => unit.isAvailable == 1 ).toList(),
+                        controller: unitController,
+                      onChanged: (value){
+                            if (value != null) {
+                              unit = value.value;
+                              unitAmountController.text =
+                                  amountFormatter.format(value.value.amount.toString());
+                              discountedAmountController.text =
+                                  amountFormatter.format(value.value.amount.toString());
+                            }
+
+                            print('My Amount = ${value.value.amount.toString()}');
                       },
                     );
+
+                    // return TenantUnitDropdown<UnitModel>(
+                    //   hintText: 'Select unit name/number',
+                    //   menuItems: state.units.where((unit) => unit.isAvailable == 1 ).toList(),
+                    //   onChanged: (value) {
+                    //     if (value != null) {
+                    //       unit = value;
+                    //       unitAmountController.text =
+                    //           numberFormat.format(value.amount);
+                    //       discountedAmountController.text =
+                    //           numberFormat.format(value.amount);
+                    //     }
+                    //   },
+                    // );
                   }
                   if (state.status.isLoading) {
                     return Column(
@@ -257,7 +338,7 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                   if (state.status.isInitial) {
                     context
                         .read<PeriodBloc>()
-                        .add(LoadAllPeriodsEvent(widget.property.id!));
+                        .add(LoadAllPeriodsEvent(selectedPropertyId));
                   }
                   if (state.status.isSuccess ||
                       state.status.isDurationSelected) {
@@ -372,14 +453,26 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                   return const SizedBox(height: 10);
                 },
               ),
-              SmartCaseTextField(
-                hint: 'Unit amount',
-                maxLength: 50,
-                minLines: 1,
-                maxLines: 1,
+              AmountTextField(
+                inputFormatters: [
+                  ThousandsFormatter(),
+                ],
                 controller: unitAmountController,
-                readOnly: true,
+                hintText: 'Unit amount',
+                obscureText: false,
+                keyBoardType: TextInputType.number,
+                enabled: false,
+
               ),
+
+              // SmartCaseTextField(
+              //   hint: 'Unit amount',
+              //   maxLength: 50,
+              //   minLines: 1,
+              //   maxLines: 1,
+              //   controller: unitAmountController,
+              //   readOnly: true,
+              // ),
               const SizedBox(height: 10),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -402,30 +495,44 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                   if (state.status.isInitial) {
                     context
                         .read<CurrencyBloc>()
-                        .add(LoadAllCurrenciesEvent(widget.property.id!));
+                        .add(LoadAllCurrenciesEvent(selectedPropertyId));
                   }
                   if (state.status.isSuccess) {
+                    currencyModel =
+                        state.currencies.firstWhere(
+                              (currency) => currency.code == 'UGX',
+                          // orElse: () => null as CurrencyModel,
+                        );
                     return Row(
                       children: [
                         Expanded(
                           child: CustomApiGenericDropdown<CurrencyModel>(
                             hintText: 'Select currency',
-                            menuItems: state.currencies,
+                            menuItems: state.currencies == null
+                                ? []
+                                : state.currencies!,
                             onChanged: (value) {
-                              if (value != null) {
-                                currency = value;
-                              }
+                              setState(() {
+                                selectedCurrency = value!.id!;
+                              });
+                              // if (value != null) {
+                              //   currency = value;
+                              // }
                             },
+                            defaultValue: currencyModel,
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: SmartCaseTextField(
-                            hint: 'Discounted amount',
-                            maxLength: 50,
-                            minLines: 1,
-                            maxLines: 1,
+                          child: AmountTextField(
+                            inputFormatters: [
+                              ThousandsFormatter(),
+                            ],
                             controller: discountedAmountController,
+                            hintText: 'Discounted amount',
+                            obscureText: false,
+                            keyBoardType: TextInputType.number,
+
                           ),
                         ),
                       ],
@@ -453,6 +560,7 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                   return const SizedBox(height: 10);
                 },
               ),
+              const SizedBox(height: 10),
               CustomTextArea(
                   hint: 'Description', controller: descriptionController),
             ],

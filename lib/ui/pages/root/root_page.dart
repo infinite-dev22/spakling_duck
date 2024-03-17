@@ -2,11 +2,16 @@ import 'package:smart_rent/ui/pages/dashboard/dashboard_page.dart';
 import 'package:smart_rent/ui/pages/employees/employees_page.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/forms/add_floor_form.dart';
+import 'package:smart_rent/ui/pages/payments/forms/add_home_payment_form.dart';
+import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/forms/add_property_form.dart';
 import 'package:smart_rent/ui/pages/root/bloc/nav_bar_bloc.dart';
 import 'package:smart_rent/ui/pages/root/widgets/bottom_nav_bar.dart';
 import 'package:smart_rent/ui/pages/root/widgets/screen.dart';
 import 'package:smart_rent/ui/pages/settings/settings_page.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/forms/add_home_tenant_unit_form.dart';
+import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/tenants/tenants_page.dart';
 import 'package:smart_rent/ui/pages/units/forms/add_home_unit_form.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
@@ -117,158 +122,269 @@ class _RootPageState extends State<RootPage> {
         height: 200,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-              Column(
-                children: [
-                  IconButton.outlined(
-                    style: const ButtonStyle(
-                      iconColor: MaterialStatePropertyAll(
-                        AppTheme.inActiveColor,
+                  Column(
+                    children: [
+                      IconButton.outlined(
+                        style: const ButtonStyle(
+                          iconColor: MaterialStatePropertyAll(
+                            AppTheme.inActiveColor,
+                          ),
+                          side: MaterialStatePropertyAll(
+                            BorderSide(
+                              color: AppTheme.inActiveColor,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          showModalBottomSheet(
+                              useSafeArea: true,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return const AddPropertyForm(
+                                    addButtonText: 'Add', isUpdate: false);
+                              });
+                        },
+                        icon: const Icon(Icons.house),
+                        iconSize: 45,
                       ),
-                      side: MaterialStatePropertyAll(
-                        BorderSide(
+                      const Text(
+                        "Add Property",
+                        style: TextStyle(
                           color: AppTheme.inActiveColor,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                          useSafeArea: true,
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) {
-                            return const AddPropertyForm(
-                                addButtonText: 'Add', isUpdate: false);
-                          });
-                    },
-                    icon: const Icon(Icons.house),
-                    iconSize: 45,
+                    ],
                   ),
-                  const Text(
-                    "Add Property",
-                    style: TextStyle(
-                      color: AppTheme.inActiveColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Column(
+                    children: [
+                      IconButton.outlined(
+                        style: const ButtonStyle(
+                          iconColor: MaterialStatePropertyAll(
+                            AppTheme.inActiveColor,
+                          ),
+                          side: MaterialStatePropertyAll(
+                            BorderSide(
+                              color: AppTheme.inActiveColor,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          showModalBottomSheet(
+                              useSafeArea: true,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return AddFloorForm(
+                                  addButtonText: 'Add',
+                                  isUpdate: false,
+                                );
+                              });
+                        },
+                        icon: const Icon(Icons.bed),
+                        iconSize: 45,
+                      ),
+                      const Text(
+                        "Add Floor",
+                        style: TextStyle(
+                          color: AppTheme.inActiveColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
+                  Column(
+                    children: [
+                      IconButton.outlined(
+                        style: const ButtonStyle(
+                          iconColor: MaterialStatePropertyAll(
+                            AppTheme.inActiveColor,
+                          ),
+                          side: MaterialStatePropertyAll(
+                            BorderSide(
+                              color: AppTheme.inActiveColor,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          showModalBottomSheet(
+                              useSafeArea: true,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (context) => FloorBloc(),
+                                    ),
+                                  ],
+                                  child: AddHomeUnitForm(
+                                    addButtonText: 'Add',
+                                    isUpdate: false,
+                                  ),
+                                );
+                              });
+                        },
+                        icon: const Icon(Icons.bed),
+                        iconSize: 45,
+                      ),
+                      const Text(
+                        "Add Unit",
+                        style: TextStyle(
+                          color: AppTheme.inActiveColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Column(
+                    children: [
+                      IconButton.outlined(
+                        style: const ButtonStyle(
+                          iconColor: MaterialStatePropertyAll(
+                            AppTheme.inActiveColor,
+                          ),
+                          side: MaterialStatePropertyAll(
+                            BorderSide(
+                              color: AppTheme.inActiveColor,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {},
+                        icon: const Icon(Icons.person),
+                        iconSize: 45,
+                      ),
+                      const Text(
+                        "Add Tenant",
+                        style: TextStyle(
+                          color: AppTheme.inActiveColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+
                 ],
               ),
-              Column(
+              SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton.outlined(
-                    style: const ButtonStyle(
-                      iconColor: MaterialStatePropertyAll(
-                        AppTheme.inActiveColor,
-                      ),
-                      side: MaterialStatePropertyAll(
-                        BorderSide(
-                          color: AppTheme.inActiveColor,
+
+                  Column(
+                    children: [
+                      IconButton.outlined(
+                        style: const ButtonStyle(
+                          iconColor: MaterialStatePropertyAll(
+                            AppTheme.inActiveColor,
+                          ),
+                          side: MaterialStatePropertyAll(
+                            BorderSide(
+                              color: AppTheme.inActiveColor,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                          useSafeArea: true,
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) {
-                            return AddFloorForm(
-                              addButtonText: 'Add',
-                              isUpdate: false,
-                            );
-                          });
-                    },
-                    icon: const Icon(Icons.bed),
-                    iconSize: 45,
-                  ),
-                  const Text(
-                    "Add Floor",
-                    style: TextStyle(
-                      color: AppTheme.inActiveColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  IconButton.outlined(
-                    style: const ButtonStyle(
-                      iconColor: MaterialStatePropertyAll(
-                        AppTheme.inActiveColor,
-                      ),
-                      side: MaterialStatePropertyAll(
-                        BorderSide(
-                          color: AppTheme.inActiveColor,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      showModalBottomSheet(
-                          useSafeArea: true,
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) {
-                            return MultiBlocProvider(
-                              providers: [
-                                BlocProvider(
-                                  create: (context) => FloorBloc(),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          showModalBottomSheet(
+                              useSafeArea: true,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return  MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (context) => PropertyBloc(),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) => TenantBloc(),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) => TenantUnitBloc(),
+                                    ),
+                                  ],
+                                  child: AddHomeTenantUnitForm(
+                                    addButtonText: 'Add',
+                                    isUpdate: false,
                                 ),
-                              ],
-                              child: AddHomeUnitForm(
-                                addButtonText: 'Add',
-                                isUpdate: false,
-                              ),
-                            );
-                          });
-                    },
-                    icon: const Icon(Icons.bed),
-                    iconSize: 45,
-                  ),
-                  const Text(
-                    "Add Unit",
-                    style: TextStyle(
-                      color: AppTheme.inActiveColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-
-              Column(
-                children: [
-                  IconButton.outlined(
-                    style: const ButtonStyle(
-                      iconColor: MaterialStatePropertyAll(
-                        AppTheme.inActiveColor,
+                                );
+                              });
+                        },
+                        icon: const Icon(Icons.house),
+                        iconSize: 45,
                       ),
-                      side: MaterialStatePropertyAll(
-                        BorderSide(
+                      const Text(
+                        "Add Tenant Unit",
+                        style: TextStyle(
                           color: AppTheme.inActiveColor,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    onPressed: () {},
-                    icon: const Icon(Icons.person),
-                    iconSize: 45,
+                    ],
                   ),
-                  const Text(
-                    "Add Tenant",
-                    style: TextStyle(
-                      color: AppTheme.inActiveColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Column(
+                    children: [
+                      IconButton.outlined(
+                        style: const ButtonStyle(
+                          iconColor: MaterialStatePropertyAll(
+                            AppTheme.inActiveColor,
+                          ),
+                          side: MaterialStatePropertyAll(
+                            BorderSide(
+                              color: AppTheme.inActiveColor,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          showModalBottomSheet(
+                              useSafeArea: true,
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (context) {
+                                return MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (context) => PropertyBloc(),
+                                    ),
+
+                                  ],
+                                  child: AddHomePaymentForm(
+                                  addButtonText: 'Add',
+                                  isUpdate: false,
+                                ),
+);
+                              });
+                        },
+                        icon: const Icon(Icons.bed),
+                        iconSize: 45,
+                      ),
+                      const Text(
+                        "Add Payment",
+                        style: TextStyle(
+                          color: AppTheme.inActiveColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
+
+
                 ],
               ),
-
             ],
           ),
         ),

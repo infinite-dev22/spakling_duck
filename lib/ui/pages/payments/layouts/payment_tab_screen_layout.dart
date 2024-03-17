@@ -112,6 +112,7 @@ class PaymentTabScreenLayout extends StatelessWidget {
               floatingActionButton: FloatingActionButton(
                 heroTag: "add_payment",
                 onPressed: () => showModalBottomSheet(
+                  backgroundColor: AppTheme.itemBgColor,
                     useSafeArea: true,
                     isScrollControlled: true,
                     context: context,
@@ -168,9 +169,14 @@ class PaymentTabScreenLayout extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                '${state.payments![index].tenantUnitModel!.tenant!.clientTypeId == 1 ? '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.firstName} ${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.lastName}' : '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.companyName}'} - ${state.payments![index].tenantUnitModel!.unit!.name}',
-                                style: AppTheme.blueAppTitle3,
+                              SizedBox(
+                                width: 250,
+                                child: Text(
+                                  '${state.payments![index].tenantUnitModel!.tenant!.clientTypeId == 1 ? '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.firstName} ${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.lastName}' : '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.companyName}'} - ${state.payments![index].tenantUnitModel!.unit!.name}',
+                                  style: AppTheme.blueAppTitle3,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               Text(
                                 '${DateFormat('d MMM, yy').format(DateTime.parse(state.payments![index].date.toString()))}',

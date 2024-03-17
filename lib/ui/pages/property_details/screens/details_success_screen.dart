@@ -41,7 +41,7 @@ class DetailsSuccessScreen extends StatelessWidget {
         top: 15,
       ),
       decoration: const BoxDecoration(
-        color: AppTheme.appBgColor,
+        color: AppTheme.whiteColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),

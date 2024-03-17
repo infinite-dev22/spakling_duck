@@ -26,6 +26,7 @@ class PropertyDetailsLayout extends StatelessWidget {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
+        backgroundColor: AppTheme.whiteColor,
         appBar: AppBar(
           backgroundColor: AppTheme.primary,
           title: const TitleBarImageHolder(),
