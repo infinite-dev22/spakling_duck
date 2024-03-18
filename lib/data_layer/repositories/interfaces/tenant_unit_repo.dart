@@ -14,4 +14,8 @@ abstract class TenantUnitRepo {
       String agreedAmount,
       String description,
       int propertyId);
+
+  Future<dynamic> getALlTenantUnitSchedules(String token, int id);
+
 }
+

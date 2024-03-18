@@ -111,4 +111,37 @@ class TenantUnitRepoImpl implements TenantUnitRepo {
       client.close();
     }
   }
+
+
+  @override
+  Future<List<TenantUnitModel>> getALlTenantUnitSchedules(String token, int id) async {
+    var client = RetryClient(http.Client());
+    try {
+      var headers = {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'Bearer $token'
+      };
+
+      var url = Uri.parse('$appUrl/api/rent/tenantunits/$id');
+      // var url =  Uri.parse('$appUrl/api/rent/payments/create/prefill/$id');z
+
+      var response = await client.get(url, headers: headers);
+      print('Tenant Unit Schedules ${response.body}');
+      List tenantUnitData =
+          jsonDecode(response.body)[0]['schedules'] ?? [];
+      // List tenantUnitData = jsonDecode(response.body)['tenantunits'] ?? [];
+      // return [];
+      if (kDebugMode) {
+        print("tenant unit schedules RESPONSE: $response");
+      }
+      return tenantUnitData
+          .map((tenantUnit) => TenantUnitModel.fromJson(tenantUnit))
+          .toList();
+    } finally {
+      client.close();
+    }
+  }
+
+
 }
