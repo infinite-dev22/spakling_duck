@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
 
 import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/layouts/search_tenant_unit_payment_schedule_screen_layout.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/layouts/test.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
@@ -67,7 +69,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
     // TODO: implement initState
     super.initState();
     // tenantUnitPaymentScheduleDataSource = TenantUnitPaymentScheduleDataSource(paymentData: widget.tenantUnitModel.paymentScheduleModel!);
-    filteredData = widget.tenantUnitModel.paymentScheduleModel!;
+    // filteredData = widget.tenantUnitModel.paymentScheduleModel!;
     // tenantUnitPaymentScheduleDataSource = TenantUnitPaymentScheduleDataSource(paymentData: filteredData);
 
   }
@@ -75,7 +77,9 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider<TenantUnitBloc>(
+  create: (context) => TenantUnitBloc(),
+  child: Scaffold(
       backgroundColor: AppTheme.whiteColor,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
@@ -240,11 +244,40 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
                 fillColor: AppTheme.fillColor,
               ),
             ),
+            
+            BlocBuilder<TenantUnitBloc, TenantUnitState>(
+              builder: (context, state) {
+                if(state.status == TenantUnitStatus.initial){
+                  context.read<TenantUnitBloc>().add(LoadTenantUnitPaymentSchedules(widget.tenantUnitModel.id!));
+                } if(state.status == TenantUnitStatus.loadingDetails){
+                  return Center(child: CircularProgressIndicator(),);
+                } if(state.status == TenantUnitStatus.successDetails){
+                  filteredData = state.paymentSchedules!;
+                  return Expanded(child: _buildDataTable(filteredData));
+                  // return ListView.builder(
+                  //     shrinkWrap: true,
+                  //     itemCount: filteredData.length,
+                  //     itemBuilder: (context, index){
+                  //       var schedule =  filteredData[index];
+                  //       return Text('Index$index ${schedule.fromDate.toString()}');
+                  //     });
 
-            widget.tenantUnitModel.paymentScheduleModel!.isEmpty
-                ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
+                } if(state.status == TenantUnitStatus.errorDetails){
+                  return Center(child: Text('Something went wrong'),);
 
-                : Expanded(child: _buildDataTable(filteredData)),
+                } if(state.status == TenantUnitStatus.emptyDetails){
+                  return Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),);
+                }
+
+                return Container();
+
+                },
+            ),
+
+            // widget.tenantUnitModel.paymentScheduleModel!.isEmpty
+            //     ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
+            //
+            //     : Expanded(child: _buildDataTable(filteredData)),
 
                 // : Expanded(child: MyDataTable(tenantUnitModel: widget.tenantUnitModel)),
 
@@ -282,7 +315,8 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
         ),
       ),
 
-    );
+    ),
+);
   }
 
 

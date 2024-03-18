@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:smart_rent/data_layer/dtos/implementation/tenant_unit_dto_impl.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
 import 'package:smart_rent/data_layer/models/tenant_unit/add_tenant_unit_response.dart';
 import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
 import 'package:smart_rent/data_layer/repositories/implementation/tenant_unit_repo_impl.dart';
@@ -16,6 +17,7 @@ class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
     on<LoadTenantUnitsEvent>(_mapFetchTenantUnitsToState);
     on<RefreshTenantUnitsEvent>(_mapRefreshTenantUnitsToState);
     on<AddTenantUnitEvent>(_mapAddTenantUnitEventToState);
+    on<LoadTenantUnitPaymentSchedules>(_mapFetchTenantUnitPaymentSchedulesToState);
   }
 
   _mapFetchTenantUnitsToState(
@@ -32,6 +34,27 @@ class TenantUnitBloc extends Bloc<TenantUnitEvent, TenantUnitState> {
       }
     }).onError((error, stackTrace) {
       emit(state.copyWith(status: TenantUnitStatus.error));
+      if (kDebugMode) {
+        print("Error: $error");
+        print("Stacktrace: $stackTrace");
+      }
+    });
+  }
+
+  _mapFetchTenantUnitPaymentSchedulesToState(
+      LoadTenantUnitPaymentSchedules event, Emitter<TenantUnitState> emit) async {
+    emit(state.copyWith(status: TenantUnitStatus.loadingDetails));
+    await TenantUnitRepoImpl()
+        .getALlTenantUnitSchedules(currentUserToken.toString(), event.tenantUnitId)
+        .then((tenantUnitSchedules) {
+      if (tenantUnitSchedules.isNotEmpty) {
+        emit(state.copyWith(
+            status: TenantUnitStatus.successDetails, paymentSchedules: tenantUnitSchedules));
+      } else {
+        emit(state.copyWith(status: TenantUnitStatus.emptyDetails));
+      }
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(status: TenantUnitStatus.errorDetails, message: error.toString()));
       if (kDebugMode) {
         print("Error: $error");
         print("Stacktrace: $stackTrace");

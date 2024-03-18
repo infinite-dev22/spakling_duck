@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 import 'package:smart_rent/configs/app_configs.dart';
+import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
 import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
 import 'package:smart_rent/data_layer/repositories/interfaces/tenant_unit_repo.dart';
 
@@ -114,7 +115,7 @@ class TenantUnitRepoImpl implements TenantUnitRepo {
 
 
   @override
-  Future<List<TenantUnitModel>> getALlTenantUnitSchedules(String token, int id) async {
+  Future<List<PaymentSchedulesModel>> getALlTenantUnitSchedules(String token, int id) async {
     var client = RetryClient(http.Client());
     try {
       var headers = {
@@ -128,15 +129,15 @@ class TenantUnitRepoImpl implements TenantUnitRepo {
 
       var response = await client.get(url, headers: headers);
       print('Tenant Unit Schedules ${response.body}');
-      List tenantUnitData =
+      List tenantUnitSchedulesData =
           jsonDecode(response.body)[0]['schedules'] ?? [];
       // List tenantUnitData = jsonDecode(response.body)['tenantunits'] ?? [];
       // return [];
       if (kDebugMode) {
         print("tenant unit schedules RESPONSE: $response");
       }
-      return tenantUnitData
-          .map((tenantUnit) => TenantUnitModel.fromJson(tenantUnit))
+      return tenantUnitSchedulesData
+          .map((tenantUnitSchedules) => PaymentSchedulesModel.fromJson(tenantUnitSchedules))
           .toList();
     } finally {
       client.close();

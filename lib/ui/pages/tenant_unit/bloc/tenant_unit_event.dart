@@ -56,3 +56,15 @@ class AddTenantUnitEvent extends TenantUnitEvent {
   List<Object?> get props => [token, tenantId, unitId, duration, periodId, fromDate, toDate, unitAmount, currencyId, agreedAmount, description, propertyId];
 
 }
+
+class LoadTenantUnitPaymentSchedules extends TenantUnitEvent{
+  final int tenantUnitId;
+  const LoadTenantUnitPaymentSchedules(this.tenantUnitId);
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+
+
+
+}
