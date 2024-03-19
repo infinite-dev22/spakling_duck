@@ -12,9 +12,7 @@ import 'package:smart_rent/ui/widgets/smart_error_widget.dart';
 import 'package:smart_rent/ui/widgets/smart_widget.dart';
 
 class PropertiesLayout extends StatelessWidget {
-  Timer? _timer;
-
-  PropertiesLayout({super.key});
+  const PropertiesLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +34,6 @@ class PropertiesLayout extends StatelessWidget {
           );
         }
         if (state.status.isSuccess) {
-          _timer = Timer.periodic(
-            const Duration(seconds: 5),
-            (timer) {
-              context.read<PropertyBloc>().add(RefreshPropertiesEvent());
-            },
-          );
-          if(_timer != null) {
-            if(_timer!.isActive) {
-              _timer!.cancel();
-            }
-          }
           return const SuccessWidget();
         }
         if (state.status.isEmpty) {

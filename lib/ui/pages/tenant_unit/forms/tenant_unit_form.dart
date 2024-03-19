@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -76,7 +77,39 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
           .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: BlocConsumer<TenantUnitFormBloc, TenantUnitFormState>(
         builder: (context, state) {
-          return _buildBody(context, state);
+          return Column(
+            children: [
+              FormTitle(
+                name: '${widget.isUpdate ? "Edit" : "New"}  Tenant',
+                addButtonText: widget.isUpdate ? "Update" : "Add",
+                onSave: () {
+                  context.read<TenantUnitFormBloc>().add(
+                    AddTenantUnitEvent(
+                      currentUserToken.toString(),
+                      tenant.id!,
+                      unit.id!,
+                      period.id!,
+                      durationController.text,
+                      DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
+                          .parse(startDateController.text)),
+                      DateFormat('yyyy-MM-dd').format(
+                          DateFormat('dd/MM/yyyy').parse(endDateController.text)),
+                      unitAmountController.text,
+                      currency.id!,
+                      discountedAmountController.text,
+                      descriptionController.text,
+                      widget.property.id!,
+                    ),
+                  );
+                },
+                isElevated: true,
+                onCancel: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Expanded(child: _buildBody(context, state)),
+            ],
+          );
         },
         listener: (context, state) {
           if (state.status.isLoading) {
@@ -106,34 +139,6 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
   Widget _buildBody(BuildContext context, TenantUnitFormState state) {
     return ListView(
       children: [
-        FormTitle(
-          name: '${widget.isUpdate ? "Edit" : "New"}  Tenant',
-          addButtonText: widget.isUpdate ? "Update" : "Add",
-          onSave: () {
-            context.read<TenantUnitFormBloc>().add(
-                  AddTenantUnitEvent(
-                    currentUserToken.toString(),
-                    tenant.id!,
-                    unit.id!,
-                    period.id!,
-                    durationController.text,
-                    DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
-                        .parse(startDateController.text)),
-                    DateFormat('yyyy-MM-dd').format(
-                        DateFormat('dd/MM/yyyy').parse(endDateController.text)),
-                    unitAmountController.text,
-                    currency.id!,
-                    discountedAmountController.text,
-                    descriptionController.text,
-                    widget.property.id!,
-                  ),
-                );
-          },
-          isElevated: true,
-          onCancel: () {
-            Navigator.pop(context);
-          },
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
           child: Column(

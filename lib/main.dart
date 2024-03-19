@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/auth/auth_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/login_page.dart';
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'SmartRent Manager',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

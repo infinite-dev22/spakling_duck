@@ -1,6 +1,7 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -89,7 +90,44 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
           .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: BlocConsumer<TenantUnitFormBloc, TenantUnitFormState>(
         builder: (context, state) {
-          return _buildBody(context, state);
+          return Column(
+            children: [
+              FormTitle(
+                name: '${widget.isUpdate ? "Edit" : "New"}  Tenant',
+                addButtonText: widget.isUpdate ? "Update" : "Add",
+                onSave: () {
+                  if (selectedPropertyId == 0) {
+                    Fluttertoast.showToast(
+                        msg: 'please select property', gravity: ToastGravity.TOP);
+                  } else {
+                    context.read<TenantUnitFormBloc>().add(
+                      AddTenantUnitEvent(
+                        currentUserToken.toString(),
+                        tenant.id!,
+                        unit.id!,
+                        period.id!,
+                        durationController.text,
+                        DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
+                            .parse(startDateController.text)),
+                        DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
+                            .parse(endDateController.text)),
+                        unitAmountController.text,
+                        currency.id!,
+                        discountedAmountController.text,
+                        descriptionController.text,
+                        selectedPropertyId,
+                      ),
+                    );
+                  }
+                },
+                isElevated: true,
+                onCancel: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Expanded(child: _buildBody(context, state)),
+            ],
+          );
         },
         listener: (context, state) {
           if (state.status.isLoading) {
@@ -116,39 +154,6 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
   Widget _buildBody(BuildContext context, TenantUnitFormState state) {
     return ListView(
       children: [
-        FormTitle(
-          name: '${widget.isUpdate ? "Edit" : "New"}  Tenant',
-          addButtonText: widget.isUpdate ? "Update" : "Add",
-          onSave: () {
-            if (selectedPropertyId == 0) {
-              Fluttertoast.showToast(
-                  msg: 'please select property', gravity: ToastGravity.TOP);
-            } else {
-              context.read<TenantUnitFormBloc>().add(
-                    AddTenantUnitEvent(
-                      currentUserToken.toString(),
-                      tenant.id!,
-                      unit.id!,
-                      period.id!,
-                      durationController.text,
-                      DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
-                          .parse(startDateController.text)),
-                      DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
-                          .parse(endDateController.text)),
-                      unitAmountController.text,
-                      currency.id!,
-                      discountedAmountController.text,
-                      descriptionController.text,
-                      selectedPropertyId,
-                    ),
-                  );
-            }
-          },
-          isElevated: true,
-          onCancel: () {
-            Navigator.pop(context);
-          },
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
           child: Column(
