@@ -33,6 +33,7 @@ class EmployeeSuccessWidget extends StatelessWidget {
 
   Widget _buildBody() {
     return Scaffold(
+      backgroundColor: AppTheme.appBgColor,
       appBar: AppBar(
         title: const TitleBarImageHolder(),
         backgroundColor: AppTheme.primaryColor,

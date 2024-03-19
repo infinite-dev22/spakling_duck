@@ -1,6 +1,6 @@
-part of 'payment_bloc.dart';
+part of 'payment_form_bloc.dart';
 
-enum PaymentStatus {
+enum PaymentFormStatus {
   initial,
   loading,
   success,
@@ -9,29 +9,30 @@ enum PaymentStatus {
   accessDenied,
 }
 
-extension PaymentStatusX on PaymentStatus {
-  bool get isInitial => this == PaymentStatus.initial;
+extension PaymentFormStatusX on PaymentFormStatus {
+  bool get isInitial => this == PaymentFormStatus.initial;
 
-  bool get isSuccess => this == PaymentStatus.success;
+  bool get isSuccess => this == PaymentFormStatus.success;
 
-  bool get isError => this == PaymentStatus.error;
+  bool get isError => this == PaymentFormStatus.error;
 
-  bool get isLoading => this == PaymentStatus.loading;
+  bool get isLoading => this == PaymentFormStatus.loading;
 
-  bool get isEmpty => this == PaymentStatus.empty;
+  bool get isEmpty => this == PaymentFormStatus.empty;
 }
 
-class PaymentState extends Equatable {
+@immutable
+class PaymentFormState extends Equatable {
   final List<PaymentsModel>? payments;
-  final PaymentStatus status;
+  final PaymentFormStatus status;
   final PaymentsModel? paymentsModel;
   final AddPaymentResponseModel? addPaymentResponseModel;
   final bool? isPaymentLoading;
   final String? message;
 
-  const PaymentState(
+  const PaymentFormState(
       {this.payments,
-      this.status = PaymentStatus.initial,
+      this.status = PaymentFormStatus.initial,
       this.paymentsModel,
       this.addPaymentResponseModel,
       this.isPaymentLoading = false,
@@ -48,15 +49,15 @@ class PaymentState extends Equatable {
         message
       ];
 
-  PaymentState copyWith({
+  PaymentFormState copyWith({
     List<PaymentsModel>? payments,
-    PaymentStatus? status,
+    PaymentFormStatus? status,
     PaymentsModel? paymentsModel,
     AddPaymentResponseModel? addPaymentResponseModel,
     bool? isPaymentLoading,
     String? message,
   }) {
-    return PaymentState(
+    return PaymentFormState(
         payments: payments ?? this.payments,
         status: status ?? this.status,
         paymentsModel: paymentsModel ?? this.paymentsModel,
@@ -65,9 +66,4 @@ class PaymentState extends Equatable {
         isPaymentLoading: isPaymentLoading ?? this.isPaymentLoading,
         message: message ?? this.message);
   }
-}
-
-class PaymentInitial extends PaymentState {
-  @override
-  List<Object> get props => [];
 }

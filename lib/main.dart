@@ -1,3 +1,4 @@
+import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/auth/auth_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/login_page.dart';
 import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
@@ -29,11 +30,12 @@ void main() {
         BlocProvider(create: (context) => NavBarBloc()),
         BlocProvider(create: (context) => DashboardBloc()),
         BlocProvider(create: (context) => LoginBloc()),
+        BlocProvider(create: (context) => AuthBloc()),
         BlocProvider(create: (context) => ProfilePicBloc()),
         BlocProvider(create: (context) => PropertyBloc()),
         BlocProvider(create: (context) => PropertyTypeBloc()),
         BlocProvider(create: (context) => PropertyCategoryBloc()),
-        BlocProvider(create: (context) => FloorBloc()),
+        // BlocProvider(create: (context) => FloorBloc()),
         BlocProvider(create: (context) => CurrencyBloc()),
         BlocProvider(create: (context) => PeriodBloc()),
         BlocProvider(create: (context) => PaymentBloc()),

@@ -1,58 +1,54 @@
-part of 'tenant_unit_bloc.dart';
+part of 'tenant_unit_form_bloc.dart';
 
-enum TenantUnitStatus {
+enum TenantUnitFormStatus {
   initial,
   success,
   loading,
   accessDenied,
   error,
   empty,
-  loadingDetails,
-  successDetails,
-  errorDetails,
-  emptyDetails,
 }
 
-extension TenantUnitStatusX on TenantUnitStatus {
-  bool get isInitial => this == TenantUnitStatus.initial;
+extension TenantUnitFormStatusX on TenantUnitFormStatus {
+  bool get isInitial => this == TenantUnitFormStatus.initial;
 
-  bool get isLoading => this == TenantUnitStatus.loading;
+  bool get isLoading => this == TenantUnitFormStatus.loading;
 
-  bool get isSuccess => this == TenantUnitStatus.success;
+  bool get isSuccess => this == TenantUnitFormStatus.success;
 
-  bool get isError => this == TenantUnitStatus.error;
+  bool get isError => this == TenantUnitFormStatus.error;
 
-  bool get isEmpty => this == TenantUnitStatus.empty;
+  bool get isEmpty => this == TenantUnitFormStatus.empty;
 
-  bool get isAccessDenied => this == TenantUnitStatus.accessDenied;
+  bool get isAccessDenied => this == TenantUnitFormStatus.accessDenied;
 }
 
 @immutable
-class TenantUnitState extends Equatable {
+class TenantUnitFormState extends Equatable {
   final List<TenantUnitModel>? tenantUnits;
-  final TenantUnitStatus status;
+  final TenantUnitFormStatus status;
   final TenantUnitModel? tenantUnitModel;
   final bool? isLoading;
   final AddTenantUnitResponse? addTenantUnitResponse;
   final String? message;
 
-  const TenantUnitState(
+  const TenantUnitFormState(
       {this.tenantUnits,
-      this.status = TenantUnitStatus.initial,
+      this.status = TenantUnitFormStatus.initial,
       this.tenantUnitModel,
       this.isLoading = false,
       this.addTenantUnitResponse,
       this.message});
 
-  TenantUnitState copyWith({
+  TenantUnitFormState copyWith({
     List<TenantUnitModel>? tenantUnits,
-    TenantUnitStatus? status,
+    TenantUnitFormStatus? status,
     TenantUnitModel? tenantUnitModel,
     bool? isLoading,
     AddTenantUnitResponse? addTenantUnitResponse,
     String? message,
   }) {
-    return TenantUnitState(
+    return TenantUnitFormState(
         tenantUnits: tenantUnits ?? this.tenantUnits,
         status: status ?? this.status,
         tenantUnitModel: tenantUnitModel ?? this.tenantUnitModel,
@@ -74,7 +70,7 @@ class TenantUnitState extends Equatable {
       ];
 }
 
-class TenantUnitInitial extends TenantUnitState {
+class TenantUnitInitial extends TenantUnitFormState {
   @override
   List<Object> get props => [];
 }

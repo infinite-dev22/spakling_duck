@@ -13,48 +13,28 @@ import 'package:flutter/foundation.dart';
 
 
 
-part 'unit_event.dart';
-part 'unit_state.dart';
+part 'unit_form_event.dart';
+part 'unit_form_state.dart';
 
-class UnitBloc extends Bloc<UnitEvent, UnitState> {
-  UnitBloc() : super(UnitState()) {
-    on<LoadAllUnitsEvent>(_mapFetchUnitsToState);
-    on<RefreshUnitsEvent>(_mapRefreshUnitsToState);
+class UnitFormBloc extends Bloc<UnitFormEvent, UnitFormState> {
+  UnitFormBloc() : super(const UnitFormState()) {
+    on<LoadUnitTypesEvent>(_mapFetchUnitTypesToState);
+    on<AddUnitEvent>(_mapAddUnitEventToState);
   }
 
-  _mapFetchUnitsToState(
-      LoadAllUnitsEvent event, Emitter<UnitState> emit) async {
-    emit(state.copyWith(status: UnitStatus.loading));
+  _mapFetchUnitTypesToState(
+      LoadUnitTypesEvent event, Emitter<UnitFormState> emit) async {
+    emit(state.copyWith(status: UnitFormStatus.loadingUT));
     await UnitRepoImpl()
-        .getALlUnits(currentUserToken.toString(), event.id)
-        .then((units) {
-      if (units.isNotEmpty) {
-        emit(state.copyWith(status: UnitStatus.success, units: units));
+        .getUnitTypes(currentUserToken.toString(), event.id)
+        .then((types) {
+      if (types.isNotEmpty) {
+        emit(state.copyWith(status: UnitFormStatus.successUT, unitTypes: types));
       } else {
-        emit(state.copyWith(status: UnitStatus.empty));
+        emit(state.copyWith(status: UnitFormStatus.emptyUT));
       }
     }).onError((error, stackTrace) {
-      emit(state.copyWith(status: UnitStatus.error));
-      if (kDebugMode) {
-        print("Error: $error");
-        print("Stacktrace: $stackTrace");
-      }
-    });
-  }
-
-  _mapRefreshUnitsToState(
-      RefreshUnitsEvent event, Emitter<UnitState> emit) async {
-    // emit(state.copyWith(status: UnitStatus.reLoading));
-    await UnitRepoImpl()
-        .getALlUnits(currentUserToken.toString(), event.id)
-        .then((units) {
-      if (units.isNotEmpty) {
-        emit(state.copyWith(status: UnitStatus.reLoaded, units: units));
-      } else {
-        emit(state.copyWith(status: UnitStatus.empty));
-      }
-    }).onError((error, stackTrace) {
-      emit(state.copyWith(status: UnitStatus.error));
+      emit(state.copyWith(status: UnitFormStatus.errorUT));
       if (kDebugMode) {
         print("Error: $error");
         print("Stacktrace: $stackTrace");
@@ -76,20 +56,51 @@ class UnitBloc extends Bloc<UnitEvent, UnitState> {
   //
   // }
 
+
+  _mapAddUnitEventToState(
+      AddUnitEvent event, Emitter<UnitFormState> emit) async {
+    emit(state.copyWith(status: UnitFormStatus.loading, isLoading: true));
+    await UnitDtoImpl.addUnitToProperty(currentUserToken.toString(),
+         event.unitTypeId, event.floorId, event.name, event.sqm,
+        event.periodId, event.currencyId, event.initialAmount, event.description, event.propertyId,
+    )
+        .then((response) {
+      print('success ${response.unitApi}');
+
+      if (response != null) {
+        emit(state.copyWith(
+            status: UnitFormStatus.success,
+            isLoading: false,
+            addUnitResponse: response));
+
+      } else {
+        emit(state.copyWith(
+          status: UnitFormStatus.accessDenied,
+          isLoading: false,
+        ));
+      }
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(
+          status: UnitFormStatus.error,
+          isLoading: false,
+          message: error.toString()));
+    });
+  }
+
   @override
-  void onEvent(UnitEvent event) {
+  void onEvent(UnitFormEvent event) {
     log(event.toString());
     super.onEvent(event);
   }
 
   @override
-  void onTransition(Transition<UnitEvent, UnitState> transition) {
+  void onTransition(Transition<UnitFormEvent, UnitFormState> transition) {
     log(transition.toString());
     super.onTransition(transition);
   }
 
   @override
-  void onChange(Change<UnitState> change) {
+  void onChange(Change<UnitFormState> change) {
     log(change.toString());
     super.onChange(change);
   }

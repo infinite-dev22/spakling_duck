@@ -1,26 +1,29 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:date_picker_plus/date_picker_plus.dart';
+import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:full_picker/full_picker.dart';
+import 'package:get/get.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:smart_rent/data_layer/models/currency/currency_model.dart';
-import 'package:smart_rent/data_layer/models/floor/floor_model.dart';
+import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_account_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_mode_model.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_tenant_unit_schedule_model.dart';
-import 'package:smart_rent/data_layer/models/period/period_model.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
-import 'package:smart_rent/data_layer/models/unit/unit_type_model.dart';
-import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
-import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/payment_account/bloc/payment_account_bloc.dart';
 import 'package:smart_rent/ui/pages/payment_mode/bloc/payment_mode_bloc.dart';
 import 'package:smart_rent/ui/pages/payment_schedules/bloc/payment_schedules_bloc.dart';
+import 'package:smart_rent/ui/pages/payments/bloc/form/payment_form_bloc.dart';
 import 'package:smart_rent/ui/pages/payments/bloc/payment_bloc.dart';
-import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
-import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/amount_text_field.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
@@ -29,28 +32,19 @@ import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/ui/widgets/text_field_label_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
-import 'package:date_picker_plus/date_picker_plus.dart';
-import 'package:dropdown_textfield/dropdown_textfield.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:full_picker/full_picker.dart';
-import 'package:get/get.dart';
-import 'package:multi_dropdown/multiselect_dropdown.dart';
-import 'package:pattern_formatter/pattern_formatter.dart';
-import 'package:smart_rent/utilities/extra.dart';
-
-
 
 class AddPaymentForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
   final Property property;
+  final BuildContext parentContext;
 
   const AddPaymentForm(
-      {super.key, required this.addButtonText, required this.isUpdate, required this.property});
+      {super.key,
+      required this.addButtonText,
+      required this.isUpdate,
+      required this.property,
+      required this.parentContext});
 
   @override
   State<AddPaymentForm> createState() => _AddPaymentFormState();
@@ -66,7 +60,8 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
   var myPaymentSchedules = [];
   var myBalances = [];
   var myPaymentScheduleIDs = [];
-  final MultiSelectController myPaymentSchedulesController = MultiSelectController();
+  final MultiSelectController myPaymentSchedulesController =
+      MultiSelectController();
 
   final TextEditingController descriptionController = TextEditingController();
 
@@ -99,7 +94,8 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
   var initialBalance = 0;
 
-  List<ValueItem<dynamic>> availableOptions = []; // Maintain a list of available options
+  List<ValueItem<dynamic>> availableOptions =
+      []; // Maintain a list of available options
   List<ValueItem<dynamic>> selectedOptions = [];
 
   Future<int> setPaymentScheduleId(int id) async {
@@ -111,8 +107,6 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
     return id;
   }
-
-
 
   Future<void> _selectPaymentDate(BuildContext context) async {
     // final DateTime? picked = await showDatePicker(
@@ -133,10 +127,10 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
       paymentDate(picked);
       // paymentDateController.text =
       //     '${DateFormat('MM/dd/yyyy').format(paymentDate.value)}';
-      var formatedDate1 = "${paymentDate.value.year}-${paymentDate.value.month}-${paymentDate.value.day}";
+      var formatedDate1 =
+          "${paymentDate.value.year}-${paymentDate.value.month}-${paymentDate.value.day}";
       print('formatedFromDate1 $formatedDate1');
       paymentDateController.text = formatedDate1;
-
     }
   }
 
@@ -153,7 +147,6 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
   late bool isTitleElevated = false;
 
-
   final ScrollController scrollController = ScrollController();
 
   List<PaymentTenantUnitScheduleModel> selectedSchedules = [];
@@ -164,8 +157,9 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
     // TODO: implement initState
     super.initState();
     tenantUnitsDropdownCont = SingleValueDropDownController();
-    paymentDateController = TextEditingController(text: "${paymentDate.value.year}-${paymentDate.value.month}-${paymentDate.value.day}");
-
+    paymentDateController = TextEditingController(
+        text:
+            "${paymentDate.value.year}-${paymentDate.value.month}-${paymentDate.value.day}");
   }
 
   @override
@@ -174,7 +168,6 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
     super.dispose();
     _controller.dispose();
     tenantUnitsDropdownCont.dispose();
-
   }
 
   @override
@@ -188,46 +181,52 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
           children: [
             MultiBlocListener(
               listeners: [
-                BlocListener<PaymentBloc, PaymentState>(
+                BlocListener<PaymentFormBloc, PaymentFormState>(
                   listener: (context, state) {
-                if (state.status == PaymentStatus.successAdd) {
-                  selectedDate1.value = DateTime.now();
-                  selectedDate2.value = DateTime.now();
-                  amountController.clear();
-                  paidController.clear();
-                  balanceController.clear();
-                  initialBalance = 0;
-                  selectedTenantUnitId = 0;
-                  selectedPaymentScheduleId = 0;
-                  selectedPaymentModeId = 0;
-                  selectedPaymentAccountId = 0;
-                  Fluttertoast.showToast(
-                      msg: state.message.toString(),
-                      backgroundColor: Colors.green,
-                      gravity: ToastGravity.TOP);
+                    if (state.status.isSuccess) {
+                      selectedDate1.value = DateTime.now();
+                      selectedDate2.value = DateTime.now();
+                      amountController.clear();
+                      paidController.clear();
+                      balanceController.clear();
+                      initialBalance = 0;
+                      selectedTenantUnitId = 0;
+                      selectedPaymentScheduleId = 0;
+                      selectedPaymentModeId = 0;
+                      selectedPaymentAccountId = 0;
+                      Fluttertoast.showToast(
+                          msg: state.message.toString(),
+                          backgroundColor: Colors.green,
+                          gravity: ToastGravity.TOP);
 
-                  context.read<PaymentBloc>().add(LoadAllPayments(widget.property.id!));
-                  context.read<PaymentSchedulesBloc>().add(
-                      LoadAllPaymentSchedulesEvent(
-                          selectedTenantUnitId, widget.property.id!));
-                  _controller.options.clear();
-                  Navigator.pop(context);
+                      try {
+                        widget.parentContext
+                            .read<PaymentBloc>()
+                            .add(LoadAllPayments(widget.property.id!));
+                        context.read<PaymentSchedulesBloc>().add(
+                            LoadAllPaymentSchedulesEvent(
+                                selectedTenantUnitId, widget.property.id!));
+                      } catch (e) {
+                        log(e.toString());
+                      }
 
-                }
-                if (state.status == PaymentStatus.accessDeniedAdd) {
-                  Fluttertoast.showToast(
-                      msg: state.message.toString(), gravity: ToastGravity.TOP);
-                }
-                if (state.status == PaymentStatus.errorAdd) {
-                  Fluttertoast.showToast(
-                      msg: state.message.toString(), gravity: ToastGravity.TOP);
-                }
-              },
+                      _controller.options.clear();
+                      Navigator.pop(context);
+                    }
+                    if (state.status == PaymentStatus.accessDenied) {
+                      Fluttertoast.showToast(
+                          msg: state.message.toString(),
+                          gravity: ToastGravity.TOP);
+                    }
+                    if (state.status.isError) {
+                      Fluttertoast.showToast(
+                          msg: state.message.toString(),
+                          gravity: ToastGravity.TOP);
+                    }
+                  },
                 ),
                 BlocListener<PaymentSchedulesBloc, PaymentSchedulesState>(
-                  listener: (context, state) {
-
-                  },
+                  listener: (context, state) {},
                 ),
               ],
               child: FormTitle(
@@ -239,26 +238,41 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                         msg: 'paid amount required', gravity: ToastGravity.TOP);
                   } else if (balanceController.text.isEmpty) {
                     Fluttertoast.showToast(
-                        msg: 'balance amount required', gravity: ToastGravity.TOP);
+                        msg: 'balance amount required',
+                        gravity: ToastGravity.TOP);
                   } else if (paymentDateController.text.isEmpty) {
                     Fluttertoast.showToast(
-                        msg: 'payment date required', gravity: ToastGravity.TOP);
+                        msg: 'payment date required',
+                        gravity: ToastGravity.TOP);
                   } else if (amountController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'amount required', gravity: ToastGravity.TOP);
-                  }else if (selectedTenantUnitId == 0) {
+                  } else if (selectedTenantUnitId == 0) {
                     Fluttertoast.showToast(
                         msg: 'please select a tenant unit',
                         gravity: ToastGravity.TOP);
-                  } else if (int.parse(paidController.text.trim().replaceAll(',', '').toString()) > int.parse(amountController.text.trim().replaceAll(',', '').toString())) {
+                  } else if (int.parse(paidController.text
+                          .trim()
+                          .replaceAll(',', '')
+                          .toString()) >
+                      int.parse(amountController.text
+                          .trim()
+                          .replaceAll(',', '')
+                          .toString())) {
                     Fluttertoast.showToast(
                         msg: 'paid amount exceeds balance',
                         gravity: ToastGravity.TOP);
                   } else {
                     print('MY INITIAL BALANCE IS == $initialBalance');
-                    var postedBalance =  initialBalance - int.parse(paidController.text.trim().replaceAll(',', '').toString());
+                    var postedBalance = initialBalance -
+                        int.parse(paidController.text
+                            .trim()
+                            .replaceAll(',', '')
+                            .toString());
 
-                    List<String> stringScheduleList = myPaymentSchedules.map((item) => item.id.toString()).toList();
+                    List<String> stringScheduleList = myPaymentSchedules
+                        .map((item) => item.id.toString())
+                        .toList();
 
                     print('MY Posted Balance == $postedBalance');
                     print('MY Cont options = ${_controller.options}');
@@ -266,23 +280,36 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                     print('paid = $paidController');
                     print('balance = $balanceController');
                     print('selectedTenantUnitId = $selectedTenantUnitId');
-                    print('selectedPaymentAccountId = $selectedPaymentAccountId');
+                    print(
+                        'selectedPaymentAccountId = $selectedPaymentAccountId');
                     print('selectedPaymentModeId = $selectedPaymentModeId');
-                    print('paymentModeModelID = ${paymentModeModel!.id!.toInt()}');
-                    print('basedSelectedpaymentModeModelID = ${selectedPaymentModeId == 0 ? paymentModeModel!.id!.toInt() : selectedPaymentModeId}');
+                    print(
+                        'paymentModeModelID = ${paymentModeModel!.id!.toInt()}');
+                    print(
+                        'basedSelectedpaymentModeModelID = ${selectedPaymentModeId == 0 ? paymentModeModel!.id!.toInt() : selectedPaymentModeId}');
                     print('stringScheduleList = $stringScheduleList');
 
-                    context.read<PaymentBloc>().add(AddPaymentsEvent(
-                      currentUserToken.toString(),
-                      paidController.text.trim().replaceAll(',', '').toString(),
-                      amountController.text.trim().replaceAll(',', '').toString(),
-                      paymentDateController.text.trim(),
-                      selectedTenantUnitId,
-                      selectedPaymentAccountId == 0 ? paymentAccountsModel!.id!.toInt() : selectedPaymentModeId,
-                      selectedPaymentModeId == 0 ? paymentModeModel!.id!.toInt() : selectedPaymentModeId,
-                      widget.property.id!,
-                      stringScheduleList,
-                    ));
+                    context.read<PaymentFormBloc>().add(AddPaymentsEvent(
+                          currentUserToken.toString(),
+                          paidController.text
+                              .trim()
+                              .replaceAll(',', '')
+                              .toString(),
+                          amountController.text
+                              .trim()
+                              .replaceAll(',', '')
+                              .toString(),
+                          paymentDateController.text.trim(),
+                          selectedTenantUnitId,
+                          selectedPaymentAccountId == 0
+                              ? paymentAccountsModel!.id!.toInt()
+                              : selectedPaymentModeId,
+                          selectedPaymentModeId == 0
+                              ? paymentModeModel!.id!.toInt()
+                              : selectedPaymentModeId,
+                          widget.property.id!,
+                          stringScheduleList,
+                        ));
                   }
                 },
                 isElevated: true,
@@ -296,7 +323,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                   Navigator.pop(context);
                 },
               ),
-      ),
+),
             Expanded(
               child: GestureDetector(
                 onTap: () {
@@ -328,7 +355,6 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                         return Form(
                           child: Column(
                             children: [
-
                               TextFieldLabelWidget(label: 'Date'),
                               AuthTextField(
                                 controller: paymentDateController,
@@ -349,18 +375,18 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                       PaymentSchedulesStatus.initial) {
                                     context.read<PaymentSchedulesBloc>().add(
                                         LoadAllPaymentSchedulesEvent(
-                                            selectedTenantUnitId, widget.property.id!));
-
+                                            selectedTenantUnitId,
+                                            widget.property.id!));
                                   }
                                 },
-                                child:
-                                BlocBuilder<TenantUnitBloc, TenantUnitState>(
+                                child: BlocBuilder<TenantUnitBloc,
+                                    TenantUnitState>(
                                   builder: (context, state) {
                                     if (state.status ==
                                         TenantUnitStatus.initial) {
-                                      context
-                                          .read<TenantUnitBloc>()
-                                          .add(LoadTenantUnitsEvent(widget.property.id!));
+                                      context.read<TenantUnitBloc>().add(
+                                          LoadTenantUnitsEvent(
+                                              widget.property.id!));
                                     }
                                     return SearchableTenantUnitDropDown<
                                         TenantUnitModel>(
@@ -372,7 +398,8 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                       onChanged: (value) {
                                         print(value.value.id);
 
-                                        print('My Amounts = ${value.value.getAmount()}');
+                                        print(
+                                            'My Amounts = ${value.value.getAmount()}');
                                         setPaymentScheduleId(value.value.id)
                                             .then((newValue) {
                                           print(
@@ -380,99 +407,107 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                           context
                                               .read<PaymentSchedulesBloc>()
                                               .add(LoadAllPaymentSchedulesEvent(
-                                              selectedTenantUnitId, widget.property.id!));
+                                                  selectedTenantUnitId,
+                                                  widget.property.id!));
                                         });
 
                                         paidController.clear();
                                         amountController.clear();
                                         balanceController.clear();
-
                                       },
                                     );
                                   },
                                 ),
                               ),
-
-
                               TextFieldLabelWidget(label: 'Period'),
                               BlocBuilder<PaymentSchedulesBloc,
                                   PaymentSchedulesState>(
                                 builder: (context, state) {
-                                  if(state.status == PaymentSchedulesStatus.initial){
-                                    context.read<PaymentSchedulesBloc>().add(LoadAllPaymentSchedulesEvent(selectedTenantUnitId, widget.property.id!));
-
+                                  if (state.status ==
+                                      PaymentSchedulesStatus.initial) {
+                                    context.read<PaymentSchedulesBloc>().add(
+                                        LoadAllPaymentSchedulesEvent(
+                                            selectedTenantUnitId,
+                                            widget.property.id!));
                                   }
                                   if (state.status ==
                                       PaymentSchedulesStatus.success) {
                                     print("ITEMS: ${state.paymentSchedules}");
 
-                                    return MultiSelectDialogField<PaymentTenantUnitScheduleModel>(
+                                    return MultiSelectDialogField<
+                                        PaymentTenantUnitScheduleModel>(
                                       searchable: true,
                                       searchHint: 'search for schedule',
                                       backgroundColor: AppTheme.appBgColor,
-                                      title: Text('Payment Schedules', style: AppTheme.appTitle7,),
+                                      title: Text(
+                                        'Payment Schedules',
+                                        style: AppTheme.appTitle7,
+                                      ),
                                       items: state.paymentSchedules == null
-                                            ? []
-                                            : state.paymentSchedules!.map((schedule) => MultiSelectItem(schedule, '${schedule.fromdate}-${schedule.todate} || ${schedule.balance}')).toList(),
+                                          ? []
+                                          : state.paymentSchedules!
+                                              .map((schedule) => MultiSelectItem(
+                                                  schedule,
+                                                  '${schedule.fromdate}-${schedule.todate} || ${schedule.balance}'))
+                                              .toList(),
                                       listType: MultiSelectListType.CHIP,
                                       decoration: BoxDecoration(
                                           color: AppTheme.itemBgColor,
-                                          borderRadius: BorderRadius.circular(10)
-                                      ),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                       onConfirm: (values) {
                                         selectedSchedules = values;
 
-                                        if(selectedSchedules.isEmpty){
+                                        if (selectedSchedules.isEmpty) {
                                           paidController.clear();
                                           amountController.clear();
                                           balanceController.clear();
-
                                         } else {
-
-
-                                          print('My Total balance = $sumBalances');
-                                          amountController.text = amountFormatter.format(sumBalances.toString());
-                                          paidController.text = amountFormatter.format(sumBalances.toString());
-                                          balanceController.text = (int.parse(amountController.text.trim()) - int.parse(paidController.text.trim())).toString();
-
-
-
-
+                                          print(
+                                              'My Toatal balance = $sumBalances');
+                                          amountController.text =
+                                              sumBalances.toString();
+                                          paidController.text =
+                                              sumBalances.toString();
+                                          balanceController.text = (int.parse(
+                                                      amountController.text
+                                                          .trim()) -
+                                                  int.parse(paidController.text
+                                                      .trim()))
+                                              .toString();
                                         }
 
-                                        print('My New selected schedules= $selectedSchedules');
+                                        print(
+                                            'My New selected schedules= $selectedSchedules');
                                       },
+                                      onSelectionChanged: (options) {
+                                        for (var element in options) {
+                                          print(
+                                              'My selected element = $element');
 
+                                          myPaymentSchedules =
+                                              options.map((e) => e).toList();
+                                          print(
+                                              'My Options selected schedules = $myPaymentSchedules');
 
+                                          myBalances =
+                                              options.map((e) => e).toList();
+                                          myPaymentScheduleIDs =
+                                              options.map((e) => e).toList();
 
-                                      onSelectionChanged: (options){
+                                          print(
+                                              'My selected balances = ${myBalances.map((e) => e.balance).toList()}');
+                                          print(
+                                              'My selected ps ids = ${myPaymentScheduleIDs.map((e) => e.id).toList()}');
 
-                                            for (var element in options) {
-                                              print('My selected element = $element');
-
-                                              myPaymentSchedules = options
-                                                  .map((e) => e)
-                                                  .toList();
-                                              print(
-                                                  'My Options selected schedules = $myPaymentSchedules');
-
-                                              myBalances = options
-                                                  .map((e) => e)
-                                                  .toList();
-                                              myPaymentScheduleIDs = options
-                                                  .map((e) => e)
-                                                  .toList();
-
-
-                                              print('My selected balances = ${myBalances.map((e) => e.balance).toList()}');
-                                              print('My selected ps ids = ${myPaymentScheduleIDs.map((e) => e.id).toList()}');
-
-                                               sumBalances = myBalances.map((e) => int.parse(e.balance.replaceAll(',',''))).toList().reduce((value, element) => value + element);
-                                              // int sumBalances = myBalances.map((e) => e.balance).toList().reduce((value, element) => value + element);
-
-
-                                            }
-
+                                          sumBalances = myBalances
+                                              .map((e) => int.parse(e.balance
+                                                  .replaceAll(',', '')))
+                                              .toList()
+                                              .reduce((value, element) =>
+                                                  value + element);
+                                          // int sumBalances = myBalances.map((e) => e.balance).toList().reduce((value, element) => value + element);
+                                        }
                                       },
                                       isDismissible: false,
                                     );
@@ -481,94 +516,94 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                   return AuthTextField(
                                     hintText: 'No Schedule',
                                     obscureText: false,
-                                    enabled: false,);
+                                    enabled: false,
+                                  );
                                 },
                               ),
-
-
-
                               const SizedBox(
                                 height: 10,
                               ),
-
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: [
-
-                     Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         TextFieldLabelWidget(label: 'Amount Due'),
-                         SizedBox(
-                             width: 190,
-                             child: AmountTextField(
-                               inputFormatters: [
-                                 ThousandsFormatter(),
-                               ],
-                               controller: amountController,
-                               hintText: 'Amount Due',
-                               obscureText: false,
-                               keyBoardType: TextInputType.number,
-                               enabled: false,
-                               // suffix: fitValue.value == 0
-                               //     ? ''
-                               //     : '$fitValue $fitUnit',
-                             ),
-                           ),
-                       ],
-                     ),
-
-                     Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         TextFieldLabelWidget(label: 'Paid Amount'),
-                         SizedBox(
-                           width: 190,
-                           child: AuthTextField(
-                             inputFormatters: [
-                               ThousandsFormatter(),
-                             ],
-                             controller: paidController,
-                             hintText: 'Paid',
-                             obscureText: false,
-                             keyBoardType: TextInputType.number,
-                             onChanged: (value) {
-                               balanceController.text = (int.parse(
-                                   amountController.text
-                                       .trim()
-                                       .toString()
-                                       .replaceAll(',', '')) -
-                                   int.parse(
-                                       paidController.text.isEmpty
-                                           ? '0'
-                                           : paidController.text
-                                           .trim()
-                                           .replaceAll(',', '')))
-                                   .toString()
-                                   .replaceAll(',', '');
-                               print(
-                                   'MY Balance == ${balanceController.text}');
-                             },
-                           ),
-                         ),
-                       ],
-                     ),
-
-
-                   ],
-                 ),
-
-                              const SizedBox(
-                                height: 10,
-                              ),
-
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      TextFieldLabelWidget(label: 'Payment Mode'),
+                                      TextFieldLabelWidget(label: 'Amount Due'),
+                                      SizedBox(
+                                        width: 190,
+                                        child: AmountTextField(
+                                          inputFormatters: [
+                                            ThousandsFormatter(),
+                                          ],
+                                          controller: amountController,
+                                          hintText: 'Amount Due',
+                                          obscureText: false,
+                                          keyBoardType: TextInputType.number,
+                                          enabled: false,
+                                          // suffix: fitValue.value == 0
+                                          //     ? ''
+                                          //     : '$fitValue $fitUnit',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldLabelWidget(
+                                          label: 'Paid Amount'),
+                                      SizedBox(
+                                        width: 190,
+                                        child: AuthTextField(
+                                          inputFormatters: [
+                                            ThousandsFormatter(),
+                                          ],
+                                          controller: paidController,
+                                          hintText: 'Paid',
+                                          obscureText: false,
+                                          keyBoardType: TextInputType.number,
+                                          onChanged: (value) {
+                                            balanceController.text = (int.parse(
+                                                        amountController.text
+                                                            .trim()
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ',', '')) -
+                                                    int.parse(paidController
+                                                            .text.isEmpty
+                                                        ? '0'
+                                                        : paidController.text
+                                                            .trim()
+                                                            .replaceAll(
+                                                                ',', '')))
+                                                .toString()
+                                                .replaceAll(',', '');
+                                            print(
+                                                'MY Balance == ${balanceController.text}');
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldLabelWidget(
+                                          label: 'Payment Mode'),
                                       SizedBox(
                                         child: BlocBuilder<PaymentModeBloc,
                                             PaymentModeState>(
@@ -577,25 +612,30 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                                 PaymentModeStatus.initial) {
                                               context
                                                   .read<PaymentModeBloc>()
-                                                  .add(LoadAllPaymentModesEvent(widget.property.id!));
+                                                  .add(LoadAllPaymentModesEvent(
+                                                      widget.property.id!));
                                             }
                                             if (state.status ==
                                                 PaymentModeStatus.success) {
-                                              paymentModeModel =
-                                                  state.paymentModes!.firstWhere(
-                                                        (payments) => payments.code == 'CASH',
-                                                    // orElse: () => null as CurrencyModel,
-                                                  );
+                                              paymentModeModel = state
+                                                  .paymentModes!
+                                                  .firstWhere(
+                                                (payments) =>
+                                                    payments.code == 'CASH',
+                                                // orElse: () => null as CurrencyModel,
+                                              );
                                             }
                                             return CustomApiGenericDropdown<
                                                 PaymentModeModel>(
                                               hintText: 'Payment Mode',
-                                              menuItems: state.paymentModes == null
-                                                  ? []
-                                                  : state.paymentModes!,
+                                              menuItems:
+                                                  state.paymentModes == null
+                                                      ? []
+                                                      : state.paymentModes!,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  selectedPaymentModeId = value!.id!;
+                                                  selectedPaymentModeId =
+                                                      value!.id!;
                                                 });
                                               },
                                               defaultValue: paymentModeModel,
@@ -607,40 +647,54 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                     ],
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      TextFieldLabelWidget(label: 'Credited Account'),
+                                      TextFieldLabelWidget(
+                                          label: 'Credited Account'),
                                       SizedBox(
                                           width: 190,
                                           child: BlocBuilder<PaymentAccountBloc,
                                               PaymentAccountState>(
                                             builder: (context, state) {
                                               if (state.status ==
-                                                  PaymentAccountStatus.initial) {
-                                                context.read<PaymentAccountBloc>().add(
-                                                    LoadAllPaymentAccountsEvent(widget.property.id!));
-                                              }   if (state.status ==
-                                                  PaymentAccountStatus.success) {
-                                                paymentAccountsModel =
-                                                    state.paymentAccounts!.firstWhere(
-                                                          (accounts) => accounts.number == 'PETTYCASH',
-                                                      // orElse: () => null as CurrencyModel,
-                                                    );
+                                                  PaymentAccountStatus
+                                                      .initial) {
+                                                context
+                                                    .read<PaymentAccountBloc>()
+                                                    .add(
+                                                        LoadAllPaymentAccountsEvent(
+                                                            widget
+                                                                .property.id!));
+                                              }
+                                              if (state.status ==
+                                                  PaymentAccountStatus
+                                                      .success) {
+                                                paymentAccountsModel = state
+                                                    .paymentAccounts!
+                                                    .firstWhere(
+                                                  (accounts) =>
+                                                      accounts.number ==
+                                                      'PETTYCASH',
+                                                  // orElse: () => null as CurrencyModel,
+                                                );
                                               }
                                               return CustomApiGenericDropdown<
                                                   PaymentAccountsModel>(
                                                 hintText: 'Credited Account',
-                                                menuItems:
-                                                state.paymentAccounts == null
+                                                menuItems: state
+                                                            .paymentAccounts ==
+                                                        null
                                                     ? []
                                                     : state.paymentAccounts!,
                                                 onChanged: (value) {
                                                   setState(() {
                                                     selectedPaymentAccountId =
-                                                    value!.id!;
+                                                        value!.id!;
                                                   });
                                                 },
-                                                defaultValue: paymentAccountsModel,
+                                                defaultValue:
+                                                    paymentAccountsModel,
                                               );
                                             },
                                           )),
@@ -648,19 +702,23 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                   ),
                                 ],
                               ),
-
                               const SizedBox(
                                 height: 10,
                               ),
-                              TextFieldLabelWidget(label: 'Description', showIcon: false,),
+                              TextFieldLabelWidget(
+                                label: 'Description',
+                                showIcon: false,
+                              ),
                               AppMaxTextField(
-                                  controller: descriptionController,
-                                  hintText: 'Description',
-                                  obscureText: false,
+                                controller: descriptionController,
+                                hintText: 'Description',
+                                obscureText: false,
                                 fillColor: AppTheme.itemBgColor,
                               ),
-
-                              TextFieldLabelWidget(label: 'Upload Payment Pic', showIcon: false,),
+                              TextFieldLabelWidget(
+                                label: 'Upload Payment Pic',
+                                showIcon: false,
+                              ),
                               GestureDetector(
                                 onTap: () {
                                   FullPicker(
@@ -683,7 +741,8 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
 
                                       setState(() {
                                         paymentPic = value.file.first;
-                                        paymentImagePath = value.file.first!.path;
+                                        paymentImagePath =
+                                            value.file.first!.path;
                                         paymentImageExtension = value
                                             .file.first!.path
                                             .split('.')
@@ -693,7 +752,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                             .last;
                                       });
                                       paymentBytes =
-                                      await paymentPic!.readAsBytes();
+                                          await paymentPic!.readAsBytes();
                                       print('MY PIC == $paymentPic');
                                       print('MY path == $paymentImagePath');
                                       print('MY bytes == $paymentBytes');
@@ -711,16 +770,15 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                       borderRadius: BorderRadius.circular(15),
                                       image: DecorationImage(
                                           image:
-                                          FileImage(paymentPic ?? File('')),
+                                              FileImage(paymentPic ?? File('')),
                                           fit: BoxFit.cover)),
                                   child: paymentPic == null
                                       ? const Center(
-                                    child: Text('Upload payment pic'),
-                                  )
+                                          child: Text('Upload payment pic'),
+                                        )
                                       : null,
                                 ),
                               ),
-
                             ],
                           ),
                         );
