@@ -14,8 +14,29 @@ part 'property_state.dart';
 
 class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {
   PropertyBloc() : super(const PropertyState()) {
+    on<RefreshPropertiesEvent>(_mapRefreshPropertiesToState);
     on<LoadPropertiesEvent>(_mapFetchPropertiesToState);
     on<LoadSinglePropertyEvent>(_mapViewSinglePropertyDetailsEventToState);
+  }
+
+  _mapRefreshPropertiesToState(
+      RefreshPropertiesEvent event, Emitter<PropertyState> emit) async {
+    await PropertyRepoImpl()
+        .getALlProperties(currentUserToken.toString())
+        .then((properties) {
+      if (properties.isNotEmpty) {
+        emit(state.copyWith(
+            status: PropertyStatus.success, properties: properties));
+      } else {
+        emit(state.copyWith(status: PropertyStatus.empty));
+      }
+    }).onError((error, stackTrace) {
+      emit(state.copyWith(status: PropertyStatus.error));
+      if (kDebugMode) {
+        log("Error: $error");
+        log("Stacktrace: $stackTrace");
+      }
+    });
   }
 
   _mapFetchPropertiesToState(
