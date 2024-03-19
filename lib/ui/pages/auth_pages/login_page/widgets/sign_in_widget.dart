@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/auth/auth_bloc.dart';
 import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
@@ -171,7 +172,7 @@ class SignInWidget extends StatelessWidget {
         if (passwordController.text.isNotEmpty) {
           context.read<LoginBloc>().add(ChangeUser());
 
-          context.read<LoginBloc>().add(
+          context.read<AuthBloc>().add(
                 AuthenticateUser(
                   emailController.text,
                   passwordController.text,

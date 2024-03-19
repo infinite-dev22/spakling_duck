@@ -1,11 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
+import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
+import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/no_data_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/not_found_widget.dart';
+import 'package:smart_rent/ui/pages/units/bloc/form/unit_form_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/pages/units/forms/add_unit_form.dart';
 import 'package:smart_rent/ui/pages/units/widgets/unit_card_widget.dart';
@@ -41,36 +42,7 @@ class UnitsTabScreenLayout extends StatelessWidget {
             return const NotFoundWidget();
           }
           if (state.status.isEmpty) {
-            return Scaffold(
-              backgroundColor: AppTheme.appBgColor,
-              appBar: _buildAppTitle(),
-              floatingActionButton: FloatingActionButton(
-                heroTag: "add_unit",
-                onPressed: () => showModalBottomSheet(
-                    useSafeArea: true,
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) {
-                      return AddUnitForm(
-                        addButtonText: 'Add Tenant',
-                        isUpdate: false,
-                        property: property,
-                      );
-                    }),
-                backgroundColor: AppTheme.primary,
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 25,
-                ),
-              ),
-              body: NoDataWidget(
-                message: "No tenant units",
-                onPressed: () {
-                  context.read<UnitBloc>().add(LoadAllUnitsEvent(property.id!));
-                },
-              ),
-            );
+            return _buildEmptyBody(context, state);
           }
           if (state.status.isError) {
             return SmartErrorWidget(
@@ -80,79 +52,91 @@ class UnitsTabScreenLayout extends StatelessWidget {
               },
             );
           }
-          if (state.status.isReloaded) {
-            Timer.run(() async {
-              context.read<UnitBloc>().add(RefreshUnitsEvent(property.id!));
-            });
-            return Scaffold(
-              backgroundColor: AppTheme.appBgColor,
-              appBar: _buildAppTitle(),
-              floatingActionButton: FloatingActionButton(
-                heroTag: "add_unit",
-                onPressed: () => showModalBottomSheet(
-                    useSafeArea: true,
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) {
-                      return AddUnitForm(
-                        addButtonText: 'Add',
-                        isUpdate: false,
-                        property: property,
-                      );
-                    }),
-                backgroundColor: AppTheme.primary,
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 25,
-                ),
-              ),
-              body: ListView.builder(
-                controller: unitsScrollController,
-                padding: const EdgeInsets.only(top: 10),
-                itemBuilder: (context, index) =>
-                    UnitCardWidget(unitModel: state.units[index], index: index),
-                itemCount: state.units.length,
-              ),
-            );
-          }
           if (state.status.isSuccess) {
-            Timer.run(() async {
-              context.read<UnitBloc>().add(RefreshUnitsEvent(property.id!));
-            });
-            return Scaffold(
-              backgroundColor: AppTheme.appBgColor,
-              appBar: _buildAppTitle(),
-              floatingActionButton: FloatingActionButton(
-                heroTag: "add_unit",
-                onPressed: () => showModalBottomSheet(
-                    useSafeArea: true,
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) {
-                      return AddUnitForm(
-                        addButtonText: 'Add',
-                        isUpdate: false,
-                        property: property,
-                      );
-                    }),
-                backgroundColor: AppTheme.primary,
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 25,
-                ),
-              ),
-              body: ListView.builder(
-                controller: unitsScrollController,
-                padding: const EdgeInsets.only(top: 10),
-                itemBuilder: (context, index) =>
-                    UnitCardWidget(unitModel: state.units[index], index: index),
-                itemCount: state.units.length,
-              ),
-            );
+            return _buildSuccessBody(context, state);
           }
           return const SmartWidget();
+        },
+      ),
+    );
+  }
+
+  Widget _buildSuccessBody(BuildContext parentContext, UnitState state) {
+    return Scaffold(
+      backgroundColor: AppTheme.appBgColor,
+      appBar: _buildAppTitle(),
+      floatingActionButton: FloatingActionButton(
+        heroTag: "add_unit",
+        onPressed: () => showModalBottomSheet(
+            useSafeArea: true,
+            isScrollControlled: true,
+            context: parentContext,
+            builder: (context) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (context) => UnitFormBloc()),
+                  BlocProvider(create: (context) => FloorBloc()),
+                ],
+                child: AddUnitForm(
+                  parentContext: parentContext,
+                  addButtonText: 'Add',
+                  isUpdate: false,
+                  property: property,
+                ),
+              );
+            }),
+        backgroundColor: AppTheme.primary,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 25,
+        ),
+      ),
+      body: ListView.builder(
+        controller: unitsScrollController,
+        padding: const EdgeInsets.only(top: 10),
+        itemBuilder: (context, index) =>
+            UnitCardWidget(unitModel: state.units[index], index: index),
+        itemCount: state.units.length,
+      ),
+    );
+  }
+
+  Widget _buildEmptyBody(BuildContext parentContext, UnitState state) {
+    return Scaffold(
+      backgroundColor: AppTheme.appBgColor,
+      appBar: _buildAppTitle(),
+      floatingActionButton: FloatingActionButton(
+        heroTag: "add_unit",
+        onPressed: () => showModalBottomSheet(
+            useSafeArea: true,
+            isScrollControlled: true,
+            context: parentContext,
+            builder: (context) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (context) => UnitFormBloc()),
+                  BlocProvider(create: (context) => FloorBloc()),
+                ],
+                child: AddUnitForm(
+                  parentContext: parentContext,
+                  addButtonText: 'Add',
+                  isUpdate: false,
+                  property: property,
+                ),
+              );
+            }),
+        backgroundColor: AppTheme.primary,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 25,
+        ),
+      ),
+      body: NoDataWidget(
+        message: "No tenant units",
+        onPressed: () {
+          parentContext.read<UnitBloc>().add(LoadAllUnitsEvent(property.id!));
         },
       ),
     );

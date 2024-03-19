@@ -1,10 +1,3 @@
-import 'package:flutter/widgets.dart';
-import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/auth_textfield.dart';
-import 'package:smart_rent/ui/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
-import 'package:smart_rent/ui/widgets/wide_button.dart';
-import 'package:smart_rent/utilities/app_init.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -12,7 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_secure_storage/get_secure_storage.dart';
-
+import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/auth/auth_bloc.dart';
+import 'package:smart_rent/ui/pages/auth_pages/login_page/bloc/login_bloc.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/auth_textfield.dart';
+import 'package:smart_rent/ui/widgets/profile_pic_widget/bloc/profile_pic_bloc.dart';
+import 'package:smart_rent/ui/widgets/wide_button.dart';
+import 'package:smart_rent/utilities/app_init.dart';
 
 class LoginWidget extends StatelessWidget {
   var _height = 40.0;
@@ -23,7 +22,7 @@ class LoginWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginBloc, LoginState>(
+    return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.status.isSuccess &&
             state.loginSuccess &&
@@ -67,14 +66,14 @@ class LoginWidget extends StatelessWidget {
       },
       builder: (context, state) {
         if (state.status.isInitial) {
-          context.read<LoginBloc>().add(LoginInitial());
+          context.read<AuthBloc>().add(AuthInitial());
         }
         return _buildBody(context, state);
       },
     );
   }
 
-  Widget _buildBody(BuildContext context, LoginState state) {
+  Widget _buildBody(BuildContext context, AuthState state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -107,14 +106,14 @@ class LoginWidget extends StatelessWidget {
                   fillColor: Colors.transparent,
                 ),
                 onFocusChange: (hasFocus) {
-                  // if (context.read<LoginBloc>().state.isPasswordFocus) {
-                  //   context.read<LoginBloc>().add(FocusEmail());
+                  // if (context.read<AuthBloc>().state.isPasswordFocus) {
+                  //   context.read<AuthBloc>().add(FocusEmail());
                   // }
-                  // (context.read<LoginBloc>().state.isEmailFocused)
+                  // (context.read<AuthBloc>().state.isEmailFocused)
                   //     ? _height = 0
                   //     : _height = 40;
 
-                  // context.read<LoginBloc>().add(RefreshScreen());
+                  // context.read<AuthBloc>().add(RefreshScreen());
                 },
               ),
               const SizedBox(height: 10),
@@ -136,7 +135,7 @@ class LoginWidget extends StatelessWidget {
                   (context.read<LoginBloc>().state.isPasswordFocus)
                       ? _height = 0
                       : _height = 40;
-                  // context.read<LoginBloc>().add(RefreshScreen());
+                  // context.read<AuthBloc>().add(RefreshScreen());
                 },
               ),
             ],
@@ -197,7 +196,7 @@ class LoginWidget extends StatelessWidget {
     if (emailController.text.isNotEmpty) {
       if (EmailValidator.validate(emailController.text.trim())) {
         if (passwordController.text.isNotEmpty) {
-          context.read<LoginBloc>().add(
+          context.read<AuthBloc>().add(
                 AuthenticateUser(
                   emailController.text,
                   passwordController.text,
@@ -223,7 +222,7 @@ class LoginWidget extends StatelessWidget {
             backgroundColor: AppTheme.red,
             textColor: AppTheme.whiteColor,
             fontSize: 16.0);
-        // context.read<LoginBloc>().add(FocusEmail());
+        // context.read<AuthBloc>().add(FocusEmail());
       }
     } else {
       Fluttertoast.showToast(
@@ -234,11 +233,11 @@ class LoginWidget extends StatelessWidget {
           backgroundColor: AppTheme.red,
           textColor: AppTheme.whiteColor,
           fontSize: 16.0);
-      // context.read<LoginBloc>().add(FocusEmail());
+      // context.read<AuthBloc>().add(FocusEmail());
     }
   }
 
-  _signUserIn(BuildContext context, LoginState state) async {
+  _signUserIn(BuildContext context, AuthState state) async {
     final box = GetSecureStorage(
         password: 'infosec_technologies_ug_smart_rent_relator_manager');
 

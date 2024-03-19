@@ -7,11 +7,6 @@ enum PaymentStatus {
   empty,
   error,
   accessDenied,
-  loadingAdd,
-  successAdd,
-  emptyAdd,
-  errorAdd,
-  accessDeniedAdd,
 }
 
 extension PaymentStatusX on PaymentStatus {

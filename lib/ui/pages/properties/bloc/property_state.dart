@@ -17,7 +17,6 @@ enum PropertyStatus {
   emptyAdd,
   successAdd,
   accessDeniedAdd,
-  refreshListSuccess
 }
 
 extension PropertyStatusX on PropertyStatus {

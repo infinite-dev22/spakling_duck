@@ -13,6 +13,7 @@ import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
+import 'package:smart_rent/ui/pages/units/bloc/form/unit_form_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
@@ -87,7 +88,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
             .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           children: [
-            BlocListener<UnitBloc, UnitState>(
+            BlocListener<UnitFormBloc, UnitFormState>(
               listener: (context, state) {
                 if (state.status == UnitStatus.successAdd) {
                   Fluttertoast.showToast(
@@ -144,7 +145,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                     Fluttertoast.showToast(
                         msg: 'amount required', gravity: ToastGravity.TOP);
                   }  else {
-                    context.read<UnitBloc>().add(AddUnitEvent(
+                    context.read<UnitFormBloc>().add(AddUnitEvent(
                           currentUserToken.toString(),
                           selectedUnitTypeId,
                           selectedFloorId,
@@ -259,11 +260,11 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                 children: [
                                   SizedBox(
                                     width: 190,
-                                    child: BlocBuilder<UnitBloc, UnitState>(
+                                    child: BlocBuilder<UnitFormBloc, UnitFormState>(
                                       builder: (context, state) {
                                         if (state.status ==
                                             UnitStatus.initial) {
-                                          context.read<UnitBloc>().add(
+                                          context.read<UnitFormBloc>().add(
                                               LoadUnitTypesEvent(
                                                   selectedPropertyId));
                                         }

@@ -66,7 +66,7 @@ class ResetPasswordWidget extends StatelessWidget {
             isEmail: true,
             style: const TextStyle(color: AppTheme.whiteColor),
             borderSide: const BorderSide(color: AppTheme.whiteColor),
-            fillColor: AppTheme.primary,
+            fillColor: Colors.transparent,
           ),
         ),
         const SizedBox(height: 10),
@@ -75,7 +75,7 @@ class ResetPasswordWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildButtons(context, LoginState state) {
+  Widget _buildButtons(BuildContext context, LoginState state) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Row(

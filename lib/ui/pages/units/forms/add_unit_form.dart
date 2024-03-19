@@ -11,6 +11,7 @@ import 'package:smart_rent/data_layer/models/unit/unit_type_model.dart';
 import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
+import 'package:smart_rent/ui/pages/units/bloc/form/unit_form_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
@@ -23,12 +24,13 @@ class AddUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
   final Property property;
+  final BuildContext parentContext;
 
   const AddUnitForm(
       {super.key,
       required this.addButtonText,
       required this.isUpdate,
-      required this.property});
+      required this.property, required this.parentContext});
 
   @override
   State<AddUnitForm> createState() => _AddUnitFormState();
@@ -82,9 +84,9 @@ class _AddUnitFormState extends State<AddUnitForm> {
             .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           children: [
-            BlocListener<UnitBloc, UnitState>(
+            BlocListener<UnitFormBloc, UnitFormState>(
               listener: (context, state) {
-                if (state.status == UnitStatus.successAdd) {
+                if (state.status == UnitFormStatus.success) {
                   Fluttertoast.showToast(
                       msg: 'Unit Added Successfully',
                       backgroundColor: Colors.green,
@@ -99,14 +101,14 @@ class _AddUnitFormState extends State<AddUnitForm> {
                   descriptionController.clear();
                   roomNameController.clear();
                   unitNumberController.clear();
-            context.read<UnitBloc>().add(LoadAllUnitsEvent(widget.property.id!));
+                  widget.parentContext.read<UnitBloc>().add(LoadAllUnitsEvent(widget.property.id!));
                   Navigator.pop(context);
                 }
-                if (state.status == UnitStatus.accessDeniedAdd) {
+                if (state.status == UnitFormStatus.accessDenied) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
-                if (state.status == UnitStatus.errorAdd) {
+                if (state.status == UnitFormStatus.error) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
@@ -134,7 +136,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                     Fluttertoast.showToast(
                         msg: 'amount required', gravity: ToastGravity.TOP);
                   } else {
-                    context.read<UnitBloc>().add(AddUnitEvent(
+                    context.read<UnitFormBloc>().add(AddUnitEvent(
                           currentUserToken.toString(),
                           selectedUnitTypeId,
                           selectedFloorId,
@@ -209,11 +211,11 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                 children: [
                                   SizedBox(
                                     width: 190,
-                                    child: BlocBuilder<UnitBloc, UnitState>(
+                                    child: BlocBuilder<UnitFormBloc, UnitFormState>(
                                       builder: (context, state) {
                                         if (state.status ==
-                                            UnitStatus.initial) {
-                                          context.read<UnitBloc>().add(
+                                            UnitFormStatus.initial) {
+                                          context.read<UnitFormBloc>().add(
                                               LoadUnitTypesEvent(
                                                   widget.property.id!));
                                         }

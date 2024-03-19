@@ -20,8 +20,6 @@ class UnitBloc extends Bloc<UnitEvent, UnitState> {
   UnitBloc() : super(UnitState()) {
     on<LoadAllUnitsEvent>(_mapFetchUnitsToState);
     on<RefreshUnitsEvent>(_mapRefreshUnitsToState);
-    on<LoadUnitTypesEvent>(_mapFetchUnitTypesToState);
-    on<AddUnitEvent>(_mapAddUnitEventToState);
   }
 
   _mapFetchUnitsToState(
@@ -64,26 +62,6 @@ class UnitBloc extends Bloc<UnitEvent, UnitState> {
     });
   }
 
-  _mapFetchUnitTypesToState(
-      LoadUnitTypesEvent event, Emitter<UnitState> emit) async {
-    emit(state.copyWith(status: UnitStatus.loadingUT));
-    await UnitRepoImpl()
-        .getUnitTypes(currentUserToken.toString(), event.id)
-        .then((types) {
-      if (types.isNotEmpty) {
-        emit(state.copyWith(status: UnitStatus.successUT, unitTypes: types));
-      } else {
-        emit(state.copyWith(status: UnitStatus.emptyUT));
-      }
-    }).onError((error, stackTrace) {
-      emit(state.copyWith(status: UnitStatus.errorUT));
-      if (kDebugMode) {
-        print("Error: $error");
-        print("Stacktrace: $stackTrace");
-      }
-    });
-  }
-
   // _mapViewSingleFloorDetailsEventToState(LoadSinglePropertyEvent event, Emitter<PropertyState> emit) async {
   //   emit(state.copyWith(status: PropertyStatus.loadingDetails,));
   //   await PropertyRepoImpl().getSingleProperty(event.id, userStorage.read('accessToken').toString()).then((property) {
@@ -97,37 +75,6 @@ class UnitBloc extends Bloc<UnitEvent, UnitState> {
   //   });
   //
   // }
-
-
-  _mapAddUnitEventToState(
-      AddUnitEvent event, Emitter<UnitState> emit) async {
-    emit(state.copyWith(status: UnitStatus.loadingAdd, isLoading: true));
-    await UnitDtoImpl.addUnitToProperty(currentUserToken.toString(),
-         event.unitTypeId, event.floorId, event.name, event.sqm,
-        event.periodId, event.currencyId, event.initialAmount, event.description, event.propertyId,
-    )
-        .then((response) {
-      print('success ${response.unitApi}');
-
-      if (response != null) {
-        emit(state.copyWith(
-            status: UnitStatus.successAdd,
-            isLoading: false,
-            addUnitResponse: response));
-
-      } else {
-        emit(state.copyWith(
-          status: UnitStatus.accessDeniedAdd,
-          isLoading: false,
-        ));
-      }
-    }).onError((error, stackTrace) {
-      emit(state.copyWith(
-          status: UnitStatus.errorAdd,
-          isLoading: false,
-          message: error.toString()));
-    });
-  }
 
   @override
   void onEvent(UnitEvent event) {

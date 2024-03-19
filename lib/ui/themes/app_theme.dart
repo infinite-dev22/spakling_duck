@@ -6,7 +6,7 @@ class AppTheme {
   static const primaryDarker = Color(0xFF052E60); // 183D5D
   static const secondary = Color(0xFFCBE1F3);
   static const shadowColor = Colors.black;
-  static const appBgColor = Color(0xFFF2F1F6);
+  static const appBgColor = Color(0xFFFFFFFF);
   static const itemBgColor = Colors.white;
   static const bottomBar = Colors.white;
 

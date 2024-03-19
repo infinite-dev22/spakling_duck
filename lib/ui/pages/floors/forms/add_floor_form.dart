@@ -1,6 +1,11 @@
-import 'package:smart_rent/configs/app_configs.dart';
+import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
+import 'package:smart_rent/ui/pages/floors/bloc/form/floor_form_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
@@ -8,25 +13,14 @@ import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
-import 'package:dropdown_textfield/dropdown_textfield.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
-
-class AddFloorForm extends StatefulWidget {
+class AddFloorForm extends StatelessWidget {
   final String addButtonText;
   final bool isUpdate;
 
-  const AddFloorForm(
+  AddFloorForm(
       {super.key, required this.addButtonText, required this.isUpdate});
 
-  @override
-  State<AddFloorForm> createState() => _AddFloorFormState();
-}
-
-class _AddFloorFormState extends State<AddFloorForm> {
   final TextEditingController floorController = TextEditingController();
   final TextEditingController floorDescriptionController =
       TextEditingController();
@@ -40,24 +34,8 @@ class _AddFloorFormState extends State<AddFloorForm> {
   final ScrollController scrollController = ScrollController();
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _propertyModelCont = SingleValueDropDownController();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    floorController.dispose();
-    floorDescriptionController.dispose();
-    _propertyModelCont.dispose();
-    scrollController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    _propertyModelCont = SingleValueDropDownController();
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Padding(
@@ -65,9 +43,9 @@ class _AddFloorFormState extends State<AddFloorForm> {
             .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           children: [
-            BlocListener<FloorBloc, FloorState>(
+            BlocListener<FloorFormBloc, FloorFormState>(
               listener: (context, state) {
-                if (state.status == FloorStatus.success) {
+                if (state.status.isSuccess) {
                   Fluttertoast.showToast(
                       msg: 'Floor Added Successfully',
                       backgroundColor: Colors.green,
@@ -75,20 +53,24 @@ class _AddFloorFormState extends State<AddFloorForm> {
                   floorController.clear();
                   floorDescriptionController.clear();
                   _propertyModelCont.clearDropDown();
+                  // BlocProvider.of<FloorBloc>(context).add(LoadAllFloorsEvent(selectedPropertyId));
+                  context
+                      .read<FloorBloc>()
+                      .add(LoadAllFloorsEvent(selectedPropertyId));
                   Navigator.pop(context);
                 }
-                if (state.status == FloorStatus.accessDeniedAdd) {
+                if (state.status == FloorFormStatus.accessDenied) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
-                if (state.status == FloorStatus.errorAdd) {
+                if (state.status == FloorFormStatus.error) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
               },
               child: FormTitle(
-                name: '${widget.isUpdate ? "Edit" : "New"}  Floor',
-                addButtonText: widget.isUpdate ? "Update" : "Add",
+                name: '${isUpdate ? "Edit" : "New"}  Floor',
+                addButtonText: isUpdate ? "Update" : "Add",
                 onSave: () {
                   if (floorController.text.isEmpty) {
                     Fluttertoast.showToast(
@@ -101,7 +83,7 @@ class _AddFloorFormState extends State<AddFloorForm> {
                         msg: 'please select property',
                         gravity: ToastGravity.TOP);
                   } else {
-                    context.read<FloorBloc>().add(AddFloorEvent(
+                    context.read<FloorFormBloc>().add(AddFloorEvent(
                           currentUserToken.toString(),
                           selectedPropertyId,
                           floorController.text.trim().toString(),
@@ -157,16 +139,12 @@ class _AddFloorFormState extends State<AddFloorForm> {
                                         .add(LoadPropertiesEvent());
                                   }
                                   if (state.status == PropertyStatus.empty) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(bottom: 10),
-                                      child: AuthTextField(
-                                        hintText: 'No Properties',
-                                        obscureText: false,
-                                        enabled: false,),
+                                    return const Center(
+                                      child: Text('No Properties'),
                                     );
                                   }
                                   if (state.status == PropertyStatus.error) {
-                                    return Center(
+                                    return const Center(
                                       child: Text('An Error Occurred'),
                                     );
                                   }
@@ -195,9 +173,7 @@ class _AddFloorFormState extends State<AddFloorForm> {
                                   print(floorName.toString());
                                 },
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
+                              const SizedBox(height: 10),
                               AppMaxTextField(
                                 controller: floorDescriptionController,
                                 hintText: 'Description',
@@ -301,7 +277,7 @@ class _AddFloorFormState extends State<AddFloorForm> {
 //                                     obscureText: false,
 //                                   ),
 //                                   SizedBox(
-//                                     height: 10,
+//                                     height: 10
 //                                   ),
 //                                   Row(
 //                                     mainAxisAlignment:
@@ -362,7 +338,7 @@ class _AddFloorFormState extends State<AddFloorForm> {
 //                                     ],
 //                                   ),
 //                                   SizedBox(
-//                                     height: 10,
+//                                     height: 10
 //                                   ),
 //                                   Row(
 //                                     mainAxisAlignment:
@@ -387,7 +363,7 @@ class _AddFloorFormState extends State<AddFloorForm> {
 //                                     ],
 //                                   ),
 //                                   SizedBox(
-//                                     height: 10,
+//                                     height: 10
 //                                   ),
 //                                   AppMaxTextField(
 //                                     controller: descriptionController,
@@ -396,7 +372,7 @@ class _AddFloorFormState extends State<AddFloorForm> {
 //                                     fillColor: AppTheme.itemBgColor,
 //                                   ),
 //                                   SizedBox(
-//                                     height: 10,
+//                                     height: 10
 //                                   ),
 //                                   GestureDetector(
 //                                     onTap: () {
