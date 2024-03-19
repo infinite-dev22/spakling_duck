@@ -92,7 +92,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
             SizedBox(height: 10,),
 
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:  EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
