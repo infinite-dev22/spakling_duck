@@ -2,12 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_rent/data_layer/models/payment/payment_schedules_model.dart';
 
 import 'package:smart_rent/data_layer/models/tenant_unit/tenant_unit_model.dart';
-import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/layouts/search_tenant_unit_payment_schedule_screen_layout.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/layouts/test.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
@@ -36,37 +34,32 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
 
   late List<PaymentSchedulesModel> filteredData;
 
+  // void filterData(String query) {
+  //   setState(() {
+  //     filteredData = widget.tenantUnitModel.paymentScheduleModel!
+  //         .where((schedule) =>
+  //     DateFormat('d MMM, yy').format(schedule.fromDate!).toString().toLowerCase().contains(query.toLowerCase()) || DateFormat('d MMM, yy').format(schedule.fromDate!).toLowerCase().contains(query.toLowerCase()))
+  //         .toList();
+  //   });
+  //
+  //   print('New Q = $query');
+  // }
+
   void filterData(String query) {
-
-  setState(() {
-    filteredData.where((schedule) =>
-    DateFormat('d MMM, yy')
-        .format(schedule.fromDate!)
-        .toString()
-        .toLowerCase()
-        .contains(query.toLowerCase()) ||
-        DateFormat('d MMM, yy')
-            .format(schedule.fromDate!)
-            .toLowerCase()
-            .contains(query.toLowerCase()))
-        .toList();
-  });
-
-    print('My Filtered List $filteredData');
-    // setState(() {
-    //   filteredData = widget.tenantUnitModel.paymentScheduleModel!
-    //       .where((schedule) =>
-    //   DateFormat('d MMM, yy')
-    //       .format(schedule.fromDate!)
-    //       .toString()
-    //       .toLowerCase()
-    //       .contains(query.toLowerCase()) ||
-    //       DateFormat('d MMM, yy')
-    //           .format(schedule.fromDate!)
-    //           .toLowerCase()
-    //           .contains(query.toLowerCase()))
-    //       .toList();
-    // });
+    setState(() {
+      filteredData = widget.tenantUnitModel.paymentScheduleModel!
+          .where((schedule) =>
+      DateFormat('d MMM, yy')
+          .format(schedule.fromDate!)
+          .toString()
+          .toLowerCase()
+          .contains(query.toLowerCase()) ||
+          DateFormat('d MMM, yy')
+              .format(schedule.fromDate!)
+              .toLowerCase()
+              .contains(query.toLowerCase()))
+          .toList();
+    });
   }
 
   @override
@@ -74,7 +67,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
     // TODO: implement initState
     super.initState();
     // tenantUnitPaymentScheduleDataSource = TenantUnitPaymentScheduleDataSource(paymentData: widget.tenantUnitModel.paymentScheduleModel!);
-    // filteredData = widget.tenantUnitModel.paymentScheduleModel!;
+    filteredData = widget.tenantUnitModel.paymentScheduleModel!;
     // tenantUnitPaymentScheduleDataSource = TenantUnitPaymentScheduleDataSource(paymentData: filteredData);
 
   }
@@ -82,9 +75,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<TenantUnitBloc>(
-  create: (context) => TenantUnitBloc(),
-  child: Scaffold(
+    return Scaffold(
       backgroundColor: AppTheme.whiteColor,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
@@ -115,15 +106,15 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                     Container(
-                       child: Row(
-                         children: [
-                           Text('Unit:', style: AppTheme.appTitle7,),
-                           SizedBox(width: 5,),
-                           Text(widget.tenantUnitModel.unit!.name.toString(), style: AppTheme.blueAppTitle3,)
-                         ],
-                       ),
-                     ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Text('Unit:', style: AppTheme.appTitle7,),
+                            SizedBox(width: 5,),
+                            Text(widget.tenantUnitModel.unit!.name.toString(), style: AppTheme.blueAppTitle3,)
+                          ],
+                        ),
+                      ),
                       Container(
                         child: Row(
                           children: [
@@ -249,42 +240,13 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
                 fillColor: AppTheme.fillColor,
               ),
             ),
-            
-            BlocBuilder<TenantUnitBloc, TenantUnitState>(
-              builder: (context, state) {
-                if(state.status == TenantUnitStatus.initial){
-                  context.read<TenantUnitBloc>().add(LoadTenantUnitPaymentSchedules(widget.tenantUnitModel.id!));
-                } if(state.status == TenantUnitStatus.loadingDetails){
-                  return Center(child: CircularProgressIndicator(),);
-                } if(state.status == TenantUnitStatus.successDetails){
-                  filteredData = state.paymentSchedules!;
-                  return Expanded(child: _buildDataTable(filteredData));
-                  // return ListView.builder(
-                  //     shrinkWrap: true,
-                  //     itemCount: filteredData.length,
-                  //     itemBuilder: (context, index){
-                  //       var schedule =  filteredData[index];
-                  //       return Text('Index$index ${schedule.fromDate.toString()}');
-                  //     });
 
-                } if(state.status == TenantUnitStatus.errorDetails){
-                  return Center(child: Text('Something went wrong'),);
+            widget.tenantUnitModel.paymentScheduleModel!.isEmpty
+                ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
 
-                } if(state.status == TenantUnitStatus.emptyDetails){
-                  return Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),);
-                }
+                : Expanded(child: _buildDataTable(filteredData)),
 
-                return Container();
-
-                },
-            ),
-
-            // widget.tenantUnitModel.paymentScheduleModel!.isEmpty
-            //     ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
-            //
-            //     : Expanded(child: _buildDataTable(filteredData)),
-
-                // : Expanded(child: MyDataTable(tenantUnitModel: widget.tenantUnitModel)),
+            // : Expanded(child: MyDataTable(tenantUnitModel: widget.tenantUnitModel)),
 
             // widget.tenantUnitModel.paymentScheduleModel!.isEmpty
             //     ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
@@ -320,8 +282,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
         ),
       ),
 
-    ),
-);
+    );
   }
 
 

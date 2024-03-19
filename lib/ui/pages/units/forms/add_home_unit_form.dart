@@ -26,12 +26,11 @@ class AddHomeUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
 
-
-  const AddHomeUnitForm(
-      {super.key,
-      required this.addButtonText,
-      required this.isUpdate,
-     });
+  const AddHomeUnitForm({
+    super.key,
+    required this.addButtonText,
+    required this.isUpdate,
+  });
 
   @override
   State<AddHomeUnitForm> createState() => _AddHomeUnitFormState();
@@ -65,7 +64,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _propertyModelCont =  SingleValueDropDownController();
+    _propertyModelCont = SingleValueDropDownController();
   }
 
   @override
@@ -123,19 +122,19 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                 name: '${widget.isUpdate ? "Edit" : "New"}  Unit',
                 addButtonText: widget.isUpdate ? "Update" : "Add",
                 onSave: () {
-                   if (selectedPropertyId == 0) {
-                     Fluttertoast.showToast(
-                         msg: 'please select a property',
-                         gravity: ToastGravity.TOP);
+                  if (selectedPropertyId == 0) {
+                    Fluttertoast.showToast(
+                        msg: 'please select a property',
+                        gravity: ToastGravity.TOP);
                   } else if (selectedUnitTypeId == 0) {
-                     Fluttertoast.showToast(
-                         msg: 'please select a unit type',
-                         gravity: ToastGravity.TOP);
-                   }  else if (selectedFloorId == 0) {
-                     Fluttertoast.showToast(
-                         msg: 'please select a floor',
-                         gravity: ToastGravity.TOP);
-                   } else if (roomNumberController.text.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: 'please select a unit type',
+                        gravity: ToastGravity.TOP);
+                  } else if (selectedFloorId == 0) {
+                    Fluttertoast.showToast(
+                        msg: 'please select a floor',
+                        gravity: ToastGravity.TOP);
+                  } else if (roomNumberController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'unit name required', gravity: ToastGravity.TOP);
                   } else if (roomNumberController.text.length <= 1) {
@@ -144,15 +143,19 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                   } else if (amountController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'amount required', gravity: ToastGravity.TOP);
-                  }  else {
+                  } else {
                     context.read<UnitFormBloc>().add(AddUnitEvent(
                           currentUserToken.toString(),
                           selectedUnitTypeId,
                           selectedFloorId,
                           roomNumberController.text.trim().toString(),
                           sizeController.text.trim().toString(),
-                          selectedDurationId == 0 ? periodModel!.id!.toInt() : selectedDurationId,
-                          selectedCurrency == 0 ? currencyModel!.id!.toInt() : selectedCurrency,
+                          selectedDurationId == 0
+                              ? periodModel!.id!.toInt()
+                              : selectedDurationId,
+                          selectedCurrency == 0
+                              ? currencyModel!.id!.toInt()
+                              : selectedCurrency,
                           int.parse(amountController.text
                               .trim()
                               .toString()
@@ -210,7 +213,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                         return Form(
                           child: Column(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               BlocBuilder<PropertyBloc, PropertyState>(
@@ -221,16 +224,17 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                         .add(LoadPropertiesEvent());
                                   }
                                   if (state.status == PropertyStatus.empty) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(bottom: 10),
+                                    return const Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
                                       child: AuthTextField(
                                         hintText: 'No Properties',
                                         obscureText: false,
-                                        enabled: false,),
+                                        enabled: false,
+                                      ),
                                     );
                                   }
                                   if (state.status == PropertyStatus.error) {
-                                    return Center(
+                                    return const Center(
                                       child: Text('An Error Occurred'),
                                     );
                                   }
@@ -245,7 +249,9 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                       setState(() {
                                         selectedPropertyId = value.value.id;
                                       });
-                                      context.read<FloorBloc>().add(LoadAllFloorsEvent(selectedPropertyId));
+                                      context.read<FloorBloc>().add(
+                                          LoadAllFloorsEvent(
+                                              selectedPropertyId));
 
                                       print('Property is $selectedPropertyId}');
                                     },
@@ -260,7 +266,8 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                 children: [
                                   SizedBox(
                                     width: 190,
-                                    child: BlocBuilder<UnitFormBloc, UnitFormState>(
+                                    child: BlocBuilder<UnitFormBloc,
+                                        UnitFormState>(
                                       builder: (context, state) {
                                         if (state.status ==
                                             UnitStatus.initial) {
@@ -268,7 +275,8 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                               LoadUnitTypesEvent(
                                                   selectedPropertyId));
                                         }
-                                        return CustomApiGenericDropdown<UnitTypeModel>(
+                                        return CustomApiGenericDropdown<
+                                            UnitTypeModel>(
                                           hintText: 'Unit Type',
                                           menuItems: state.unitTypes == null
                                               ? []
@@ -312,7 +320,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                 ],
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -386,7 +394,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                               //   ],
                               // ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -418,7 +426,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                 },
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -463,8 +471,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                             selectedPropertyId));
                                   }
                                   if (state.status == CurrencyStatus.success) {
-                                    currencyModel =
-                                        state.currencies.firstWhere(
+                                    currencyModel = state.currencies.firstWhere(
                                       (currency) => currency.code == 'UGX',
                                       // orElse: () => null as CurrencyModel,
                                     );
@@ -485,7 +492,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                 },
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 
@@ -499,7 +506,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                 ],
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
 

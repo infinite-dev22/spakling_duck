@@ -36,7 +36,7 @@ void main() {
         BlocProvider(create: (context) => PropertyBloc()),
         BlocProvider(create: (context) => PropertyTypeBloc()),
         BlocProvider(create: (context) => PropertyCategoryBloc()),
-        // BlocProvider(create: (context) => FloorBloc()),
+        BlocProvider(create: (context) => FloorBloc()),
         BlocProvider(create: (context) => CurrencyBloc()),
         BlocProvider(create: (context) => PeriodBloc()),
         BlocProvider(create: (context) => PaymentBloc()),
