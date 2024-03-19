@@ -12,6 +12,7 @@ import 'package:smart_rent/ui/pages/root/widgets/bottom_nav_bar.dart';
 import 'package:smart_rent/ui/pages/root/widgets/screen.dart';
 import 'package:smart_rent/ui/pages/settings/settings_page.dart';
 import 'package:smart_rent/ui/pages/tenants/tenants_page.dart';
+import 'package:smart_rent/ui/pages/units/bloc/form/unit_form_bloc.dart';
 import 'package:smart_rent/ui/pages/units/forms/add_home_unit_form.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 
@@ -226,9 +227,8 @@ class _RootPageState extends State<RootPage> {
                           builder: (context) {
                             return MultiBlocProvider(
                               providers: [
-                                BlocProvider(
-                                  create: (context) => FloorBloc(),
-                                ),
+                                BlocProvider(create: (context) => FloorBloc()),
+                                BlocProvider(create: (context) => UnitFormBloc()),
                               ],
                               child: AddHomeUnitForm(
                                 addButtonText: 'Add',
