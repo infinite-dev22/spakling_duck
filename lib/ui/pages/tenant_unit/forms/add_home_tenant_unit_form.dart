@@ -15,7 +15,7 @@ import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
-import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/bloc/form/tenant_unit_form_bloc.dart';
 import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
@@ -32,11 +32,11 @@ class AddHomeTenantUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
 
-  AddHomeTenantUnitForm(
-      {super.key,
-      required this.addButtonText,
-      required this.isUpdate,
-     });
+  AddHomeTenantUnitForm({
+    super.key,
+    required this.addButtonText,
+    required this.isUpdate,
+  });
 
   @override
   State<AddHomeTenantUnitForm> createState() => _AddHomeTenantUnitFormState();
@@ -84,18 +84,18 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TenantUnitBloc, TenantUnitState>(
+    return BlocConsumer<TenantUnitFormBloc, TenantUnitFormState>(
       builder: (context, state) {
         return _buildBody(context, state);
       },
       listener: (context, state) {
-        if (state.status.isLoadingAdd) {
+        if (state.status.isLoading) {
           const LoadingWidget();
         }
-        if (state.status.isSuccessAdd) {
+        if (state.status.isSuccess) {
           Navigator.pop(context);
         }
-        if (state.status.isErrorAdd) {
+        if (state.status.isError) {
           Fluttertoast.showToast(
               msg: state.message!,
               toastLength: Toast.LENGTH_SHORT,
@@ -109,39 +109,36 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
     );
   }
 
-  Widget _buildBody(BuildContext context, TenantUnitState state) {
+  Widget _buildBody(BuildContext context, TenantUnitFormState state) {
     return ListView(
       children: [
         FormTitle(
           name: '${widget.isUpdate ? "Edit" : "New"}  Tenant',
           addButtonText: widget.isUpdate ? "Update" : "Add",
           onSave: () {
-
-             if (selectedPropertyId == 0) {
-            Fluttertoast.showToast(
-            msg: 'please select property',
-            gravity: ToastGravity.TOP);
+            if (selectedPropertyId == 0) {
+              Fluttertoast.showToast(
+                  msg: 'please select property', gravity: ToastGravity.TOP);
             } else {
-               context.read<TenantUnitBloc>().add(
-                 AddTenantUnitEvent(
-                   currentUserToken.toString(),
-                   tenant.id!,
-                   unit.id!,
-                   period.id!,
-                   durationController.text,
-                   DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
-                       .parse(startDateController.text)),
-                   DateFormat('yyyy-MM-dd').format(
-                       DateFormat('dd/MM/yyyy').parse(endDateController.text)),
-                   unitAmountController.text,
-                   currency.id!,
-                   discountedAmountController.text,
-                   descriptionController.text,
-                   selectedPropertyId,
-                 ),
-               );
-             }
-
+              context.read<TenantUnitFormBloc>().add(
+                    AddTenantUnitEvent(
+                      currentUserToken.toString(),
+                      tenant.id!,
+                      unit.id!,
+                      period.id!,
+                      durationController.text,
+                      DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
+                          .parse(startDateController.text)),
+                      DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
+                          .parse(endDateController.text)),
+                      unitAmountController.text,
+                      currency.id!,
+                      discountedAmountController.text,
+                      descriptionController.text,
+                      selectedPropertyId,
+                    ),
+                  );
+            }
           },
           isElevated: true,
           onCancel: () {
@@ -152,13 +149,10 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
           child: Column(
             children: [
-
               BlocBuilder<PropertyBloc, PropertyState>(
                 builder: (context, state) {
                   if (state.status == PropertyStatus.initial) {
-                    context
-                        .read<PropertyBloc>()
-                        .add(LoadPropertiesEvent());
+                    context.read<PropertyBloc>().add(LoadPropertiesEvent());
                   }
                   if (state.status == PropertyStatus.empty) {
                     return Padding(
@@ -166,7 +160,8 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
                       child: AuthTextField(
                         hintText: 'No Properties',
                         obscureText: false,
-                        enabled: false,),
+                        enabled: false,
+                      ),
                     );
                   }
                   if (state.status == PropertyStatus.error) {
@@ -174,18 +169,18 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
                       child: Text('An Error Occurred'),
                     );
                   }
-                  return SearchablePropertyModelListDropDown<
-                      Property>(
+                  return SearchablePropertyModelListDropDown<Property>(
                     hintText: 'Property',
-                    menuItems: state.properties == null
-                        ? []
-                        : state.properties!,
+                    menuItems:
+                        state.properties == null ? [] : state.properties!,
                     controller: _propertyModelCont,
                     onChanged: (value) {
                       setState(() {
                         selectedPropertyId = value.value.id;
                       });
-                      context.read<UnitBloc>().add(LoadAllUnitsEvent(selectedPropertyId));
+                      context
+                          .read<UnitBloc>()
+                          .add(LoadAllUnitsEvent(selectedPropertyId));
                       print('Property is $selectedPropertyId}');
                     },
                   );
@@ -263,19 +258,21 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
                   }
                   if (state.status.isSuccess) {
                     return SearchableUnitDropDown<UnitModel>(
-                        hintText: 'Select unit name/number',
-                          menuItems: state.units.where((unit) => unit.isAvailable == 1 ).toList(),
-                        controller: unitController,
-                      onChanged: (value){
-                            if (value != null) {
-                              unit = value.value;
-                              unitAmountController.text =
-                                  amountFormatter.format(value.value.amount.toString());
-                              discountedAmountController.text =
-                                  amountFormatter.format(value.value.amount.toString());
-                            }
+                      hintText: 'Select unit name/number',
+                      menuItems: state.units
+                          .where((unit) => unit.isAvailable == 1)
+                          .toList(),
+                      controller: unitController,
+                      onChanged: (value) {
+                        if (value != null) {
+                          unit = value.value;
+                          unitAmountController.text = amountFormatter
+                              .format(value.value.amount.toString());
+                          discountedAmountController.text = amountFormatter
+                              .format(value.value.amount.toString());
+                        }
 
-                            print('My Amount = ${value.value.amount.toString()}');
+                        print('My Amount = ${value.value.amount.toString()}');
                       },
                     );
 
@@ -462,7 +459,6 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
                 obscureText: false,
                 keyBoardType: TextInputType.number,
                 enabled: false,
-
               ),
 
               // SmartCaseTextField(
@@ -498,11 +494,10 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
                         .add(LoadAllCurrenciesEvent(selectedPropertyId));
                   }
                   if (state.status.isSuccess) {
-                    currencyModel =
-                        state.currencies.firstWhere(
-                              (currency) => currency.code == 'UGX',
-                          // orElse: () => null as CurrencyModel,
-                        );
+                    currencyModel = state.currencies.firstWhere(
+                      (currency) => currency.code == 'UGX',
+                      // orElse: () => null as CurrencyModel,
+                    );
                     return Row(
                       children: [
                         Expanded(
@@ -532,7 +527,6 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
                             hintText: 'Discounted amount',
                             obscureText: false,
                             keyBoardType: TextInputType.number,
-
                           ),
                         ),
                       ],
