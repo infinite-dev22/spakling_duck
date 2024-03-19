@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:smart_rent/data_layer/models/currency/currency_model.dart';
 import 'package:smart_rent/data_layer/models/floor/floor_model.dart';
 import 'package:smart_rent/data_layer/models/period/period_model.dart';
@@ -14,9 +13,11 @@ import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/form/unit_form_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/amount_text_field.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
 import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
+import 'package:smart_rent/ui/widgets/custom_textbox.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 
@@ -109,13 +110,11 @@ class _AddUnitFormState extends State<AddUnitForm> {
                 }
                 if (state.status == UnitFormStatus.accessDenied) {
                   Fluttertoast.showToast(
-                      msg: state.message.toString(),
-                      gravity: ToastGravity.TOP);
+                      msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
                 if (state.status == UnitFormStatus.error) {
                   Fluttertoast.showToast(
-                      msg: state.message.toString(),
-                      gravity: ToastGravity.TOP);
+                      msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
               },
               child: FormTitle(
@@ -135,8 +134,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                         msg: 'unit name required', gravity: ToastGravity.TOP);
                   } else if (roomNumberController.text.length <= 1) {
                     Fluttertoast.showToast(
-                        msg: 'unit name too short',
-                        gravity: ToastGravity.TOP);
+                        msg: 'unit name too short', gravity: ToastGravity.TOP);
                   } else if (amountController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'amount required', gravity: ToastGravity.TOP);
@@ -145,19 +143,17 @@ class _AddUnitFormState extends State<AddUnitForm> {
                           currentUserToken.toString(),
                           selectedUnitTypeId,
                           selectedFloorId,
-                          roomNumberController.text.trim().toString(),
-                          sizeController.text.trim().toString(),
+                          roomNumberController.text.trim(),
+                          sizeController.text.replaceAll(',', '').trim(),
                           selectedDurationId == 0
                               ? periodModel!.id!.toInt()
                               : selectedDurationId,
                           selectedCurrency == 0
                               ? currencyModel!.id!.toInt()
                               : selectedCurrency,
-                          int.parse(amountController.text
-                              .trim()
-                              .toString()
-                              .replaceAll(',', '')),
-                          descriptionController.text.trim().toString(),
+                          int.parse(
+                              amountController.text.trim().replaceAll(',', '')),
+                          descriptionController.text.trim(),
                           widget.property.id!,
                         ));
                   }
@@ -191,8 +187,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                       setState(() {
                         isTitleElevated = true;
                       });
-                    } else if (scrollController
-                            .position.userScrollDirection ==
+                    } else if (scrollController.position.userScrollDirection ==
                         ScrollDirection.forward) {
                       if (scrollController.position.pixels ==
                           scrollController.position.maxScrollExtent) {
@@ -295,11 +290,9 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                   ),
                                   SizedBox(
                                     width: 190,
-                                    child: AuthTextField(
+                                    child: NumberField(
                                       controller: sizeController,
-                                      hintText: 'Square Meters',
-                                      obscureText: false,
-                                      keyBoardType: TextInputType.text,
+                                      hint: 'Square Meters',
                                     ),
                                   ),
                                 ],
@@ -366,8 +359,7 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                       // orElse: () => null as CurrencyModel,
                                     );
                                   }
-                                  return CustomApiGenericDropdown<
-                                      PeriodModel>(
+                                  return CustomApiGenericDropdown<PeriodModel>(
                                     hintText: 'Period',
                                     menuItems: state.periods == null
                                         ? []
@@ -419,14 +411,12 @@ class _AddUnitFormState extends State<AddUnitForm> {
 
                               BlocBuilder<CurrencyBloc, CurrencyState>(
                                 builder: (context, state) {
-                                  if (state.status ==
-                                      CurrencyStatus.initial) {
+                                  if (state.status == CurrencyStatus.initial) {
                                     context.read<CurrencyBloc>().add(
                                         LoadAllCurrenciesEvent(
                                             widget.property.id!));
                                   }
-                                  if (state.status ==
-                                      CurrencyStatus.success) {
+                                  if (state.status == CurrencyStatus.success) {
                                     currencyModel =
                                         state.currencies!.firstWhere(
                                       (currency) => currency.code == 'UGX',
@@ -453,14 +443,11 @@ class _AddUnitFormState extends State<AddUnitForm> {
                                 height: 10,
                               ),
 
-                              AuthTextField(
+                              AmountTextField(
                                 controller: amountController,
                                 hintText: 'Amount',
                                 obscureText: false,
                                 keyBoardType: TextInputType.number,
-                                inputFormatters: [
-                                  ThousandsFormatter(),
-                                ],
                               ),
 
                               const SizedBox(

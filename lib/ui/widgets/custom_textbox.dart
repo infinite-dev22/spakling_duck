@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
+import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 
 class CustomTextBox extends StatelessWidget {
@@ -243,6 +244,62 @@ class SmartCaseNumberField extends StatelessWidget {
             ),
             keyboardType: TextInputType.number,
             inputFormatters: [CurrencyInputFormatter()],
+            onChanged: onChanged,
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+}
+
+class NumberField extends StatelessWidget {
+  const NumberField({
+    super.key,
+    required this.hint,
+    required this.controller,
+    this.maxLength,
+    this.onChanged,
+  });
+
+  final String hint;
+  final TextEditingController controller;
+  final int? maxLength;
+  final Function(String)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBody();
+  }
+
+  _buildBody() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 50,
+          child: TextFormField(
+            controller: controller,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (val) =>
+                val!.isEmpty ? 'Required field, Please fill in.' : null,
+            maxLength: maxLength,
+            minLines: 1,
+            decoration: InputDecoration(
+              counterText: "",
+              filled: true,
+              fillColor: AppTheme.textBoxColor,
+              hintText: hint,
+              hintStyle:
+                  const TextStyle(color: AppTheme.inActiveColor, fontSize: 15),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: [ThousandsFormatter()],
             onChanged: onChanged,
           ),
         ),

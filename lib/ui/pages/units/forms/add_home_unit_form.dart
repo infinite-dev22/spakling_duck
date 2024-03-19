@@ -19,6 +19,7 @@ import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
 import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
 import 'package:smart_rent/ui/widgets/auth_textfield.dart';
+import 'package:smart_rent/ui/widgets/custom_textbox.dart';
 import 'package:smart_rent/ui/widgets/form_title_widget.dart';
 import 'package:smart_rent/utilities/app_init.dart';
 
@@ -148,19 +149,17 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                           currentUserToken.toString(),
                           selectedUnitTypeId,
                           selectedFloorId,
-                          roomNumberController.text.trim().toString(),
-                          sizeController.text.trim().toString(),
+                          roomNumberController.text.trim(),
+                          sizeController.text.replaceAll(',', '').trim(),
                           selectedDurationId == 0
                               ? periodModel!.id!.toInt()
                               : selectedDurationId,
                           selectedCurrency == 0
                               ? currencyModel!.id!.toInt()
                               : selectedCurrency,
-                          int.parse(amountController.text
-                              .trim()
-                              .toString()
-                              .replaceAll(',', '')),
-                          descriptionController.text.trim().toString(),
+                          int.parse(
+                              amountController.text.trim().replaceAll(',', '')),
+                          descriptionController.text.trim(),
                           selectedPropertyId,
                         ));
                   }
@@ -330,22 +329,18 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    child: AuthTextField(
-                                      controller: roomNumberController,
-                                      hintText: 'Unit Name/Number',
-                                      obscureText: false,
-                                      keyBoardType: TextInputType.text,
-                                    ),
                                     width: 190,
+                                    child: SmartCaseTextField(
+                                      controller: roomNumberController,
+                                      hint: 'Unit Name/Number',
+                                    ),
                                   ),
                                   SizedBox(
-                                    child: AuthTextField(
-                                      controller: sizeController,
-                                      hintText: 'Square Meters',
-                                      obscureText: false,
-                                      keyBoardType: TextInputType.text,
-                                    ),
                                     width: 190,
+                                    child: NumberField(
+                                      controller: sizeController,
+                                      hint: 'Square Meters',
+                                    ),
                                   ),
                                 ],
                               ),

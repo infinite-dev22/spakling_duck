@@ -89,7 +89,7 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                           tenant.id!,
                           unit.id!,
                           period.id!,
-                          durationController.text,
+                          durationController.text.replaceAll(',', '').trim(),
                           DateFormat('yyyy-MM-dd').format(
                               DateFormat('dd/MM/yyyy')
                                   .parse(startDateController.text)),
@@ -302,12 +302,10 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                                   const SizedBox(width: 10),
                                 if (state.status.isDurationSelected)
                                   Expanded(
-                                    child: SmartCaseTextField(
+                                    child: NumberField(
                                       hint: _placeHolder(
                                           state.durationIdSelected!),
                                       maxLength: 50,
-                                      minLines: 1,
-                                      maxLines: 1,
                                       controller: durationController,
                                       onChanged: (value) {
                                         String duration;
