@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:smart_rent/data_layer/models/smart_model.dart';
+import 'package:smart_rent/ui/pages/properties/bloc/form/property_form_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/property_categories/bloc/property_category_bloc.dart';
 import 'package:smart_rent/ui/pages/property_types/bloc/property_type_bloc.dart';
@@ -69,7 +70,7 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
             .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           children: [
-            BlocListener<PropertyBloc, PropertyState>(
+            BlocListener<PropertyFormBloc, PropertyFormState>(
               listener: (context, state) {
                 if (state.status == PropertyStatus.successAdd) {
                   Fluttertoast.showToast(
@@ -115,7 +116,7 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
                         msg: 'select property category id',
                         gravity: ToastGravity.TOP);
                   } else {
-                    context.read<PropertyBloc>().add(AddPropertyEvent(
+                    context.read<PropertyFormBloc>().add(AddPropertyEvent(
                           currentUserToken.toString(),
                           titleController.text.trim().toString(),
                           locationController.text.trim().toString(),

@@ -1,6 +1,6 @@
-part of 'property_bloc.dart';
+part of 'property_form_bloc.dart';
 
-enum PropertyStatus {
+enum PropertyFormStatus {
   initial,
   success,
   loading,
@@ -19,32 +19,32 @@ enum PropertyStatus {
   accessDeniedAdd,
 }
 
-extension PropertyStatusX on PropertyStatus {
-  bool get isInitial => this == PropertyStatus.initial;
+extension PropertyFormStatusX on PropertyFormStatus {
+  bool get isInitial => this == PropertyFormStatus.initial;
 
-  bool get isSuccess => this == PropertyStatus.success;
+  bool get isSuccess => this == PropertyFormStatus.success;
 
-  bool get isError => this == PropertyStatus.error;
+  bool get isError => this == PropertyFormStatus.error;
 
-  bool get isLoading => this == PropertyStatus.loading;
+  bool get isLoading => this == PropertyFormStatus.loading;
 
-  bool get isEmpty => this == PropertyStatus.empty;
+  bool get isEmpty => this == PropertyFormStatus.empty;
 
-  bool get isNotFound => this == PropertyStatus.notFound;
+  bool get isNotFound => this == PropertyFormStatus.notFound;
 }
 
 @immutable
-class PropertyState extends Equatable {
+class PropertyFormState extends Equatable {
   final List<Property>? properties;
-  final PropertyStatus status;
+  final PropertyFormStatus status;
   final Property? property;
   final bool? isPropertyLoading;
   final String? message;
   final AddPropertyResponseModel? addPropertyResponseModel;
 
-  const PropertyState(
+  const PropertyFormState(
       {this.properties,
-      this.status = PropertyStatus.initial,
+      this.status = PropertyFormStatus.initial,
       this.property,
       this.isPropertyLoading = false,
       this.message = '',
@@ -61,15 +61,15 @@ class PropertyState extends Equatable {
         addPropertyResponseModel
       ];
 
-  PropertyState copyWith({
+  PropertyFormState copyWith({
     List<Property>? properties,
-    PropertyStatus? status,
+    PropertyFormStatus? status,
     Property? property,
     bool? isPropertyLoading,
     String? message,
     AddPropertyResponseModel? addPropertyResponseModel,
   }) {
-    return PropertyState(
+    return PropertyFormState(
       properties: properties ?? this.properties,
       status: status ?? this.status,
       property: property ?? this.property,

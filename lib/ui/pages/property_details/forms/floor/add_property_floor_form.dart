@@ -1,31 +1,29 @@
-import 'package:smart_rent/configs/app_configs.dart';
-import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
-import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
-import 'package:smart_rent/ui/themes/app_theme.dart';
-import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
-import 'package:smart_rent/ui/widgets/auth_textfield.dart';
-import 'package:smart_rent/ui/widgets/form_title_widget.dart';
-import 'package:smart_rent/utilities/app_init.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:smart_rent/data_layer/models/property/property_response_model.dart';
+import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
+import 'package:smart_rent/ui/pages/floors/bloc/form/floor_form_bloc.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/app_max_textfield.dart';
+import 'package:smart_rent/ui/widgets/auth_textfield.dart';
+import 'package:smart_rent/ui/widgets/form_title_widget.dart';
+import 'package:smart_rent/utilities/app_init.dart';
 
-
-class AddPropertyFloorForm extends StatefulWidget {
+class AddPropertyFloorForm extends StatelessWidget {
   final String addButtonText;
   final bool isUpdate;
   final Property property;
+  final BuildContext parentContext;
 
-  const AddPropertyFloorForm(
-      {super.key, required this.addButtonText, required this.isUpdate, required this.property});
+  AddPropertyFloorForm(
+      {super.key,
+      required this.addButtonText,
+      required this.isUpdate,
+      required this.property, required this.parentContext});
 
-  @override
-  State<AddPropertyFloorForm> createState() => _AddPropertyFloorFormState();
-}
-
-class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
   final TextEditingController floorController = TextEditingController();
   final TextEditingController floorDescriptionController =
       TextEditingController();
@@ -38,24 +36,8 @@ class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
   final ScrollController scrollController = ScrollController();
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _propertyModelCont = SingleValueDropDownController();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    floorController.dispose();
-    floorDescriptionController.dispose();
-    _propertyModelCont.dispose();
-    scrollController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    _propertyModelCont = SingleValueDropDownController();
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
       return Padding(
@@ -63,9 +45,9 @@ class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
             .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           children: [
-            BlocListener<FloorBloc, FloorState>(
+            BlocListener<FloorFormBloc, FloorFormState>(
               listener: (context, state) {
-                if (state.status == FloorStatus.successAdd) {
+                if (state.status.isSuccess) {
                   Fluttertoast.showToast(
                       msg: 'Floor Added Successfully',
                       backgroundColor: Colors.green,
@@ -73,20 +55,27 @@ class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
                   floorController.clear();
                   floorDescriptionController.clear();
                   _propertyModelCont.clearDropDown();
+                  try{
+                    parentContext
+                        .read<FloorBloc>()
+                        .add(LoadAllFloorsEvent(property.id!));
+                  } catch (e) {
+                    print(e);
+                  }
                   Navigator.pop(context);
                 }
-                if (state.status == FloorStatus.accessDeniedAdd) {
+                if (state.status == FloorFormStatus.accessDenied) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
-                if (state.status == FloorStatus.errorAdd) {
+                if (state.status == FloorFormStatus.error) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
               },
               child: FormTitle(
-                name: '${widget.isUpdate ? "Edit" : "New"}  Floor',
-                addButtonText: widget.isUpdate ? "Update" : "Add",
+                name: '${isUpdate ? "Edit" : "New"}  Floor',
+                addButtonText: isUpdate ? "Update" : "Add",
                 onSave: () {
                   if (floorController.text.isEmpty) {
                     Fluttertoast.showToast(
@@ -95,9 +84,9 @@ class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
                     Fluttertoast.showToast(
                         msg: 'floor name too short', gravity: ToastGravity.TOP);
                   } else {
-                    context.read<FloorBloc>().add(AddFloorEvent(
+                    context.read<FloorFormBloc>().add(AddFloorEvent(
                           currentUserToken.toString(),
-                          widget.property.id!,
+                          property.id!,
                           floorController.text.trim().toString(),
                           floorDescriptionController.text.trim().toString(),
                         ));

@@ -13,6 +13,7 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildBody() {
     return Scaffold(
+      backgroundColor: AppTheme.appBgColor,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         title: const TitleBarImageHolder(),

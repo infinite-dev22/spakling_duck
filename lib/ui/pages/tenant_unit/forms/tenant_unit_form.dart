@@ -12,6 +12,7 @@ import 'package:smart_rent/data_layer/models/unit/unit_model.dart';
 import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
+import 'package:smart_rent/ui/pages/tenant_unit/bloc/form/tenant_unit_form_bloc.dart';
 import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
 import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
@@ -26,12 +27,14 @@ class TenantUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
   final Property property;
+  final BuildContext parentContext;
 
   TenantUnitForm(
       {super.key,
       required this.addButtonText,
       required this.isUpdate,
-      required this.property});
+      required this.property,
+      required this.parentContext});
 
   @override
   State<TenantUnitForm> createState() => _TenantUnitFormState();
@@ -68,19 +71,21 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TenantUnitBloc, TenantUnitState>(
+    return BlocConsumer<TenantUnitFormBloc, TenantUnitFormState>(
       builder: (context, state) {
         return _buildBody(context, state);
       },
       listener: (context, state) {
-        if (state.status.isLoadingAdd) {
+        if (state.status.isLoading) {
           const LoadingWidget();
         }
-        if (state.status.isSuccessAdd) {
-          Navigator.pop(context);
+        if (state.status.isSuccess) {
+          widget.parentContext
+              .read<TenantUnitBloc>()
+              .add(LoadTenantUnitsEvent(widget.property.id!));
           Navigator.pop(context);
         }
-        if (state.status.isErrorAdd) {
+        if (state.status.isError) {
           Fluttertoast.showToast(
               msg: state.message!,
               toastLength: Toast.LENGTH_SHORT,
@@ -94,14 +99,14 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
     );
   }
 
-  Widget _buildBody(BuildContext context, TenantUnitState state) {
+  Widget _buildBody(BuildContext context, TenantUnitFormState state) {
     return ListView(
       children: [
         FormTitle(
           name: '${widget.isUpdate ? "Edit" : "New"}  Tenant',
           addButtonText: widget.isUpdate ? "Update" : "Add",
           onSave: () {
-            context.read<TenantUnitBloc>().add(
+            context.read<TenantUnitFormBloc>().add(
                   AddTenantUnitEvent(
                     currentUserToken.toString(),
                     tenant.id!,
