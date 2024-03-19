@@ -24,23 +24,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   _mapInitialEventToState(LoginInitial event, Emitter<LoginState> emit) {
     emit(state.copyWith(status: LoginStatus.loading));
     try {
-      final box = GetSecureStorage(
-          password: 'infosec_technologies_ug_smart_rent_relator_manager');
-
-      String? email = box.read('email');
-      String? name = box.read('name');
-      String? image = box.read('image');
-
-      log("Email: $email");
-      log("Name: $name");
-      log("image: $image");
+      // final box = GetSecureStorage(
+      //     password: 'infosec_technologies_ug_smart_rent_relator_manager');
+      //
+      // String? email = box.read('email');
+      // String? name = box.read('name');
+      // String? image = box.read('image');
+      //
+      // log("Email: $email");
+      // log("Name: $name");
+      // log("image: $image");
 
       // if (email != null && email.isNotEmpty) {
       emit(state.copyWith(
         status: LoginStatus.loginUser,
-        email: email,
-        name: name,
-        image: image,
+        // email: email,
+        // name: name,
+        // image: image,
       ));
       // } else if (email != null && email.isEmpty) {
       //   emit(state.copyWith(

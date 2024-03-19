@@ -8,6 +8,7 @@ import 'package:smart_rent/data_layer/models/auth/login_model.dart';
 import 'package:smart_rent/data_layer/repositories/auth_repository.dart';
 
 part 'auth_event.dart';
+
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -19,28 +20,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   _mapInitialEventToState(AuthInitial event, Emitter<AuthState> emit) {
     emit(state.copyWith(status: AuthStatus.loading));
     try {
-      final box = GetSecureStorage(
-          password: 'infosec_technologies_ug_smart_case_law_manager');
+      // final box = GetSecureStorage(
+      //     password: 'infosec_technologies_ug_smart_case_law_manager');
 
-      String? email = box.read('email');
-      String? name = box.read('name');
-      String? image = box.read('image');
+      // String? email = box.read('email');
+      // String? name = box.read('name');
+      // String? image = box.read('image');
 
-      if (email != null && email.isNotEmpty) {
-        emit(state.copyWith(
-          status: AuthStatus.signInUser,
-          email: email,
-          name: name,
-          image: image,
-        ));
-      } else if (email == null && email!.isEmpty) {
-        emit(state.copyWith(
-          status: AuthStatus.loginUser,
-          email: email,
-          name: name,
-          image: image,
-        ));
-      }
+      // if (email != null && email.isNotEmpty) {
+      emit(state.copyWith(
+        status: AuthStatus.signInUser,
+        // email: email,
+        // name: name,
+        // image: image,
+      ));
+      // } else if (email == null && email!.isEmpty) {
+      //   emit(state.copyWith(
+      //     status: AuthStatus.loginUser,
+      //     email: email,
+      //     name: name,
+      //     image: image,
+      //   ));
+      // }
     } catch (e) {
       log(e.toString());
       emit(state.copyWith(status: AuthStatus.error));
