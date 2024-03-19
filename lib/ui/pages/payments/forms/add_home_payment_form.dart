@@ -184,7 +184,7 @@ class _AddHomePaymentFormState extends State<AddHomePaymentForm> {
           children: [
             MultiBlocListener(
               listeners: [
-                BlocListener<PaymentBloc, PaymentState>(
+                BlocListener<PaymentFormBloc, PaymentFormState>(
                   listener: (context, state) {
                     if (state.status == PaymentFormStatus.success) {
                       selectedDate1.value = DateTime.now();
@@ -234,10 +234,6 @@ class _AddHomePaymentFormState extends State<AddHomePaymentForm> {
                   if (paidController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'paid amount required', gravity: ToastGravity.TOP);
-                  } else if (balanceController.text.isEmpty) {
-                    Fluttertoast.showToast(
-                        msg: 'balance amount required',
-                        gravity: ToastGravity.TOP);
                   } else if (paymentDateController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'payment date required',

@@ -1,7 +1,6 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -33,7 +32,7 @@ class AddHomeTenantUnitForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
 
-  AddHomeTenantUnitForm({
+  const AddHomeTenantUnitForm({
     super.key,
     required this.addButtonText,
     required this.isUpdate,
@@ -98,26 +97,29 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
                 onSave: () {
                   if (selectedPropertyId == 0) {
                     Fluttertoast.showToast(
-                        msg: 'please select property', gravity: ToastGravity.TOP);
+                        msg: 'please select property',
+                        gravity: ToastGravity.TOP);
                   } else {
                     context.read<TenantUnitFormBloc>().add(
-                      AddTenantUnitEvent(
-                        currentUserToken.toString(),
-                        tenant.id!,
-                        unit.id!,
-                        period.id!,
-                        durationController.text,
-                        DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
-                            .parse(startDateController.text)),
-                        DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
-                            .parse(endDateController.text)),
-                        unitAmountController.text,
-                        currency.id!,
-                        discountedAmountController.text,
-                        descriptionController.text,
-                        selectedPropertyId,
-                      ),
-                    );
+                          AddTenantUnitEvent(
+                            currentUserToken.toString(),
+                            tenant.id!,
+                            unit.id!,
+                            period.id!,
+                            durationController.text,
+                            DateFormat('yyyy-MM-dd').format(
+                                DateFormat('dd/MM/yyyy')
+                                    .parse(startDateController.text)),
+                            DateFormat('yyyy-MM-dd').format(
+                                DateFormat('dd/MM/yyyy')
+                                    .parse(endDateController.text)),
+                            unitAmountController.text,
+                            selectedCurrency,
+                            discountedAmountController.text,
+                            descriptionController.text,
+                            selectedPropertyId,
+                          ),
+                        );
                   }
                 },
                 isElevated: true,
@@ -507,6 +509,7 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
                       (currency) => currency.code == 'UGX',
                       // orElse: () => null as CurrencyModel,
                     );
+                    // currency = currencyModel!;
                     return Row(
                       children: [
                         Expanded(

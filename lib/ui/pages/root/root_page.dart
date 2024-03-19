@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_rent/ui/pages/currency/bloc/currency_bloc.dart';
 import 'package:smart_rent/ui/pages/dashboard/dashboard_page.dart';
 import 'package:smart_rent/ui/pages/employees/employees_page.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/floor_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/bloc/form/floor_form_bloc.dart';
 import 'package:smart_rent/ui/pages/floors/forms/add_floor_form.dart';
+import 'package:smart_rent/ui/pages/payments/bloc/form/payment_form_bloc.dart';
 import 'package:smart_rent/ui/pages/payments/forms/add_home_payment_form.dart';
+import 'package:smart_rent/ui/pages/period/bloc/period_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/form/property_form_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/forms/add_property_form.dart';
@@ -18,6 +21,7 @@ import 'package:smart_rent/ui/pages/tenant_unit/forms/add_home_tenant_unit_form.
 import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/tenants/tenants_page.dart';
 import 'package:smart_rent/ui/pages/units/bloc/form/unit_form_bloc.dart';
+import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/pages/units/forms/add_home_unit_form.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
 
@@ -243,6 +247,17 @@ class _RootPageState extends State<RootPage> {
                                         create: (context) => UnitFormBloc()),
                                     BlocProvider(
                                         create: (context) => FloorBloc()),
+                                    BlocProvider(
+                                        create: (context) => TenantBloc()),
+                                    BlocProvider(
+                                        create: (context) => UnitBloc()),
+                                    BlocProvider(
+                                        create: (context) => PeriodBloc()),
+                                    BlocProvider(
+                                        create: (context) => CurrencyBloc()),
+                                    BlocProvider(
+                                        create: (context) =>
+                                            TenantUnitFormBloc()),
                                   ],
                                   child: const AddHomeUnitForm(
                                     addButtonText: 'Add',
@@ -328,7 +343,7 @@ class _RootPageState extends State<RootPage> {
                                         create: (context) =>
                                             TenantUnitFormBloc()),
                                   ],
-                                  child: AddHomeTenantUnitForm(
+                                  child: const AddHomeTenantUnitForm(
                                     addButtonText: 'Add',
                                     isUpdate: false,
                                   ),
@@ -372,6 +387,8 @@ class _RootPageState extends State<RootPage> {
                                     BlocProvider(
                                         create: (context) =>
                                             PropertyFormBloc()),
+                                    BlocProvider(
+                                        create: (context) => PaymentFormBloc()),
                                   ],
                                   child: const AddHomePaymentForm(
                                     addButtonText: 'Add',

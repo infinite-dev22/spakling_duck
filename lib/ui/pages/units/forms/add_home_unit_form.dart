@@ -89,7 +89,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
           children: [
             BlocListener<UnitFormBloc, UnitFormState>(
               listener: (context, state) {
-                if (state.status == UnitStatus.successAdd) {
+                if (state.status == UnitFormStatus.success) {
                   Fluttertoast.showToast(
                       msg: 'Unit Added Successfully',
                       backgroundColor: Colors.green,
@@ -109,11 +109,11 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                       .add(LoadAllUnitsEvent(selectedPropertyId));
                   Navigator.pop(context);
                 }
-                if (state.status == UnitStatus.accessDeniedAdd) {
+                if (state.status == UnitFormStatus.accessDenied) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
-                if (state.status == UnitStatus.errorAdd) {
+                if (state.status == UnitFormStatus.error) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
@@ -270,7 +270,7 @@ class _AddHomeUnitFormState extends State<AddHomeUnitForm> {
                                         UnitFormState>(
                                       builder: (context, state) {
                                         if (state.status ==
-                                            UnitStatus.initial) {
+                                            UnitFormStatus.initial) {
                                           context.read<UnitFormBloc>().add(
                                               LoadUnitTypesEvent(
                                                   selectedPropertyId));

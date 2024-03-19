@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +17,7 @@ import 'package:smart_rent/ui/pages/tenant_unit/bloc/tenant_unit_bloc.dart';
 import 'package:smart_rent/ui/pages/tenants/bloc/tenant_bloc.dart';
 import 'package:smart_rent/ui/pages/units/bloc/unit_bloc.dart';
 import 'package:smart_rent/ui/themes/app_theme.dart';
+import 'package:smart_rent/ui/widgets/amount_text_field.dart';
 import 'package:smart_rent/ui/widgets/app_drop_downs.dart';
 import 'package:smart_rent/ui/widgets/custom_accordion.dart';
 import 'package:smart_rent/ui/widgets/custom_textbox.dart';
@@ -30,7 +30,7 @@ class TenantUnitForm extends StatefulWidget {
   final Property property;
   final BuildContext parentContext;
 
-  TenantUnitForm(
+  const TenantUnitForm(
       {super.key,
       required this.addButtonText,
       required this.isUpdate,
@@ -84,23 +84,27 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                 addButtonText: widget.isUpdate ? "Update" : "Add",
                 onSave: () {
                   context.read<TenantUnitFormBloc>().add(
-                    AddTenantUnitEvent(
-                      currentUserToken.toString(),
-                      tenant.id!,
-                      unit.id!,
-                      period.id!,
-                      durationController.text,
-                      DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy')
-                          .parse(startDateController.text)),
-                      DateFormat('yyyy-MM-dd').format(
-                          DateFormat('dd/MM/yyyy').parse(endDateController.text)),
-                      unitAmountController.text,
-                      currency.id!,
-                      discountedAmountController.text,
-                      descriptionController.text,
-                      widget.property.id!,
-                    ),
-                  );
+                        AddTenantUnitEvent(
+                          currentUserToken.toString(),
+                          tenant.id!,
+                          unit.id!,
+                          period.id!,
+                          durationController.text,
+                          DateFormat('yyyy-MM-dd').format(
+                              DateFormat('dd/MM/yyyy')
+                                  .parse(startDateController.text)),
+                          DateFormat('yyyy-MM-dd').format(
+                              DateFormat('dd/MM/yyyy')
+                                  .parse(endDateController.text)),
+                          unitAmountController.text.replaceAll(',', '').trim(),
+                          currency.id!,
+                          discountedAmountController.text
+                              .replaceAll(',', '')
+                              .trim(),
+                          descriptionController.text,
+                          widget.property.id!,
+                        ),
+                      );
                 },
                 isElevated: true,
                 onCancel: () {
@@ -387,12 +391,11 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                   return const SizedBox(height: 10);
                 },
               ),
-              SmartCaseTextField(
-                hint: 'Unit amount',
-                maxLength: 50,
-                minLines: 1,
-                maxLines: 1,
+              AmountTextField(
+                hintText: 'Unit amount',
                 controller: unitAmountController,
+                obscureText: false,
+                keyBoardType: const TextInputType.numberWithOptions(),
               ),
               const SizedBox(height: 10),
               const Row(
@@ -434,12 +437,12 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: SmartCaseTextField(
-                            hint: 'Discounted amount',
-                            maxLength: 50,
-                            minLines: 1,
-                            maxLines: 1,
+                          child: AmountTextField(
+                            hintText: 'Discounted amount',
                             controller: discountedAmountController,
+                            obscureText: false,
+                            keyBoardType:
+                                const TextInputType.numberWithOptions(),
                           ),
                         ),
                       ],
@@ -467,6 +470,7 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
                   return const SizedBox(height: 10);
                 },
               ),
+              const SizedBox(height: 10),
               CustomTextArea(
                   hint: 'Description', controller: descriptionController),
             ],

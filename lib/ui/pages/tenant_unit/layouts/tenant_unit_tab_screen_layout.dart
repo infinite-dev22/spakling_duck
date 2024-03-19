@@ -166,10 +166,11 @@ class TenantUnitTabScreenLayout extends StatelessWidget {
                       'start: ${DateFormat('dd-MM-yy').format(tenantUnit.fromDate!)} to: ${DateFormat('dd-MM-yy').format(tenantUnit.toDate!)}',
                       style: AppTheme.subText,
                     ),
-                    Text(
-                      '@${tenantUnit.currencyModel!.code} ${amountFormatter.format(tenantUnit.amount.toString())} ${tenantUnit.period!.name}',
-                      style: AppTheme.subText,
-                    ),
+                    // if (tenantUnit.currencyModel != null)
+                      Text(
+                        '@${(tenantUnit.currencyModel != null) ? tenantUnit.currencyModel!.code : ''} ${amountFormatter.format(tenantUnit.amount.toString())} ${tenantUnit.period!.name}',
+                        style: AppTheme.subText,
+                      ),
                   ],
                 ),
               ),

@@ -1,6 +1,7 @@
-import 'package:smart_rent/ui/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pattern_formatter/numeric_formatter.dart';
+import 'package:smart_rent/ui/themes/app_theme.dart';
 
 class AmountTextField extends StatelessWidget {
   final TextEditingController? controller;
@@ -42,10 +43,11 @@ class AmountTextField extends StatelessWidget {
         inputFormatters: inputFormatters ??
             [
               LengthLimitingTextInputFormatter(35),
+              ThousandsFormatter(),
             ],
         cursorColor: AppTheme.gray45,
         validator: (val) =>
-        val!.isEmpty ? 'Required field, Please fill in.' : null,
+            val!.isEmpty ? 'Required field, Please fill in.' : null,
         controller: controller,
         onChanged: onChanged,
         obscureText: obscureText,
@@ -54,20 +56,20 @@ class AmountTextField extends StatelessWidget {
         decoration: InputDecoration(
           focusedBorder: (borderSide != BorderSide.none)
               ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: AppTheme.gray45,
-              width: 2.0,
-            ),
-          )
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppTheme.gray45,
+                    width: 2.0,
+                  ),
+                )
               : null,
           enabledBorder: (borderSide != BorderSide.none)
               ? OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: AppTheme.gray45,
-            ),
-          )
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: AppTheme.gray45,
+                  ),
+                )
               : null,
           border: OutlineInputBorder(
             borderSide: borderSide,
@@ -81,7 +83,6 @@ class AmountTextField extends StatelessWidget {
             color: AppTheme.inActiveColor,
             fontSize: 16,
           ),
-
         ),
         keyboardType: keyBoardType ?? TextInputType.emailAddress,
         onTap: onTap,
