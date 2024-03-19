@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_rent/ui/global/global.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/no_data_widget.dart';
@@ -19,6 +20,7 @@ class PropertiesLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<PropertyBloc, PropertyState>(
       builder: (context, state) {
+        globalPropertiesContext = context;
         if (state.status.isInitial) {
           context.read<PropertyBloc>().add(LoadPropertiesEvent());
         }

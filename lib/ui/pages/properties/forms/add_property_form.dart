@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:smart_rent/data_layer/models/smart_model.dart';
+import 'package:smart_rent/ui/global/global.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/form/property_form_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/property_categories/bloc/property_category_bloc.dart';
@@ -24,7 +25,7 @@ class AddPropertyForm extends StatefulWidget {
   final bool isUpdate;
 
   const AddPropertyForm(
-      {super.key, required this.addButtonText, required this.isUpdate});
+      {super.key, required this.addButtonText, required this.isUpdate,});
 
   @override
   State<AddPropertyForm> createState() => _AddPropertyFormState();
@@ -72,7 +73,7 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
           children: [
             BlocListener<PropertyFormBloc, PropertyFormState>(
               listener: (context, state) {
-                if (state.status == PropertyStatus.successAdd) {
+                if (state.status == PropertyFormStatus.success) {
                   Fluttertoast.showToast(
                       msg: 'Property Added Successfully',
                       backgroundColor: Colors.green,
@@ -85,13 +86,14 @@ class _AddPropertyFormState extends State<AddPropertyForm> {
                   selectedPropertyCategoryId = 0;
                   propertyPic = File('');
                   print('Pic = ${propertyPic!.path}');
+                  context.read<PropertyBloc>().add(LoadPropertiesEvent());
                   Navigator.pop(context);
                 }
-                if (state.status == PropertyStatus.accessDeniedAdd) {
+                if (state.status == PropertyFormStatus.accessDenied) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }
-                if (state.status == PropertyStatus.errorAdd) {
+                if (state.status == PropertyFormStatus.error) {
                   Fluttertoast.showToast(
                       msg: state.message.toString(), gravity: ToastGravity.TOP);
                 }

@@ -8,8 +8,6 @@ class PropertyFormEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadPropertiesEvent extends PropertyFormEvent {}
-
 class LoadSinglePropertyFormEvent extends PropertyFormEvent {
   final int id;
 

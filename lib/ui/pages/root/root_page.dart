@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_rent/ui/pages/dashboard/dashboard_page.dart';
@@ -144,8 +145,9 @@ class _RootPageState extends State<RootPage> {
                           builder: (context) {
                             return BlocProvider(
                               create: (context) => PropertyFormBloc(),
-                              child: const AddPropertyForm(
-                                  addButtonText: 'Add', isUpdate: false),
+                              child:  AddPropertyForm(
+                                  addButtonText: 'Add', isUpdate: false,
+                              ),
                             );
                           });
                     },

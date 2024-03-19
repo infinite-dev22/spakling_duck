@@ -93,6 +93,7 @@ class _AddHomeTenantUnitFormState extends State<AddHomeTenantUnitForm> {
           const LoadingWidget();
         }
         if (state.status.isSuccess) {
+          context.read<PropertyBloc>().add(LoadPropertiesEvent());
           Navigator.pop(context);
         }
         if (state.status.isError) {
