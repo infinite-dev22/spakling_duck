@@ -32,9 +32,9 @@ class PropertiesLayout extends StatelessWidget {
           );
         }
         if (state.status.isSuccess) {
-          Timer.run(() async {
-            context.read<PropertyBloc>().add(RefreshPropertiesEvent());
-          });
+          // Timer.run(() async {
+          //   context.read<PropertyBloc>().add(RefreshPropertiesEvent());
+          // });
           return const SuccessWidget();
         }
         if (state.status.isEmpty) {

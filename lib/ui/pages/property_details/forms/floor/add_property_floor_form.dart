@@ -17,9 +17,10 @@ class AddPropertyFloorForm extends StatefulWidget {
   final String addButtonText;
   final bool isUpdate;
   final Property property;
+  // final BuildContext context;
 
   const AddPropertyFloorForm(
-      {super.key, required this.addButtonText, required this.isUpdate, required this.property});
+      {super.key, required this.addButtonText, required this.isUpdate, required this.property, });
 
   @override
   State<AddPropertyFloorForm> createState() => _AddPropertyFloorFormState();
@@ -65,7 +66,7 @@ class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
           children: [
             BlocListener<FloorBloc, FloorState>(
               listener: (context, state) {
-                if (state.status == FloorStatus.successAdd) {
+                if (state.status == FloorStatus.success) {
                   Fluttertoast.showToast(
                       msg: 'Floor Added Successfully',
                       backgroundColor: Colors.green,
@@ -73,6 +74,8 @@ class _AddPropertyFloorFormState extends State<AddPropertyFloorForm> {
                   floorController.clear();
                   floorDescriptionController.clear();
                   _propertyModelCont.clearDropDown();
+                  context.read<FloorBloc>().add(LoadAllFloorsEvent(widget.property.id!));
+                  print('Floor current status1= ${state.status}');
                   Navigator.pop(context);
                 }
                 if (state.status == FloorStatus.accessDeniedAdd) {

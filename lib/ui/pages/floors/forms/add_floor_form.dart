@@ -67,7 +67,7 @@ class _AddFloorFormState extends State<AddFloorForm> {
           children: [
             BlocListener<FloorBloc, FloorState>(
               listener: (context, state) {
-                if (state.status == FloorStatus.successAdd) {
+                if (state.status == FloorStatus.success) {
                   Fluttertoast.showToast(
                       msg: 'Floor Added Successfully',
                       backgroundColor: Colors.green,

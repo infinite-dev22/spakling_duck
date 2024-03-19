@@ -26,8 +26,9 @@ class FloorsSuccessWidget extends StatelessWidget {
 
   Widget _buildBody() {
     return BlocConsumer<FloorBloc, FloorState>(
+
       listener: (context, state) {
-        // TODO: implement listener
+
       },
       builder: (context, state) {
         if (state.status.isInitial) {
@@ -80,9 +81,9 @@ class FloorsSuccessWidget extends StatelessWidget {
           );
         }
         if (state.status.isSuccess) {
-          Timer.run(() async {
-            context.read<FloorBloc>().add(RefreshFloorsEvent(property.id!));
-          });
+          // Timer.run(() async {
+          //   context.read<FloorBloc>().add(RefreshFloorsEvent(property.id!));
+          // });
           return Scaffold(
             backgroundColor: AppTheme.appBgColor,
             appBar: _buildAppTitle(),

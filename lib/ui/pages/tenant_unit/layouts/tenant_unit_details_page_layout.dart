@@ -36,32 +36,37 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
 
   late List<PaymentSchedulesModel> filteredData;
 
-  // void filterData(String query) {
-  //   setState(() {
-  //     filteredData = widget.tenantUnitModel.paymentScheduleModel!
-  //         .where((schedule) =>
-  //     DateFormat('d MMM, yy').format(schedule.fromDate!).toString().toLowerCase().contains(query.toLowerCase()) || DateFormat('d MMM, yy').format(schedule.fromDate!).toLowerCase().contains(query.toLowerCase()))
-  //         .toList();
-  //   });
-  //
-  //   print('New Q = $query');
-  // }
-
   void filterData(String query) {
-    setState(() {
-      filteredData = widget.tenantUnitModel.paymentScheduleModel!
-          .where((schedule) =>
-      DateFormat('d MMM, yy')
-          .format(schedule.fromDate!)
-          .toString()
-          .toLowerCase()
-          .contains(query.toLowerCase()) ||
-          DateFormat('d MMM, yy')
-              .format(schedule.fromDate!)
-              .toLowerCase()
-              .contains(query.toLowerCase()))
-          .toList();
-    });
+
+  setState(() {
+    filteredData.where((schedule) =>
+    DateFormat('d MMM, yy')
+        .format(schedule.fromDate!)
+        .toString()
+        .toLowerCase()
+        .contains(query.toLowerCase()) ||
+        DateFormat('d MMM, yy')
+            .format(schedule.fromDate!)
+            .toLowerCase()
+            .contains(query.toLowerCase()))
+        .toList();
+  });
+
+    print('My Filtered List $filteredData');
+    // setState(() {
+    //   filteredData = widget.tenantUnitModel.paymentScheduleModel!
+    //       .where((schedule) =>
+    //   DateFormat('d MMM, yy')
+    //       .format(schedule.fromDate!)
+    //       .toString()
+    //       .toLowerCase()
+    //       .contains(query.toLowerCase()) ||
+    //       DateFormat('d MMM, yy')
+    //           .format(schedule.fromDate!)
+    //           .toLowerCase()
+    //           .contains(query.toLowerCase()))
+    //       .toList();
+    // });
   }
 
   @override

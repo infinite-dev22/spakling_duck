@@ -63,14 +63,18 @@ class FloorBloc extends Bloc<FloorEvent, FloorState> {
     emit(state.copyWith(status: FloorStatus.loadingAdd, isFloorLoading: true));
     await FloorDtoImpl.addFloor(currentUserToken.toString(), event.propertyId,
             event.floorName, event.description)
-        .then((response) {
+        .then((response) async {
       print('success ${response.floorCreatedViaApi}');
 
       if (response != null) {
-        emit(state.copyWith(
-            status: FloorStatus.successAdd,
-            isFloorLoading: false,
-            floorResponseModel: response));
+        // emit(state.copyWith(
+        //     status: FloorStatus.success,
+        //     isFloorLoading: false,
+        //     floorResponseModel: response,));
+        final refreshedData = await FloorRepoImpl().getALlFloors(currentUserToken.toString(), event.propertyId);
+        print('New Refreshed Floors =$refreshedData');
+
+        emit(state.copyWith(status: FloorStatus.success, isFloorLoading: false, floorResponseModel: response, floors: refreshedData));
       } else {
         emit(state.copyWith(
           status: FloorStatus.accessDeniedAdd,
