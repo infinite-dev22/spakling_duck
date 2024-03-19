@@ -128,11 +128,16 @@ class FloorsSuccessWidget extends StatelessWidget {
             isScrollControlled: true,
             context: parentContext,
             builder: (context) {
-              return AddPropertyFloorForm(
-                parentContext: parentContext,
-                addButtonText: 'Add',
-                isUpdate: false,
-                property: property,
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (context) => FloorFormBloc()),
+                ],
+                child: AddPropertyFloorForm(
+                  parentContext: parentContext,
+                  addButtonText: 'Add',
+                  isUpdate: false,
+                  property: property,
+                ),
               );
             }),
         backgroundColor: AppTheme.primary,

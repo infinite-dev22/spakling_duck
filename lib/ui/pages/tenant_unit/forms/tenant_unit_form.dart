@@ -71,31 +71,35 @@ class _TenantUnitFormState extends State<TenantUnitForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TenantUnitFormBloc, TenantUnitFormState>(
-      builder: (context, state) {
-        return _buildBody(context, state);
-      },
-      listener: (context, state) {
-        if (state.status.isLoading) {
-          const LoadingWidget();
-        }
-        if (state.status.isSuccess) {
-          widget.parentContext
-              .read<TenantUnitBloc>()
-              .add(LoadTenantUnitsEvent(widget.property.id!));
-          Navigator.pop(context);
-        }
-        if (state.status.isError) {
-          Fluttertoast.showToast(
-              msg: state.message!,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
-      },
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20)
+          .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: BlocConsumer<TenantUnitFormBloc, TenantUnitFormState>(
+        builder: (context, state) {
+          return _buildBody(context, state);
+        },
+        listener: (context, state) {
+          if (state.status.isLoading) {
+            const LoadingWidget();
+          }
+          if (state.status.isSuccess) {
+            widget.parentContext
+                .read<TenantUnitBloc>()
+                .add(LoadTenantUnitsEvent(widget.property.id!));
+            Navigator.pop(context);
+          }
+          if (state.status.isError) {
+            Fluttertoast.showToast(
+                msg: state.message!,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        },
+      ),
     );
   }
 

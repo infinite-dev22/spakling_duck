@@ -106,15 +106,15 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                     Container(
-                       child: Row(
-                         children: [
-                           Text('Unit:', style: AppTheme.appTitle7,),
-                           SizedBox(width: 5,),
-                           Text(widget.tenantUnitModel.unit!.name.toString(), style: AppTheme.blueAppTitle3,)
-                         ],
-                       ),
-                     ),
+                      Container(
+                        child: Row(
+                          children: [
+                            Text('Unit:', style: AppTheme.appTitle7,),
+                            SizedBox(width: 5,),
+                            Text(widget.tenantUnitModel.unit!.name.toString(), style: AppTheme.blueAppTitle3,)
+                          ],
+                        ),
+                      ),
                       Container(
                         child: Row(
                           children: [
@@ -246,7 +246,7 @@ class _TenantUnitDetailsPageLayoutState extends State<TenantUnitDetailsPageLayou
 
                 : Expanded(child: _buildDataTable(filteredData)),
 
-                // : Expanded(child: MyDataTable(tenantUnitModel: widget.tenantUnitModel)),
+            // : Expanded(child: MyDataTable(tenantUnitModel: widget.tenantUnitModel)),
 
             // widget.tenantUnitModel.paymentScheduleModel!.isEmpty
             //     ? Center(child: Text('No Payment Schedules', style: AppTheme.blueAppTitle3,),)
