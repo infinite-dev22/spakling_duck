@@ -175,685 +175,681 @@ class _AddHomePaymentFormState extends State<AddHomePaymentForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20)
-          .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 20)
-              .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Column(
-            children: [
-              MultiBlocListener(
-                listeners: [
-                  BlocListener<PaymentBloc, PaymentState>(
-                    listener: (context, state) {
-                      if (state.status == PaymentFormStatus.success) {
-                        selectedDate1.value = DateTime.now();
-                        selectedDate2.value = DateTime.now();
-                        amountController.clear();
-                        paidController.clear();
-                        balanceController.clear();
-                        initialBalance = 0;
-                        selectedTenantUnitId = 0;
-                        selectedPaymentScheduleId = 0;
-                        selectedPaymentModeId = 0;
-                        selectedPaymentAccountId = 0;
-                        Fluttertoast.showToast(
-                            msg: state.message.toString(),
-                            backgroundColor: Colors.green,
-                            gravity: ToastGravity.TOP);
-
-                        context
-                            .read<PaymentBloc>()
-                            .add(LoadAllPayments(selectedPropertyId));
-                        context.read<PaymentSchedulesBloc>().add(
-                            LoadAllPaymentSchedulesEvent(
-                                selectedTenantUnitId, selectedPropertyId));
-                        _controller.options.clear();
-                        Navigator.pop(context);
-                      }
-                      if (state.status == PaymentFormStatus.accessDenied) {
-                        Fluttertoast.showToast(
-                            msg: state.message.toString(),
-                            gravity: ToastGravity.TOP);
-                      }
-                      if (state.status == PaymentFormStatus.error) {
-                        Fluttertoast.showToast(
-                            msg: state.message.toString(),
-                            gravity: ToastGravity.TOP);
-                      }
-                    },
-                  ),
-                  BlocListener<PaymentSchedulesBloc, PaymentSchedulesState>(
-                    listener: (context, state) {},
-                  ),
-                ],
-                child: FormTitle(
-                  name: '${widget.isUpdate ? "Edit" : "New"}  Payment',
-                  addButtonText: widget.isUpdate ? "Update" : "Add",
-                  onSave: () {
-                    if (paidController.text.isEmpty) {
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 20)
+            .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          children: [
+            MultiBlocListener(
+              listeners: [
+                BlocListener<PaymentBloc, PaymentState>(
+                  listener: (context, state) {
+                    if (state.status == PaymentFormStatus.success) {
+                      selectedDate1.value = DateTime.now();
+                      selectedDate2.value = DateTime.now();
+                      amountController.clear();
+                      paidController.clear();
+                      balanceController.clear();
+                      initialBalance = 0;
+                      selectedTenantUnitId = 0;
+                      selectedPaymentScheduleId = 0;
+                      selectedPaymentModeId = 0;
+                      selectedPaymentAccountId = 0;
                       Fluttertoast.showToast(
-                          msg: 'paid amount required', gravity: ToastGravity.TOP);
-                    } else if (balanceController.text.isEmpty) {
-                      Fluttertoast.showToast(
-                          msg: 'balance amount required',
+                          msg: state.message.toString(),
+                          backgroundColor: Colors.green,
                           gravity: ToastGravity.TOP);
-                    } else if (paymentDateController.text.isEmpty) {
-                      Fluttertoast.showToast(
-                          msg: 'payment date required',
-                          gravity: ToastGravity.TOP);
-                    } else if (amountController.text.isEmpty) {
-                      Fluttertoast.showToast(
-                          msg: 'amount required', gravity: ToastGravity.TOP);
-                    } else if (selectedTenantUnitId == 0) {
-                      Fluttertoast.showToast(
-                          msg: 'please select a tenant unit',
-                          gravity: ToastGravity.TOP);
-                    } else if (int.parse(paidController.text
-                            .trim()
-                            .replaceAll(',', '')
-                            .toString()) >
-                        int.parse(amountController.text
-                            .trim()
-                            .replaceAll(',', '')
-                            .toString())) {
-                      Fluttertoast.showToast(
-                          msg: 'paid amount exceeds balance',
-                          gravity: ToastGravity.TOP);
-                    } else {
-                      print('MY INITIAL BALANCE IS == $initialBalance');
-                      var postedBalance = initialBalance -
-                          int.parse(paidController.text
-                              .trim()
-                              .replaceAll(',', '')
-                              .toString());
 
-                      List<String> stringScheduleList = myPaymentSchedules
-                          .map((item) => item.id.toString())
-                          .toList();
-
-                      print('MY Posted Balance == $postedBalance');
-                      print('MY Cont options = ${_controller.options}');
-                      print('amount = ${amountController.text}');
-                      print('paid = $paidController');
-                      print('balance = $balanceController');
-                      print('selectedTenantUnitId = $selectedTenantUnitId');
-                      print(
-                          'selectedPaymentAccountId = $selectedPaymentAccountId');
-                      print('selectedPaymentModeId = $selectedPaymentModeId');
-                      print(
-                          'paymentModeModelID = ${paymentModeModel!.id!.toInt()}');
-                      print(
-                          'basedSelectedpaymentModeModelID = ${selectedPaymentModeId == 0 ? paymentModeModel!.id!.toInt() : selectedPaymentModeId}');
-                      print('stringScheduleList = $stringScheduleList');
-
-                      context.read<PaymentFormBloc>().add(AddPaymentsEvent(
-                            currentUserToken.toString(),
-                            paidController.text
-                                .trim()
-                                .replaceAll(',', '')
-                                .toString(),
-                            amountController.text
-                                .trim()
-                                .replaceAll(',', '')
-                                .toString(),
-                            paymentDateController.text.trim(),
-                            selectedTenantUnitId,
-                            selectedPaymentAccountId == 0
-                                ? paymentAccountsModel!.id!.toInt()
-                                : selectedPaymentModeId,
-                            selectedPaymentModeId == 0
-                                ? paymentModeModel!.id!.toInt()
-                                : selectedPaymentModeId,
-                            selectedPropertyId,
-                            stringScheduleList,
-                          ));
+                      context
+                          .read<PaymentBloc>()
+                          .add(LoadAllPayments(selectedPropertyId));
+                      context.read<PaymentSchedulesBloc>().add(
+                          LoadAllPaymentSchedulesEvent(
+                              selectedTenantUnitId, selectedPropertyId));
+                      _controller.options.clear();
+                      Navigator.pop(context);
+                    }
+                    if (state.status == PaymentFormStatus.accessDenied) {
+                      Fluttertoast.showToast(
+                          msg: state.message.toString(),
+                          gravity: ToastGravity.TOP);
+                    }
+                    if (state.status == PaymentFormStatus.error) {
+                      Fluttertoast.showToast(
+                          msg: state.message.toString(),
+                          gravity: ToastGravity.TOP);
                     }
                   },
-                  isElevated: true,
-                  onCancel: () {
-                    selectedDate1.value = DateTime.now();
-                    selectedDate2.value = DateTime.now();
-                    amountController.clear();
-                    paidController.clear();
-                    balanceController.clear();
-                    initialBalance = 0;
-                    Navigator.pop(context);
-                  },
                 ),
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    // FocusManager.instance.primaryFocus?.unfocus();
-                  },
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (scrollNotification) {
-                      if (scrollController.position.userScrollDirection ==
-                          ScrollDirection.reverse) {
-                        setState(() {
-                          isTitleElevated = true;
-                        });
-                      } else if (scrollController.position.userScrollDirection ==
-                          ScrollDirection.forward) {
-                        if (scrollController.position.pixels ==
-                            scrollController.position.maxScrollExtent) {
-                          setState(() {
-                            isTitleElevated = false;
-                          });
-                        }
-                      }
-                      return true;
-                    },
-                    child: ListView(
-                      controller: scrollController,
-                      padding: const EdgeInsets.all(8),
-                      children: [
-                        LayoutBuilder(builder: (context, constraints) {
-                          return Form(
-                            child: Column(
-                              children: [
-                                TextFieldLabelWidget(label: 'Date'),
-                                AuthTextField(
-                                  controller: paymentDateController,
-                                  hintText: 'Payment Date',
-                                  obscureText: false,
-                                  onTap: () {
-                                    _selectPaymentDate(context);
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                BlocListener<PaymentSchedulesBloc, PaymentSchedulesState>(
+                  listener: (context, state) {},
+                ),
+              ],
+              child: FormTitle(
+                name: '${widget.isUpdate ? "Edit" : "New"}  Payment',
+                addButtonText: widget.isUpdate ? "Update" : "Add",
+                onSave: () {
+                  if (paidController.text.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: 'paid amount required', gravity: ToastGravity.TOP);
+                  } else if (balanceController.text.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: 'balance amount required',
+                        gravity: ToastGravity.TOP);
+                  } else if (paymentDateController.text.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: 'payment date required',
+                        gravity: ToastGravity.TOP);
+                  } else if (amountController.text.isEmpty) {
+                    Fluttertoast.showToast(
+                        msg: 'amount required', gravity: ToastGravity.TOP);
+                  } else if (selectedTenantUnitId == 0) {
+                    Fluttertoast.showToast(
+                        msg: 'please select a tenant unit',
+                        gravity: ToastGravity.TOP);
+                  } else if (int.parse(paidController.text
+                          .trim()
+                          .replaceAll(',', '')
+                          .toString()) >
+                      int.parse(amountController.text
+                          .trim()
+                          .replaceAll(',', '')
+                          .toString())) {
+                    Fluttertoast.showToast(
+                        msg: 'paid amount exceeds balance',
+                        gravity: ToastGravity.TOP);
+                  } else {
+                    print('MY INITIAL BALANCE IS == $initialBalance');
+                    var postedBalance = initialBalance -
+                        int.parse(paidController.text
+                            .trim()
+                            .replaceAll(',', '')
+                            .toString());
 
-                                TextFieldLabelWidget(label: 'Property'),
-                                BlocBuilder<PropertyBloc, PropertyState>(
+                    List<String> stringScheduleList = myPaymentSchedules
+                        .map((item) => item.id.toString())
+                        .toList();
+
+                    print('MY Posted Balance == $postedBalance');
+                    print('MY Cont options = ${_controller.options}');
+                    print('amount = ${amountController.text}');
+                    print('paid = $paidController');
+                    print('balance = $balanceController');
+                    print('selectedTenantUnitId = $selectedTenantUnitId');
+                    print(
+                        'selectedPaymentAccountId = $selectedPaymentAccountId');
+                    print('selectedPaymentModeId = $selectedPaymentModeId');
+                    print(
+                        'paymentModeModelID = ${paymentModeModel!.id!.toInt()}');
+                    print(
+                        'basedSelectedpaymentModeModelID = ${selectedPaymentModeId == 0 ? paymentModeModel!.id!.toInt() : selectedPaymentModeId}');
+                    print('stringScheduleList = $stringScheduleList');
+
+                    context.read<PaymentFormBloc>().add(AddPaymentsEvent(
+                          currentUserToken.toString(),
+                          paidController.text
+                              .trim()
+                              .replaceAll(',', '')
+                              .toString(),
+                          amountController.text
+                              .trim()
+                              .replaceAll(',', '')
+                              .toString(),
+                          paymentDateController.text.trim(),
+                          selectedTenantUnitId,
+                          selectedPaymentAccountId == 0
+                              ? paymentAccountsModel!.id!.toInt()
+                              : selectedPaymentModeId,
+                          selectedPaymentModeId == 0
+                              ? paymentModeModel!.id!.toInt()
+                              : selectedPaymentModeId,
+                          selectedPropertyId,
+                          stringScheduleList,
+                        ));
+                  }
+                },
+                isElevated: true,
+                onCancel: () {
+                  selectedDate1.value = DateTime.now();
+                  selectedDate2.value = DateTime.now();
+                  amountController.clear();
+                  paidController.clear();
+                  balanceController.clear();
+                  initialBalance = 0;
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  // FocusManager.instance.primaryFocus?.unfocus();
+                },
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (scrollNotification) {
+                    if (scrollController.position.userScrollDirection ==
+                        ScrollDirection.reverse) {
+                      setState(() {
+                        isTitleElevated = true;
+                      });
+                    } else if (scrollController.position.userScrollDirection ==
+                        ScrollDirection.forward) {
+                      if (scrollController.position.pixels ==
+                          scrollController.position.maxScrollExtent) {
+                        setState(() {
+                          isTitleElevated = false;
+                        });
+                      }
+                    }
+                    return true;
+                  },
+                  child: ListView(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(8),
+                    children: [
+                      LayoutBuilder(builder: (context, constraints) {
+                        return Form(
+                          child: Column(
+                            children: [
+                              TextFieldLabelWidget(label: 'Date'),
+                              AuthTextField(
+                                controller: paymentDateController,
+                                hintText: 'Payment Date',
+                                obscureText: false,
+                                onTap: () {
+                                  _selectPaymentDate(context);
+                                },
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+
+                              TextFieldLabelWidget(label: 'Property'),
+                              BlocBuilder<PropertyBloc, PropertyState>(
+                                builder: (context, state) {
+                                  if (state.status == PropertyStatus.initial) {
+                                    context
+                                        .read<PropertyBloc>()
+                                        .add(LoadPropertiesEvent());
+                                  }
+                                  if (state.status == PropertyStatus.empty) {
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: AuthTextField(
+                                        hintText: 'No Properties',
+                                        obscureText: false,
+                                        enabled: false,
+                                      ),
+                                    );
+                                  }
+                                  if (state.status == PropertyStatus.error) {
+                                    return Center(
+                                      child: Text('An Error Occurred'),
+                                    );
+                                  }
+                                  return SearchablePropertyModelListDropDown<
+                                      Property>(
+                                    hintText: 'Property',
+                                    menuItems: state.properties == null
+                                        ? []
+                                        : state.properties!,
+                                    controller: _propertyModelCont,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedPropertyId = value.value.id;
+                                      });
+                                      context.read<TenantUnitBloc>().add(
+                                          LoadTenantUnitsEvent(
+                                              selectedPropertyId));
+                                      print('Property is $selectedPropertyId}');
+                                    },
+                                  );
+                                },
+                              ),
+                              // const SizedBox(
+                              //   height: 10,
+                              // ),
+
+                              TextFieldLabelWidget(label: 'Tenant/ Unit'),
+                              BlocListener<PaymentSchedulesBloc,
+                                  PaymentSchedulesState>(
+                                listener: (context, state) {
+                                  if (state.status ==
+                                      PaymentSchedulesStatus.initial) {
+                                    context.read<PaymentSchedulesBloc>().add(
+                                        LoadAllPaymentSchedulesEvent(
+                                            selectedTenantUnitId,
+                                            selectedPropertyId));
+                                  }
+                                },
+                                child: BlocBuilder<TenantUnitBloc,
+                                    TenantUnitState>(
                                   builder: (context, state) {
-                                    if (state.status == PropertyStatus.initial) {
-                                      context
-                                          .read<PropertyBloc>()
-                                          .add(LoadPropertiesEvent());
-                                    }
-                                    if (state.status == PropertyStatus.empty) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 10),
-                                        child: AuthTextField(
-                                          hintText: 'No Properties',
-                                          obscureText: false,
-                                          enabled: false,
-                                        ),
+                                    if (state.status ==
+                                        TenantUnitStatus.initial) {
+                                      context.read<TenantUnitBloc>().add(
+                                          LoadTenantUnitsEvent(
+                                              selectedPropertyId));
+                                    } else if (state.status ==
+                                        TenantUnitStatus.loading) {
+                                      return SmartCaseTextField(
+                                        hint: 'Loading tenant units',
+                                        controller: TextEditingController(),
+                                        readOnly: true,
                                       );
                                     }
-                                    if (state.status == PropertyStatus.error) {
-                                      return Center(
-                                        child: Text('An Error Occurred'),
-                                      );
-                                    }
-                                    return SearchablePropertyModelListDropDown<
-                                        Property>(
-                                      hintText: 'Property',
-                                      menuItems: state.properties == null
+                                    return SearchableTenantUnitDropDown<
+                                        TenantUnitModel>(
+                                      hintText: 'Tenant Unit',
+                                      menuItems: state.tenantUnits == null
                                           ? []
-                                          : state.properties!,
-                                      controller: _propertyModelCont,
+                                          : state.tenantUnits!,
+                                      controller: tenantUnitsDropdownCont,
                                       onChanged: (value) {
-                                        setState(() {
-                                          selectedPropertyId = value.value.id;
+                                        print(value.value.id);
+
+                                        print(
+                                            'My Amounts = ${value.value.getAmount()}');
+                                        setPaymentScheduleId(value.value.id)
+                                            .then((newValue) {
+                                          print(
+                                              'My Selected TENANT UNIT ID IS ++ $newValue');
+                                          context
+                                              .read<PaymentSchedulesBloc>()
+                                              .add(LoadAllPaymentSchedulesEvent(
+                                                  selectedTenantUnitId,
+                                                  selectedPropertyId));
                                         });
-                                        context.read<TenantUnitBloc>().add(
-                                            LoadTenantUnitsEvent(
-                                                selectedPropertyId));
-                                        print('Property is $selectedPropertyId}');
+
+                                        paidController.clear();
+                                        amountController.clear();
+                                        balanceController.clear();
                                       },
                                     );
                                   },
                                 ),
-                                // const SizedBox(
-                                //   height: 10,
-                                // ),
+                              ),
 
-                                TextFieldLabelWidget(label: 'Tenant/ Unit'),
-                                BlocListener<PaymentSchedulesBloc,
-                                    PaymentSchedulesState>(
-                                  listener: (context, state) {
-                                    if (state.status ==
-                                        PaymentSchedulesStatus.initial) {
-                                      context.read<PaymentSchedulesBloc>().add(
-                                          LoadAllPaymentSchedulesEvent(
-                                              selectedTenantUnitId,
-                                              selectedPropertyId));
-                                    }
-                                  },
-                                  child: BlocBuilder<TenantUnitBloc,
-                                      TenantUnitState>(
-                                    builder: (context, state) {
-                                      if (state.status ==
-                                          TenantUnitStatus.initial) {
-                                        context.read<TenantUnitBloc>().add(
-                                            LoadTenantUnitsEvent(
-                                                selectedPropertyId));
-                                      } else if (state.status ==
-                                          TenantUnitStatus.loading) {
-                                        return SmartCaseTextField(
-                                          hint: 'Loading tenant units',
-                                          controller: TextEditingController(),
-                                          readOnly: true,
-                                        );
-                                      }
-                                      return SearchableTenantUnitDropDown<
-                                          TenantUnitModel>(
-                                        hintText: 'Tenant Unit',
-                                        menuItems: state.tenantUnits == null
-                                            ? []
-                                            : state.tenantUnits!,
-                                        controller: tenantUnitsDropdownCont,
-                                        onChanged: (value) {
-                                          print(value.value.id);
+                              TextFieldLabelWidget(label: 'Period'),
+                              BlocBuilder<PaymentSchedulesBloc,
+                                  PaymentSchedulesState>(
+                                builder: (context, state) {
+                                  if (state.status ==
+                                      PaymentSchedulesStatus.initial) {
+                                    context.read<PaymentSchedulesBloc>().add(
+                                        LoadAllPaymentSchedulesEvent(
+                                            selectedTenantUnitId,
+                                            selectedPropertyId));
+                                  }
+                                  if (state.status ==
+                                      PaymentSchedulesStatus.success) {
+                                    print("ITEMS: ${state.paymentSchedules}");
 
-                                          print(
-                                              'My Amounts = ${value.value.getAmount()}');
-                                          setPaymentScheduleId(value.value.id)
-                                              .then((newValue) {
-                                            print(
-                                                'My Selected TENANT UNIT ID IS ++ $newValue');
-                                            context
-                                                .read<PaymentSchedulesBloc>()
-                                                .add(LoadAllPaymentSchedulesEvent(
-                                                    selectedTenantUnitId,
-                                                    selectedPropertyId));
-                                          });
+                                    return MultiSelectDialogField<
+                                        PaymentTenantUnitScheduleModel>(
+                                      searchable: true,
+                                      searchHint: 'search for schedule',
+                                      backgroundColor: AppTheme.appBgColor,
+                                      title: Text(
+                                        'Payment Schedules',
+                                        style: AppTheme.appTitle7,
+                                      ),
+                                      items: state.paymentSchedules == null
+                                          ? []
+                                          : state.paymentSchedules!
+                                              .map((schedule) => MultiSelectItem(
+                                                  schedule,
+                                                  '${schedule.fromdate}-${schedule.todate} || ${schedule.balance}'))
+                                              .toList(),
+                                      listType: MultiSelectListType.CHIP,
+                                      decoration: BoxDecoration(
+                                          color: AppTheme.itemBgColor,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      onConfirm: (values) {
+                                        selectedSchedules = values;
 
+                                        if (selectedSchedules.isEmpty) {
                                           paidController.clear();
                                           amountController.clear();
                                           balanceController.clear();
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
+                                        } else {
+                                          print(
+                                              'My Total balance = $sumBalances');
+                                          amountController.text =
+                                              amountFormatter.format(
+                                                  sumBalances.toString());
+                                          paidController.text = amountFormatter
+                                              .format(sumBalances.toString());
+                                          balanceController.text = (int.parse(
+                                                      amountController.text
+                                                          .trim()) -
+                                                  int.parse(paidController.text
+                                                      .trim()))
+                                              .toString();
+                                        }
 
-                                TextFieldLabelWidget(label: 'Period'),
-                                BlocBuilder<PaymentSchedulesBloc,
-                                    PaymentSchedulesState>(
-                                  builder: (context, state) {
-                                    if (state.status ==
-                                        PaymentSchedulesStatus.initial) {
-                                      context.read<PaymentSchedulesBloc>().add(
-                                          LoadAllPaymentSchedulesEvent(
-                                              selectedTenantUnitId,
-                                              selectedPropertyId));
-                                    }
-                                    if (state.status ==
-                                        PaymentSchedulesStatus.success) {
-                                      print("ITEMS: ${state.paymentSchedules}");
+                                        print(
+                                            'My New selected schedules= $selectedSchedules');
+                                      },
+                                      onSelectionChanged: (options) {
+                                        for (var element in options) {
+                                          print(
+                                              'My selected element = $element');
 
-                                      return MultiSelectDialogField<
-                                          PaymentTenantUnitScheduleModel>(
-                                        searchable: true,
-                                        searchHint: 'search for schedule',
-                                        backgroundColor: AppTheme.appBgColor,
-                                        title: Text(
-                                          'Payment Schedules',
-                                          style: AppTheme.appTitle7,
-                                        ),
-                                        items: state.paymentSchedules == null
-                                            ? []
-                                            : state.paymentSchedules!
-                                                .map((schedule) => MultiSelectItem(
-                                                    schedule,
-                                                    '${schedule.fromdate}-${schedule.todate} || ${schedule.balance}'))
-                                                .toList(),
-                                        listType: MultiSelectListType.CHIP,
-                                        decoration: BoxDecoration(
-                                            color: AppTheme.itemBgColor,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        onConfirm: (values) {
-                                          selectedSchedules = values;
+                                          myPaymentSchedules =
+                                              options.map((e) => e).toList();
+                                          print(
+                                              'My Options selected schedules = $myPaymentSchedules');
 
-                                          if (selectedSchedules.isEmpty) {
-                                            paidController.clear();
-                                            amountController.clear();
-                                            balanceController.clear();
-                                          } else {
-                                            print(
-                                                'My Total balance = $sumBalances');
-                                            amountController.text =
-                                                amountFormatter.format(
-                                                    sumBalances.toString());
-                                            paidController.text = amountFormatter
-                                                .format(sumBalances.toString());
-                                            balanceController.text = (int.parse(
-                                                        amountController.text
-                                                            .trim()) -
-                                                    int.parse(paidController.text
-                                                        .trim()))
-                                                .toString();
-                                          }
+                                          myBalances =
+                                              options.map((e) => e).toList();
+                                          myPaymentScheduleIDs =
+                                              options.map((e) => e).toList();
 
                                           print(
-                                              'My New selected schedules= $selectedSchedules');
-                                        },
-                                        onSelectionChanged: (options) {
-                                          for (var element in options) {
-                                            print(
-                                                'My selected element = $element');
+                                              'My selected balances = ${myBalances.map((e) => e.balance).toList()}');
+                                          print(
+                                              'My selected ps ids = ${myPaymentScheduleIDs.map((e) => e.id).toList()}');
 
-                                            myPaymentSchedules =
-                                                options.map((e) => e).toList();
-                                            print(
-                                                'My Options selected schedules = $myPaymentSchedules');
-
-                                            myBalances =
-                                                options.map((e) => e).toList();
-                                            myPaymentScheduleIDs =
-                                                options.map((e) => e).toList();
-
-                                            print(
-                                                'My selected balances = ${myBalances.map((e) => e.balance).toList()}');
-                                            print(
-                                                'My selected ps ids = ${myPaymentScheduleIDs.map((e) => e.id).toList()}');
-
-                                            sumBalances = myBalances
-                                                .map((e) => int.parse(e.balance
-                                                    .replaceAll(',', '')))
-                                                .toList()
-                                                .reduce((value, element) =>
-                                                    value + element);
-                                            // int sumBalances = myBalances.map((e) => e.balance).toList().reduce((value, element) => value + element);
-                                          }
-                                        },
-                                        isDismissible: false,
-                                      );
-                                    }
-
-                                    return AuthTextField(
-                                      hintText: 'No Schedule',
-                                      obscureText: false,
-                                      enabled: false,
+                                          sumBalances = myBalances
+                                              .map((e) => int.parse(e.balance
+                                                  .replaceAll(',', '')))
+                                              .toList()
+                                              .reduce((value, element) =>
+                                                  value + element);
+                                          // int sumBalances = myBalances.map((e) => e.balance).toList().reduce((value, element) => value + element);
+                                        }
+                                      },
+                                      isDismissible: false,
                                     );
-                                  },
-                                ),
+                                  }
 
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                                  return AuthTextField(
+                                    hintText: 'No Schedule',
+                                    obscureText: false,
+                                    enabled: false,
+                                  );
+                                },
+                              ),
 
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextFieldLabelWidget(label: 'Amount Due'),
-                                        SizedBox(
-                                          width: 190,
-                                          child: AmountTextField(
-                                            inputFormatters: [
-                                              ThousandsFormatter(),
-                                            ],
-                                            controller: amountController,
-                                            hintText: 'Amount Due',
-                                            obscureText: false,
-                                            keyBoardType: TextInputType.number,
-                                            enabled: false,
-                                            // suffix: fitValue.value == 0
-                                            //     ? ''
-                                            //     : '$fitValue $fitUnit',
-                                          ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldLabelWidget(label: 'Amount Due'),
+                                      SizedBox(
+                                        width: 190,
+                                        child: AmountTextField(
+                                          inputFormatters: [
+                                            ThousandsFormatter(),
+                                          ],
+                                          controller: amountController,
+                                          hintText: 'Amount Due',
+                                          obscureText: false,
+                                          keyBoardType: TextInputType.number,
+                                          enabled: false,
+                                          // suffix: fitValue.value == 0
+                                          //     ? ''
+                                          //     : '$fitValue $fitUnit',
                                         ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextFieldLabelWidget(
-                                            label: 'Paid Amount'),
-                                        SizedBox(
-                                          width: 190,
-                                          child: AuthTextField(
-                                            inputFormatters: [
-                                              ThousandsFormatter(),
-                                            ],
-                                            controller: paidController,
-                                            hintText: 'Paid',
-                                            obscureText: false,
-                                            keyBoardType: TextInputType.number,
-                                            onChanged: (value) {
-                                              balanceController.text = (int.parse(
-                                                          amountController.text
-                                                              .trim()
-                                                              .toString()
-                                                              .replaceAll(
-                                                                  ',', '')) -
-                                                      int.parse(paidController
-                                                              .text.isEmpty
-                                                          ? '0'
-                                                          : paidController.text
-                                                              .trim()
-                                                              .replaceAll(
-                                                                  ',', '')))
-                                                  .toString()
-                                                  .replaceAll(',', '');
-                                              print(
-                                                  'MY Balance == ${balanceController.text}');
-                                            },
-                                          ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldLabelWidget(
+                                          label: 'Paid Amount'),
+                                      SizedBox(
+                                        width: 190,
+                                        child: AuthTextField(
+                                          inputFormatters: [
+                                            ThousandsFormatter(),
+                                          ],
+                                          controller: paidController,
+                                          hintText: 'Paid',
+                                          obscureText: false,
+                                          keyBoardType: TextInputType.number,
+                                          onChanged: (value) {
+                                            balanceController.text = (int.parse(
+                                                        amountController.text
+                                                            .trim()
+                                                            .toString()
+                                                            .replaceAll(
+                                                                ',', '')) -
+                                                    int.parse(paidController
+                                                            .text.isEmpty
+                                                        ? '0'
+                                                        : paidController.text
+                                                            .trim()
+                                                            .replaceAll(
+                                                                ',', '')))
+                                                .toString()
+                                                .replaceAll(',', '');
+                                            print(
+                                                'MY Balance == ${balanceController.text}');
+                                          },
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
 
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                              const SizedBox(
+                                height: 10,
+                              ),
 
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextFieldLabelWidget(
-                                            label: 'Payment Mode'),
-                                        SizedBox(
-                                          child: BlocBuilder<PaymentModeBloc,
-                                              PaymentModeState>(
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldLabelWidget(
+                                          label: 'Payment Mode'),
+                                      SizedBox(
+                                        child: BlocBuilder<PaymentModeBloc,
+                                            PaymentModeState>(
+                                          builder: (context, state) {
+                                            if (state.status ==
+                                                PaymentModeStatus.initial) {
+                                              context
+                                                  .read<PaymentModeBloc>()
+                                                  .add(LoadAllPaymentModesEvent(
+                                                      selectedPropertyId));
+                                            }
+                                            if (state.status ==
+                                                PaymentModeStatus.success) {
+                                              paymentModeModel = state
+                                                  .paymentModes!
+                                                  .firstWhere(
+                                                (payments) =>
+                                                    payments.code == 'CASH',
+                                                // orElse: () => null as CurrencyModel,
+                                              );
+                                            }
+                                            return CustomApiGenericDropdown<
+                                                PaymentModeModel>(
+                                              hintText: 'Payment Mode',
+                                              menuItems:
+                                                  state.paymentModes == null
+                                                      ? []
+                                                      : state.paymentModes!,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  selectedPaymentModeId =
+                                                      value!.id!;
+                                                });
+                                              },
+                                              defaultValue: paymentModeModel,
+                                            );
+                                          },
+                                        ),
+                                        width: 190,
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextFieldLabelWidget(
+                                          label: 'Credited Account'),
+                                      SizedBox(
+                                          width: 190,
+                                          child: BlocBuilder<PaymentAccountBloc,
+                                              PaymentAccountState>(
                                             builder: (context, state) {
                                               if (state.status ==
-                                                  PaymentModeStatus.initial) {
+                                                  PaymentAccountStatus
+                                                      .initial) {
                                                 context
-                                                    .read<PaymentModeBloc>()
-                                                    .add(LoadAllPaymentModesEvent(
+                                                    .read<PaymentAccountBloc>()
+                                                    .add(LoadAllPaymentAccountsEvent(
                                                         selectedPropertyId));
                                               }
                                               if (state.status ==
-                                                  PaymentModeStatus.success) {
-                                                paymentModeModel = state
-                                                    .paymentModes!
+                                                  PaymentAccountStatus
+                                                      .success) {
+                                                paymentAccountsModel = state
+                                                    .paymentAccounts!
                                                     .firstWhere(
-                                                  (payments) =>
-                                                      payments.code == 'CASH',
+                                                  (accounts) =>
+                                                      accounts.number ==
+                                                      'PETTYCASH',
                                                   // orElse: () => null as CurrencyModel,
                                                 );
                                               }
                                               return CustomApiGenericDropdown<
-                                                  PaymentModeModel>(
-                                                hintText: 'Payment Mode',
-                                                menuItems:
-                                                    state.paymentModes == null
-                                                        ? []
-                                                        : state.paymentModes!,
+                                                  PaymentAccountsModel>(
+                                                hintText: 'Credited Account',
+                                                menuItems: state
+                                                            .paymentAccounts ==
+                                                        null
+                                                    ? []
+                                                    : state.paymentAccounts!,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    selectedPaymentModeId =
+                                                    selectedPaymentAccountId =
                                                         value!.id!;
                                                   });
                                                 },
-                                                defaultValue: paymentModeModel,
+                                                defaultValue:
+                                                    paymentAccountsModel,
                                               );
                                             },
-                                          ),
-                                          width: 190,
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextFieldLabelWidget(
-                                            label: 'Credited Account'),
-                                        SizedBox(
-                                            width: 190,
-                                            child: BlocBuilder<PaymentAccountBloc,
-                                                PaymentAccountState>(
-                                              builder: (context, state) {
-                                                if (state.status ==
-                                                    PaymentAccountStatus
-                                                        .initial) {
-                                                  context
-                                                      .read<PaymentAccountBloc>()
-                                                      .add(LoadAllPaymentAccountsEvent(
-                                                          selectedPropertyId));
-                                                }
-                                                if (state.status ==
-                                                    PaymentAccountStatus
-                                                        .success) {
-                                                  paymentAccountsModel = state
-                                                      .paymentAccounts!
-                                                      .firstWhere(
-                                                    (accounts) =>
-                                                        accounts.number ==
-                                                        'PETTYCASH',
-                                                    // orElse: () => null as CurrencyModel,
-                                                  );
-                                                }
-                                                return CustomApiGenericDropdown<
-                                                    PaymentAccountsModel>(
-                                                  hintText: 'Credited Account',
-                                                  menuItems: state
-                                                              .paymentAccounts ==
-                                                          null
-                                                      ? []
-                                                      : state.paymentAccounts!,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      selectedPaymentAccountId =
-                                                          value!.id!;
-                                                    });
-                                                  },
-                                                  defaultValue:
-                                                      paymentAccountsModel,
-                                                );
-                                              },
-                                            )),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                TextFieldLabelWidget(
-                                  label: 'Description',
-                                  showIcon: false,
-                                ),
-                                AppMaxTextField(
-                                  controller: descriptionController,
-                                  hintText: 'Description',
-                                  obscureText: false,
-                                  fillColor: AppTheme.itemBgColor,
-                                ),
-
-                                TextFieldLabelWidget(
-                                  label: 'Upload Payment Pic',
-                                  showIcon: false,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    FullPicker(
-                                      context: context,
-                                      file: true,
-                                      image: true,
-                                      video: true,
-                                      videoCamera: true,
-                                      imageCamera: true,
-                                      voiceRecorder: true,
-                                      videoCompressor: false,
-                                      imageCropper: false,
-                                      multiFile: true,
-                                      url: true,
-                                      onError: (int value) {
-                                        print(" ----  onError ----=$value");
-                                      },
-                                      onSelected: (value) async {
-                                        print(" ----  onSelected ----");
-
-                                        setState(() {
-                                          paymentPic = value.file.first;
-                                          paymentImagePath =
-                                              value.file.first!.path;
-                                          paymentImageExtension = value
-                                              .file.first!.path
-                                              .split('.')
-                                              .last;
-                                          paymentFileName = value.file.first!.path
-                                              .split('/')
-                                              .last;
-                                        });
-                                        paymentBytes =
-                                            await paymentPic!.readAsBytes();
-                                        print('MY PIC == $paymentPic');
-                                        print('MY path == $paymentImagePath');
-                                        print('MY bytes == $paymentBytes');
-                                        print(
-                                            'MY extension == $paymentImageExtension');
-                                        print('MY FILE NAME == $paymentFileName');
-                                      },
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 175,
-                                    height: 200,
-                                    decoration: BoxDecoration(
-                                        color: AppTheme.itemBgColor,
-                                        borderRadius: BorderRadius.circular(15),
-                                        image: DecorationImage(
-                                            image:
-                                                FileImage(paymentPic ?? File('')),
-                                            fit: BoxFit.cover)),
-                                    child: paymentPic == null
-                                        ? const Center(
-                                            child: Text('Upload payment pic'),
-                                          )
-                                        : null,
+                                          )),
+                                    ],
                                   ),
+                                ],
+                              ),
+
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              TextFieldLabelWidget(
+                                label: 'Description',
+                                showIcon: false,
+                              ),
+                              AppMaxTextField(
+                                controller: descriptionController,
+                                hintText: 'Description',
+                                obscureText: false,
+                                fillColor: AppTheme.itemBgColor,
+                              ),
+
+                              TextFieldLabelWidget(
+                                label: 'Upload Payment Pic',
+                                showIcon: false,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  FullPicker(
+                                    context: context,
+                                    file: true,
+                                    image: true,
+                                    video: true,
+                                    videoCamera: true,
+                                    imageCamera: true,
+                                    voiceRecorder: true,
+                                    videoCompressor: false,
+                                    imageCropper: false,
+                                    multiFile: true,
+                                    url: true,
+                                    onError: (int value) {
+                                      print(" ----  onError ----=$value");
+                                    },
+                                    onSelected: (value) async {
+                                      print(" ----  onSelected ----");
+
+                                      setState(() {
+                                        paymentPic = value.file.first;
+                                        paymentImagePath =
+                                            value.file.first!.path;
+                                        paymentImageExtension = value
+                                            .file.first!.path
+                                            .split('.')
+                                            .last;
+                                        paymentFileName = value.file.first!.path
+                                            .split('/')
+                                            .last;
+                                      });
+                                      paymentBytes =
+                                          await paymentPic!.readAsBytes();
+                                      print('MY PIC == $paymentPic');
+                                      print('MY path == $paymentImagePath');
+                                      print('MY bytes == $paymentBytes');
+                                      print(
+                                          'MY extension == $paymentImageExtension');
+                                      print('MY FILE NAME == $paymentFileName');
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  width: 175,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                      color: AppTheme.itemBgColor,
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                          image:
+                                              FileImage(paymentPic ?? File('')),
+                                          fit: BoxFit.cover)),
+                                  child: paymentPic == null
+                                      ? const Center(
+                                          child: Text('Upload payment pic'),
+                                        )
+                                      : null,
                                 ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
-        );
-      }),
-    );
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

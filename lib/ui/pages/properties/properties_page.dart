@@ -6,6 +6,6 @@ class PropertiesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PropertiesLayout();
+    return const PropertiesLayout();
   }
 }

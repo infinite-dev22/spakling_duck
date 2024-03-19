@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_rent/ui/global/global.dart';
 import 'package:smart_rent/ui/pages/properties/bloc/property_bloc.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/loading_widget.dart';
 import 'package:smart_rent/ui/pages/properties/widgets/no_data_widget.dart';
@@ -11,14 +12,13 @@ import 'package:smart_rent/ui/widgets/smart_error_widget.dart';
 import 'package:smart_rent/ui/widgets/smart_widget.dart';
 
 class PropertiesLayout extends StatelessWidget {
-  Timer? _timer;
-
-  PropertiesLayout({super.key});
+  const PropertiesLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PropertyBloc, PropertyState>(
       builder: (context, state) {
+        globalPropertiesContext = context;
         if (state.status.isInitial) {
           context.read<PropertyBloc>().add(LoadPropertiesEvent());
         }
@@ -34,17 +34,6 @@ class PropertiesLayout extends StatelessWidget {
           );
         }
         if (state.status.isSuccess) {
-          _timer = Timer.periodic(
-            const Duration(seconds: 5),
-            (timer) {
-              context.read<PropertyBloc>().add(RefreshPropertiesEvent());
-            },
-          );
-          if(_timer != null) {
-            if(_timer!.isActive) {
-              _timer!.cancel();
-            }
-          }
           return const SuccessWidget();
         }
         if (state.status.isEmpty) {

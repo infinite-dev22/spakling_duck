@@ -14,30 +14,8 @@ part 'property_form_state.dart';
 
 class PropertyFormBloc extends Bloc<PropertyFormEvent, PropertyFormState> {
   PropertyFormBloc() : super(const PropertyFormState()) {
-    on<LoadPropertiesEvent>(_mapFetchPropertiesToState);
     on<LoadSinglePropertyFormEvent>(_mapViewSinglePropertyDetailsEventToState);
     on<AddPropertyEvent>(_mapAddPropertyEventToState);
-  }
-
-  _mapFetchPropertiesToState(
-      LoadPropertiesEvent event, Emitter<PropertyFormState> emit) async {
-    emit(state.copyWith(status: PropertyFormStatus.loading));
-    await PropertyRepoImpl()
-        .getALlProperties(currentUserToken.toString())
-        .then((properties) {
-      if (properties.isNotEmpty) {
-        emit(state.copyWith(
-            status: PropertyFormStatus.success, properties: properties));
-      } else {
-        emit(state.copyWith(status: PropertyFormStatus.empty));
-      }
-    }).onError((error, stackTrace) {
-      emit(state.copyWith(status: PropertyFormStatus.error));
-      if (kDebugMode) {
-        log("Error: $error");
-        log("Stacktrace: $stackTrace");
-      }
-    });
   }
 
   _mapViewSinglePropertyDetailsEventToState(LoadSinglePropertyFormEvent event,
@@ -64,7 +42,7 @@ class PropertyFormBloc extends Bloc<PropertyFormEvent, PropertyFormState> {
   _mapAddPropertyEventToState(
       AddPropertyEvent event, Emitter<PropertyFormState> emit) async {
     emit(state.copyWith(
-        status: PropertyFormStatus.loadingAdd, isPropertyLoading: true));
+        status: PropertyFormStatus.loading, isPropertyLoading: true));
     await PropertyDtoImpl.addProperty(
             currentUserToken.toString(),
             event.name,
@@ -94,13 +72,13 @@ class PropertyFormBloc extends Bloc<PropertyFormEvent, PropertyFormState> {
           }
         }).then((value) {
           emit(state.copyWith(
-              status: PropertyFormStatus.successAdd,
+              status: PropertyFormStatus.success,
               isPropertyLoading: false,
               addPropertyResponseModel: response));
         });
       } else {
         emit(state.copyWith(
-          status: PropertyFormStatus.accessDeniedAdd,
+          status: PropertyFormStatus.accessDenied,
           isPropertyLoading: false,
         ));
       }

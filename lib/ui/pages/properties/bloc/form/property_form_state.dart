@@ -12,11 +12,6 @@ enum PropertyFormStatus {
   successDetails,
   errorDetails,
   emptyDetails,
-  loadingAdd,
-  errorAdd,
-  emptyAdd,
-  successAdd,
-  accessDeniedAdd,
 }
 
 extension PropertyFormStatusX on PropertyFormStatus {
