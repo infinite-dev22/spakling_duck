@@ -13,6 +13,15 @@ class LoadTenantUnitsEvent extends TenantUnitEvent {
   List<Object?> get props => [id];
 }
 
+class LoadTenantUnitPaymentSchedules extends TenantUnitEvent {
+  final int tenantUnitId;
+
+  const LoadTenantUnitPaymentSchedules(this.tenantUnitId);
+
+  @override
+  List<Object?> get props => [tenantUnitId];
+}
+
 class RefreshTenantUnitsEvent extends TenantUnitEvent {
   final int id;
 

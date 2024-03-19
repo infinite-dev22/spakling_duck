@@ -11,6 +11,16 @@ enum TenantUnitStatus {
   successDetails,
   errorDetails,
   emptyDetails,
+  successAdd,
+  loadingAdd,
+  accessDeniedAdd,
+  errorAdd,
+  emptyAdd,
+  tuSuccess,
+  tuLoading,
+  tuAccessDenied,
+  tuError,
+  tuEmpty,
 }
 
 extension TenantUnitStatusX on TenantUnitStatus {
@@ -25,6 +35,18 @@ extension TenantUnitStatusX on TenantUnitStatus {
   bool get isEmpty => this == TenantUnitStatus.empty;
 
   bool get isAccessDenied => this == TenantUnitStatus.accessDenied;
+
+  bool get isSuccessAdd => this == TenantUnitStatus.successAdd;
+
+  bool get isLoadingAdd => this == TenantUnitStatus.loadingAdd;
+
+  bool get isAccessDeniedAdd => this == TenantUnitStatus.accessDeniedAdd;
+
+  bool get isErrorAdd => this == TenantUnitStatus.errorAdd;
+
+  bool get isEmptyAdd => this == TenantUnitStatus.emptyAdd;
+
+
 }
 
 @immutable
@@ -35,14 +57,17 @@ class TenantUnitState extends Equatable {
   final bool? isLoading;
   final AddTenantUnitResponse? addTenantUnitResponse;
   final String? message;
+  final List<PaymentSchedulesModel>? paymentSchedules;
 
   const TenantUnitState(
       {this.tenantUnits,
-      this.status = TenantUnitStatus.initial,
-      this.tenantUnitModel,
-      this.isLoading = false,
-      this.addTenantUnitResponse,
-      this.message});
+        this.status = TenantUnitStatus.initial,
+        this.tenantUnitModel,
+        this.isLoading = false,
+        this.addTenantUnitResponse,
+        this.message,
+        this.paymentSchedules,
+      });
 
   TenantUnitState copyWith({
     List<TenantUnitModel>? tenantUnits,
@@ -51,6 +76,7 @@ class TenantUnitState extends Equatable {
     bool? isLoading,
     AddTenantUnitResponse? addTenantUnitResponse,
     String? message,
+    List<PaymentSchedulesModel>? paymentSchedules
   }) {
     return TenantUnitState(
         tenantUnits: tenantUnits ?? this.tenantUnits,
@@ -58,20 +84,23 @@ class TenantUnitState extends Equatable {
         tenantUnitModel: tenantUnitModel ?? this.tenantUnitModel,
         isLoading: isLoading ?? this.isLoading,
         addTenantUnitResponse:
-            addTenantUnitResponse ?? this.addTenantUnitResponse,
-        message: message ?? this.message);
+        addTenantUnitResponse ?? this.addTenantUnitResponse,
+        message: message ?? this.message,
+        paymentSchedules: paymentSchedules ?? this.paymentSchedules
+    );
   }
 
   @override
   // TODO: implement props
   List<Object?> get props => [
-        tenantUnits,
-        status,
-        tenantUnitModel,
-        isLoading,
-        addTenantUnitResponse,
-        message
-      ];
+    tenantUnits,
+    status,
+    tenantUnitModel,
+    isLoading,
+    addTenantUnitResponse,
+    message,
+    paymentSchedules
+  ];
 }
 
 class TenantUnitInitial extends TenantUnitState {

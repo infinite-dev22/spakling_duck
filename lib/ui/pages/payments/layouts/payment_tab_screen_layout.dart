@@ -123,9 +123,15 @@ class PaymentTabScreenLayout extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${state.payments![index].tenantUnitModel!.tenant!.clientTypeId == 1 ? '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.firstName} ${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.lastName}' : '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.companyName}'} - ${state.payments![index].tenantUnitModel!.unit!.name}',
-                        style: AppTheme.blueAppTitle3,
+                      SizedBox(
+                        width: 250,
+                        child: Text(
+                          '${state.payments![index].tenantUnitModel!.tenant!.clientTypeId == 1 ? '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.firstName} ${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.lastName}' : '${state.payments![index].tenantUnitModel!.tenant!.clientProfiles!.first.companyName}'} - ${state.payments![index].tenantUnitModel!.unit!.name}',
+                          style: AppTheme.blueAppTitle3,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                        ),
                       ),
                       Text(
                         '${DateFormat('d MMM, yy').format(DateTime.parse(state.payments![index].date.toString()))}',
