@@ -237,10 +237,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                   if (paidController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'paid amount required', gravity: ToastGravity.TOP);
-                  } else if (balanceController.text.isEmpty) {
-                    Fluttertoast.showToast(
-                        msg: 'balance amount required', gravity: ToastGravity.TOP);
-                  } else if (paymentDateController.text.isEmpty) {
+                  }  else if (paymentDateController.text.isEmpty) {
                     Fluttertoast.showToast(
                         msg: 'payment date required', gravity: ToastGravity.TOP);
                   } else if (amountController.text.isEmpty) {
