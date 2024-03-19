@@ -10,6 +10,8 @@ class PropertyEvent extends Equatable {
 
 class LoadPropertiesEvent extends PropertyEvent {}
 
+class RefreshPropertiesEvent extends PropertyEvent {}
+
 class LoadSinglePropertyEvent extends PropertyEvent {
   final int id;
 
